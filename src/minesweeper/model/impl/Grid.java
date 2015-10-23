@@ -1,4 +1,4 @@
-package model.impl;
+package minesweeper.model.impl;
 
 public class Grid {
     private Cell[][] cells;

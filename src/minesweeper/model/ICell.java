@@ -1,4 +1,4 @@
-package model;
+package minesweeper.model;
 
 public interface ICell {
     int getMines();

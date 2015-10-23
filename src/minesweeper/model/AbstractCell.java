@@ -1,4 +1,4 @@
-package model;
+package minesweeper.model;
 
 public class AbstractCell implements ICell {
     private int mines;

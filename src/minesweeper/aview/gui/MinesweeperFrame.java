@@ -1,4 +1,4 @@
-package aview.gui;
+package minesweeper.aview.gui;
 
 import javax.swing.JFrame;
 

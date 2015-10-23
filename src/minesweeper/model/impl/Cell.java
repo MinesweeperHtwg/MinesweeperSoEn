@@ -1,6 +1,6 @@
-package model.impl;
+package minesweeper.model.impl;
 
-import model.AbstractCell;
+import minesweeper.model.AbstractCell;
 
 public class Cell extends AbstractCell{
     private final int col;
