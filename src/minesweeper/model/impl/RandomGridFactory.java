@@ -4,10 +4,10 @@ import java.util.List;
 
 import minesweeper.model.IGridFactory;
 
-public class DebugGridFactory implements IGridFactory {
+public class RandomGridFactory implements IGridFactory {
 	private Grid grid;
 
-	public DebugGridFactory(Grid grid) {
+	public RandomGridFactory(Grid grid) {
 		this.grid = grid;
 	}
 
