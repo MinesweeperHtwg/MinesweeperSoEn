@@ -11,7 +11,7 @@ public class GridFactory implements IGridFactory {
 	private int mines;
 
 	public GridFactory(int height, int width, int mines) {
-		if (height * width > mines) {
+		if (height * width < mines) {
 			throw new IllegalArgumentException(
 					"Cant construct a grid with more mines than cells!");
 		}
