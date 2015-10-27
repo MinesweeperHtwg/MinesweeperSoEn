@@ -7,7 +7,7 @@ public class Cell implements ICell {
 	private final int row;
 	private int mines;
 	private boolean opened;
-	private boolean containsMine;
+	private boolean isMine;
 	private boolean flag;
 
 	public Cell(int col, int row) {
@@ -20,7 +20,7 @@ public class Cell implements ICell {
 		this.row = row;
 		this.mines = mines;
 		this.opened = opened;
-		this.containsMine = containsMine;
+		this.isMine = containsMine;
 		this.flag = flag;
 	}
 
@@ -41,15 +41,15 @@ public class Cell implements ICell {
 	}
 	
 	public boolean isMine() {
-		return containsMine;
+		return isMine;
 	}
 
 	public boolean isOpened() {
 		return opened;
 	}
 
-	public void setContainsMine(boolean containsMine) {
-		this.containsMine = containsMine;
+	public void setIsMine(boolean isMine) {
+		this.isMine = isMine;
 	}
 
 	public void setFlag(boolean flag) {
@@ -69,7 +69,7 @@ public class Cell implements ICell {
 			return "F";
 		if (!opened)
 			return " ";
-		if (containsMine) {
+		if (isMine) {
 			return "M";
 		}
 		return String.valueOf(mines);

@@ -42,7 +42,7 @@ public class GridFactory implements IGridFactory {
 		List<Cell> cellList = grid.getList();
 		Collections.shuffle(cellList);
 		for (int i = 0; i < mines; i++) {
-			cellList.get(i).setContainsMine(true);
+			cellList.get(i).setIsMine(true);
 		}
 
 		return grid;

@@ -15,5 +15,5 @@ public interface ICell {
     
     boolean isMine();
     
-    void setContainsMine(boolean containsMine);
+    void setIsMine(boolean containsMine);
 }
