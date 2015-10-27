@@ -13,7 +13,7 @@ public interface ICell {
     
     void setFlag(boolean flag);
     
-    boolean containsMine();
+    boolean isMine();
     
     void setContainsMine(boolean containsMine);
 }

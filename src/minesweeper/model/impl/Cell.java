@@ -24,24 +24,24 @@ public class Cell implements ICell {
 		this.flag = flag;
 	}
 
-	public boolean containsMine() {
-		return containsMine;
-	}
-
 	public int getCol() {
 		return col;
+	}
+	
+	public int getRow() {
+		return row;
 	}
 
 	public int getMines() {
 		return mines;
 	}
 
-	public int getRow() {
-		return row;
-	}
-
 	public boolean isFlag() {
 		return flag;
+	}
+	
+	public boolean isMine() {
+		return containsMine;
 	}
 
 	public boolean isOpened() {
