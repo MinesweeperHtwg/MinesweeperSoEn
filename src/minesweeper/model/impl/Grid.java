@@ -31,17 +31,17 @@ public class Grid {
 		checkBounds(height, width);
 		return getCell(height, width).getMines();
 	}
-	
+
 	public boolean isFlag(int height, int width) {
 		checkBounds(height, width);
 		return getCell(height, width).isFlag();
 	}
-	
+
 	public boolean isMine(int height, int width) {
 		checkBounds(height, width);
 		return getCell(height, width).isMine();
 	}
-	
+
 	public boolean isOpened(int height, int width) {
 		checkBounds(height, width);
 		return getCell(height, width).isOpened();
@@ -64,14 +64,17 @@ public class Grid {
 				sb.append(cell.mkString()).append('|');
 			}
 			// Delete the last '|' in the line
-			sb.deleteCharAt(sb.length()-1);
+			sb.deleteCharAt(sb.length() - 1);
 			sb.append('\n');
 		}
 		return sb.toString();
 	}
-	
-	private void checkBounds(int height, int width) {
-		if (height < 0 || width < 0  || height >= this.height || width >= this.width);
+
+	private void checkBounds(int height, int width)
+			throws IllegalArgumentException {
+		if (height < 0 || width < 0 || height >= this.height
+				|| width >= this.width)
+			throw new IllegalArgumentException("Index out of bounds");
 	}
 
 }
