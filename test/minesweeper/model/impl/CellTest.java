@@ -58,6 +58,7 @@ public class CellTest {
 	
 	@Test
 	public void testMkString() {
+		assertEquals(" ", cell.mkString());
 		cell.setIsMine(false);
 		cell.setOpened(false);
 		cell.setFlag(false);
