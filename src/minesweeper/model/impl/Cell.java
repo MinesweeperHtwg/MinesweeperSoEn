@@ -40,7 +40,7 @@ public class Cell implements ICell {
 		}
 
 		int mines = Character.getNumericValue(type);
-		if (mines < 0 || mines > 9) {
+		if (mines < 0 || mines > 8) {
 			throw new IllegalArgumentException("Illegal Cell type");
 		}
 		setMines(mines);
