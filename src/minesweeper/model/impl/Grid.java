@@ -23,11 +23,28 @@ public class Grid {
 	}
 
 	public Cell getCell(int height, int width) {
+		checkBounds(height, width);
 		return cells[height][width];
 	}
 
 	public int getMines(int height, int width) {
+		checkBounds(height, width);
 		return getCell(height, width).getMines();
+	}
+	
+	public boolean isFlag(int height, int width) {
+		checkBounds(height, width);
+		return getCell(height, width).isFlag();
+	}
+	
+	public boolean isMine(int height, int width) {
+		checkBounds(height, width);
+		return getCell(height, width).isMine();
+	}
+	
+	public boolean isOpened(int height, int width) {
+		checkBounds(height, width);
+		return getCell(height, width).isOpened();
 	}
 
 	public List<Cell> getList() {
@@ -51,6 +68,10 @@ public class Grid {
 			sb.append('\n');
 		}
 		return sb.toString();
+	}
+	
+	private void checkBounds(int height, int width) {
+		if (height < 0 || width < 0  || height >= this.height || width >= this.width);
 	}
 
 }
