@@ -42,9 +42,9 @@ public class CellTest {
 	
 	@Test
 	public void testContainsMine() {
-		cell.setContainsMine(true);
+		cell.setIsMine(true);
 		assertEquals(true, cell.isMine());
-		cell.setContainsMine(false);
+		cell.setIsMine(false);
 		assertEquals(false, cell.isMine());
 	}
 	
@@ -55,5 +55,23 @@ public class CellTest {
 		cell.setOpened(false);
 		assertEquals(false, cell.isOpened());
 	}
-
+	
+	@Test
+	public void testMkString() {
+		cell.setIsMine(false);
+		cell.setOpened(false);
+		cell.setFlag(false);
+		assertEquals(" ", cell.mkString());
+		cell.setFlag(true);
+		assertEquals("F", cell.mkString());
+		cell.setFlag(false);
+		cell.setOpened(true);
+		cell.setIsMine(true);
+		assertEquals("M", cell.mkString());
+		cell.setIsMine(false);
+		cell.setMines(1);
+		assertEquals("1", cell.mkString());
+		cell.setMines(0);
+		assertEquals("0", cell.mkString());
+	}
 }
