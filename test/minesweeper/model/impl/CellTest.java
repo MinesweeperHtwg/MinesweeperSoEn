@@ -16,6 +16,16 @@ public class CellTest {
     }
 
     @Test
+    public void testConstructor() {
+        cell = new Cell(1, 2, State.OPENED, 2, true);
+        assertEquals(1, cell.getCol());
+        assertEquals(2, cell.getRow());
+        assertEquals(State.OPENED, cell.getState());
+        assertEquals(2, cell.getMines());
+        assertEquals(true, cell.isMine());
+    }
+
+    @Test
     public void testCol() {
         assertEquals(1, cell.getCol());
     }
@@ -80,9 +90,9 @@ public class CellTest {
         cell.setState(State.FLAG);
         assertFalse(cell.isOpened());
     }
-    
-    @Test(expected=IllegalArgumentException.class)
-    public void testSetMinesIllegal(){
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testSetMinesIllegal() {
         cell.setMines(-1);
     }
 

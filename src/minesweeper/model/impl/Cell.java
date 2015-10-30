@@ -23,6 +23,7 @@ public class Cell implements ICell {
         this.row = row;
         setMines(mines);
         setState(state);
+        setIsMine(isMine);
     }
 
     public int getCol() {
