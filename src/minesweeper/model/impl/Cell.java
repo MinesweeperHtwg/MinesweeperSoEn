@@ -3,134 +3,121 @@ package minesweeper.model.impl;
 import minesweeper.model.ICell;
 
 public class Cell implements ICell {
-	private final int col;
-	private final int row;
-	private int mines;
-	private boolean opened;
-	private boolean isMine;
-	private boolean flag;
+    public enum State {
+        OPENED, CLOSED, FLAG
+    }
 
-	public Cell(int col, int row) {
-		this(col, row, 0, false, false, false);
-	}
+    private final int col;
+    private final int row;
+    private State state;
+    private int mines;
 
-	public Cell(int col, int row, char type) {
-		this.col = col;
-		this.row = row;
-		if (type == 'F') {
-			setFlag(true);
-			setIsMine(false);
-			setOpened(false);
-			setMines(0);
-			return;
-		}
-		if (type == 'M') {
-			setFlag(false);
-			setIsMine(true);
-			setOpened(true);
-			setMines(0);
-			return;
-		}
-		if (type == ' ') {
-			setFlag(false);
-			setIsMine(false);
-			setOpened(false);
-			setMines(0);
-			return;
-		}
+    private boolean isMine;
 
-		int mines = Character.getNumericValue(type);
-		if (mines < 0 || mines > 8) {
-			throw new IllegalArgumentException("Illegal Cell type");
-		}
-		setMines(mines);
-		setFlag(false);
-		setIsMine(false);
-		setOpened(true);
-	}
+    public Cell(int col, int row) {
+        this(col, row, State.CLOSED, 0, false);
+    }
 
-	public Cell(int col, int row, int mines, boolean opened, boolean isMine,
-			boolean flag) {
-		this.col = col;
-		this.row = row;
-		this.mines = mines;
-		this.opened = opened;
-		this.isMine = isMine;
-		this.flag = flag;
-	}
+    public Cell(int col, int row, State state, int mines, boolean isMine) {
+        this.col = col;
+        this.row = row;
+        setMines(mines);
+        setState(state);
+    }
 
-	public int getCol() {
-		return col;
-	}
+    public int getCol() {
+        return col;
+    }
 
-	public int getRow() {
-		return row;
-	}
+    public int getRow() {
+        return row;
+    }
 
-	public int getMines() {
-		return mines;
-	}
+    public int getMines() {
+        return mines;
+    }
 
-	public boolean isFlag() {
-		return flag;
-	}
+    public State getState() {
+        return state;
+    }
 
-	public boolean isMine() {
-		return isMine;
-	}
+    public boolean isClosed() {
+        if (state != State.OPENED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public boolean isOpened() {
-		return opened;
-	}
+    @Override
+    public boolean isFlag() {
+        if (state == State.FLAG) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public void setIsMine(boolean isMine) {
-		this.isMine = isMine;
-	}
+    public boolean isMine() {
+        return isMine;
+    }
 
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
+    public boolean isOpened() {
+        if (state == State.OPENED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public void setMines(int mines) {
-		this.mines = mines;
-	}
+    public void setIsMine(boolean isMine) {
+        this.isMine = isMine;
+    }
 
-	public void setOpened(boolean opened) {
-		this.opened = opened;
-	}
+    public void setMines(int mines) {
+        if (mines < 0)
+            throw new IllegalArgumentException(
+                    "Surrounding mines should not be negative.");
+        this.mines = mines;
+    }
 
-	public String mkString() {
-		if (flag)
-			return "F";
-		if (!opened)
-			return " ";
-		if (isMine) {
-			return "M";
-		}
-		return String.valueOf(mines);
-	}
+    public void setState(State state) {
+        this.state = state;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cell other = (Cell) obj;
-		if (col != other.col)
-			return false;
-		if (flag != other.flag)
-			return false;
-		if (isMine != other.isMine)
-			return false;
-		if (mines != other.mines)
-			return false;
-		if (opened != other.opened)
-			return false;
-		if (row != other.row)
-			return false;
-		return true;
-	}
+    public String mkString() {
+        switch (state) {
+        case CLOSED:
+            return " ";
+        case FLAG:
+            return "F";
+        default:
+            if (isMine) {
+                return "M";
+            }
+            return String.valueOf(mines);
+        }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Cell other = (Cell) obj;
+        if (col != other.col)
+            return false;
+        if (row != other.row)
+            return false;
+        if (state != other.state)
+            return false;
+        if (isMine != other.isMine)
+            return false;
+        if (mines != other.mines)
+            return false;
+        return true;
+    }
 }
