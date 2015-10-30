@@ -26,6 +26,11 @@ public class CellTest {
     }
 
     @Test
+    public void testEnum() {
+        assertEquals(State.OPENED, State.valueOf("OPENED"));
+    }
+
+    @Test
     public void testCol() {
         assertEquals(1, cell.getCol());
     }
