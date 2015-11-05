@@ -2,15 +2,21 @@ package minesweeper.model.impl;
 
 import static org.junit.Assert.*;
 
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 public class GridFactoryTest {
-	@Test(expected = IllegalArgumentException.class)
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
+    
+	@Test
 	public void testGridFactoryIllegal() {
+		new GridFactory(10, 10, 100);
+		thrown.expect(IllegalArgumentException.class);
 		new GridFactory(10, 10, 101);
 	}
-
+	
 	@Test
 	public void testGetGrid() {
 		GridFactory gFact = new GridFactory(5, 10, 10);
