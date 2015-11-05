@@ -56,7 +56,7 @@ public class Grid {
 	}
 
 	public List<Cell> getAdjCells(final int row, final int col) {
-		ArrayList<Cell> result = new ArrayList<>(8);
+		List<Cell> result = new ArrayList<>(8);
 		for (int[] cord : adjCord) {
 			int rowGet = cord[0] + row;
 			int colGet = cord[1] + col;
