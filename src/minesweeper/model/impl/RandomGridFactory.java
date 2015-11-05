@@ -14,7 +14,7 @@ public class RandomGridFactory implements IGridFactory {
 
 	@Override
 	public Grid getGrid() {
-		List<Cell> cellList = grid.getList();
+		List<Cell> cellList = grid.getCells();
 		for (Cell cell : cellList) {
 		    double r = Math.random();
 			if (r < 0.75)

@@ -1,8 +1,6 @@
 package minesweeper.model.impl;
 
-import minesweeper.model.ICell;
-
-public class Cell implements ICell {
+public class Cell {
     public enum State {
         OPENED, CLOSED, FLAG
     }
@@ -14,11 +12,11 @@ public class Cell implements ICell {
 
     private boolean isMine;
 
-    public Cell(int col, int row) {
-        this(col, row, State.CLOSED, 0, false);
+    public Cell(int row, int col) {
+        this(row, col, State.CLOSED, 0, false);
     }
 
-    public Cell(int col, int row, State state, int mines, boolean isMine) {
+    public Cell(int row, int col, State state, int mines, boolean isMine) {
         this.col = col;
         this.row = row;
         setMines(mines);
@@ -50,7 +48,6 @@ public class Cell implements ICell {
         }
     }
 
-    @Override
     public boolean isFlag() {
         if (state == State.FLAG) {
             return true;

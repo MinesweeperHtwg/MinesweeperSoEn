@@ -19,8 +19,8 @@ public class GridTest {
     public void setUp() throws Exception {
         cells = new Cell[2][2];
         cells[0][0] = new Cell(0, 0, State.CLOSED, 0, false);
-        cells[1][0] = new Cell(1, 0, State.OPENED,0,true);
-        cells[0][1] = new Cell(0, 1, State.FLAG,0,false);
+        cells[0][1] = new Cell(0, 1, State.OPENED,0,true);
+        cells[1][0] = new Cell(1, 0, State.FLAG,0,false);
         cells[1][1] = new Cell(1, 1, State.OPENED,1,false);
         grid = new Grid(cells);
     }
@@ -66,12 +66,12 @@ public class GridTest {
 
     @Test
     public void testIsFlag() {
-        assertEquals(true, grid.isFlag(0, 1));
+        assertEquals(true, grid.isFlag(1, 0));
     }
 
     @Test
     public void testIsMine() {
-        assertEquals(true, grid.isMine(1, 0));
+        assertEquals(true, grid.isMine(0, 1));
     }
 
     @Test
@@ -86,18 +86,27 @@ public class GridTest {
     }
 
     @Test
-    public void testGetList() {
-        List<Cell> cellList = grid.getList();
+    public void testGetCells() {
+        List<Cell> cellList = grid.getCells();
         assertTrue(cellList.contains(cells[0][0]));
         assertTrue(cellList.contains(cells[0][1]));
         assertTrue(cellList.contains(cells[1][0]));
         assertTrue(cellList.contains(cells[1][1]));
         assertEquals(4, cellList.size());
     }
+    
+    @Test
+    public void testGetAdjCells() {
+    	List<Cell> cellList = grid.getAdjCells(0, 0);
+        assertTrue(cellList.contains(cells[0][1]));
+        assertTrue(cellList.contains(cells[1][0]));
+        assertTrue(cellList.contains(cells[1][1]));
+        assertEquals(3, cellList.size());
+    }
 
     @Test
     public void testMkString() {
-        assertEquals(" |F\nM|1\n", grid.mkString());
+        assertEquals(" |M\nF|1\n", grid.mkString());
     }
 
 }

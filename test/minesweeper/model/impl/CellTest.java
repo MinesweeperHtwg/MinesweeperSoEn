@@ -12,12 +12,12 @@ public class CellTest {
 
     @Before
     public void setUp() throws Exception {
-        cell = new Cell(1, 2);
+        cell = new Cell(2, 1);
     }
 
     @Test
     public void testConstructor() {
-        cell = new Cell(1, 2, State.OPENED, 2, true);
+        cell = new Cell(2, 1, State.OPENED, 2, true);
         assertEquals(1, cell.getCol());
         assertEquals(2, cell.getRow());
         assertEquals(State.OPENED, cell.getState());
@@ -119,7 +119,7 @@ public class CellTest {
 
     @Test
     public void testEquals() {
-        Cell c1 = new Cell(1, 2);
+        Cell c1 = new Cell(2, 1);
         assertEquals(c1, c1);
         assertFalse(c1.equals(null));
         assertFalse(c1.equals(1));
@@ -128,7 +128,7 @@ public class CellTest {
         assertFalse(c1.equals(c2));
         c2 = new Cell(1, 1);
         assertFalse(c1.equals(c2));
-        c2 = new Cell(1, 2);
+        c2 = new Cell(2, 1);
         c2.setState(State.FLAG);
         assertFalse(c1.equals(c2));
         c2.setState(State.CLOSED);

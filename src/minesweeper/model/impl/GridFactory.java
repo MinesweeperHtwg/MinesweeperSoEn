@@ -1,5 +1,6 @@
 package minesweeper.model.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,10 +40,17 @@ public class GridFactory implements IGridFactory {
 		Grid grid = new Grid(cells);
 
 		// Distribute mines on the grid
-		List<Cell> cellList = grid.getList();
+		List<Cell> cellList = grid.getCells();
 		Collections.shuffle(cellList);
 		for (int i = 0; i < mines; i++) {
 			cellList.get(i).setIsMine(true);
+		}
+
+		// Update Mines
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				
+			}
 		}
 
 		return grid;

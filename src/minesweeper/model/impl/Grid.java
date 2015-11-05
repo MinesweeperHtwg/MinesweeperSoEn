@@ -1,18 +1,19 @@
 package minesweeper.model.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Grid {
 	private Cell[][] cells;
-	private int height = 0;
-	private int width = 0;
+	private int height;
+	private int width;
+
+	private static final int[][] adjCord = { { -1, -1 }, { -1, 0 }, { -1, 1 },
+			{ 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
 
 	protected Grid(Cell[][] cells) {
-		setCells(cells);
-	}
-
-	protected void setCells(Cell[][] cells) {
 		if (cells == null || cells.length < 1 || cells[0] == null
 				|| cells[0].length < 1) {
 			throw new IllegalArgumentException("Cells input array illegal");
@@ -22,32 +23,30 @@ public class Grid {
 		width = cells[0].length;
 	}
 
-	public Cell getCell(int height, int width) {
-		checkBounds(height, width);
-		return cells[height][width];
+	public Cell getCell(int row, int col) throws IllegalArgumentException {
+		if (!checkBounds(row, col)) {
+			throw new IllegalArgumentException("Index out of bounds");
+		}
+		return cells[row][col];
 	}
 
-	public int getMines(int height, int width) {
-		checkBounds(height, width);
-		return getCell(height, width).getMines();
+	public int getMines(int row, int col) {
+		return getCell(row, col).getMines();
 	}
 
-	public boolean isFlag(int height, int width) {
-		checkBounds(height, width);
-		return getCell(height, width).isFlag();
+	public boolean isFlag(int row, int col) {
+		return getCell(row, col).isFlag();
 	}
 
-	public boolean isMine(int height, int width) {
-		checkBounds(height, width);
-		return getCell(height, width).isMine();
+	public boolean isMine(int row, int col) {
+		return getCell(row, col).isMine();
 	}
 
-	public boolean isOpened(int height, int width) {
-		checkBounds(height, width);
-		return getCell(height, width).isOpened();
+	public boolean isOpened(int row, int col) {
+		return getCell(row, col).isOpened();
 	}
 
-	public List<Cell> getList() {
+	public List<Cell> getCells() {
 		List<Cell> cellList = new LinkedList<>();
 		for (Cell[] rows : cells) {
 			for (Cell cell : rows) {
@@ -55,6 +54,18 @@ public class Grid {
 			}
 		}
 		return cellList;
+	}
+
+	public List<Cell> getAdjCells(final int row, final int col) {
+		ArrayList<Cell> result = new ArrayList<>(8);
+		for (int[] cord : adjCord) {
+			int rowGet = cord[0] + row;
+			int colGet = cord[1] + col;
+			if (checkBounds(rowGet, colGet)) {
+				result.add(cells[rowGet][colGet]);
+			}
+		}
+		return result;
 	}
 
 	public String mkString() {
@@ -70,11 +81,8 @@ public class Grid {
 		return sb.toString();
 	}
 
-	private void checkBounds(int height, int width)
-			throws IllegalArgumentException {
-		if (height < 0 || width < 0 || height >= this.height
-				|| width >= this.width)
-			throw new IllegalArgumentException("Index out of bounds");
+	private boolean checkBounds(int row, int col) {
+		return col >= 0 && row >= 0 && col < width && row < height;
 	}
 
 }
