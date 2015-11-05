@@ -1,14 +1,13 @@
 package minesweeper.model.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 public class Grid {
 	private Cell[][] cells;
-	private int height;
-	private int width;
+	private final int height;
+	private final int width;
 
 	private static final int[][] adjCord = { { -1, -1 }, { -1, 0 }, { -1, 1 },
 			{ 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
