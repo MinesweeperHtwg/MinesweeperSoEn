@@ -29,6 +29,14 @@ public class Grid {
 		return cells[row][col];
 	}
 
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
 	public int getMines(int row, int col) {
 		return getCell(row, col).getMines();
 	}
