@@ -1,7 +1,5 @@
 package minesweeper.model.impl;
 
-import javax.annotation.Generated;
-
 public class Cell {
     public enum State {
         OPENED, CLOSED, FLAG
