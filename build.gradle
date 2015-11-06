@@ -54,9 +54,9 @@ task pom << {
     
 sonarqube {
     properties {
-    property "sonar.projectName", "de.htwg.se.minesweeper"
-    property "sonar.projectKey", "de.htwg.se.minesweeper"
-    property "sonar.projectVersion", "2.0"
+    property "sonar.projectName", "SE2015WS-13-Minesweeper"
+    property "sonar.projectKey", "SE2015WS-13-Minesweeper"
+    property "sonar.projectVersion", "0.1"
     property "sonar.binaries", "build/classes"
     property "sonar.java.coveragePlugin", "jacoco"
   }
