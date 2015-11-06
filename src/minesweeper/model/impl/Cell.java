@@ -41,19 +41,11 @@ public class Cell {
     }
 
     public boolean isClosed() {
-        if (state != State.OPENED) {
-            return true;
-        } else {
-            return false;
-        }
+        return state != State.OPENED;
     }
 
     public boolean isFlag() {
-        if (state == State.FLAG) {
-            return true;
-        } else {
-            return false;
-        }
+        return state == State.FLAG;
     }
 
     public boolean isMine() {
@@ -61,11 +53,7 @@ public class Cell {
     }
 
     public boolean isOpened() {
-        if (state == State.OPENED) {
-            return true;
-        } else {
-            return false;
-        }
+        return state == State.OPENED;
     }
 
     public void setIsMine(boolean isMine) {
