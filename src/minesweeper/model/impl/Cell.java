@@ -1,5 +1,7 @@
 package minesweeper.model.impl;
 
+import javax.annotation.Generated;
+
 public class Cell {
     public enum State {
         OPENED, CLOSED, FLAG
@@ -86,6 +88,18 @@ public class Cell {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + col;
+        result = prime * result + (isMine ? 1231 : 1237);
+        result = prime * result + mines;
+        result = prime * result + row;
+        result = prime * result + ((state == null) ? 0 : state.hashCode());
+        return result;
+    }
+
+    @Override
     public boolean equals(Object obj) {
         if (this == obj)
             return true;
@@ -96,13 +110,13 @@ public class Cell {
         Cell other = (Cell) obj;
         if (col != other.col)
             return false;
-        if (row != other.row)
-            return false;
-        if (state != other.state)
-            return false;
         if (isMine != other.isMine)
             return false;
         if (mines != other.mines)
+            return false;
+        if (row != other.row)
+            return false;
+        if (state != other.state)
             return false;
         return true;
     }
