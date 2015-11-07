@@ -27,6 +27,8 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	@Override
 	public void newGame() {
 		grid = gFact.getGrid();
+		statusLine = "New game started";
+		notifyObservers();
 	}
 
 	@Override
