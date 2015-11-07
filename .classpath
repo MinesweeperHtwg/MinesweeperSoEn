@@ -12,5 +12,7 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="lib/log4j-api-2.4.1.jar" sourcepath="lib/log4j-api-2.4.1-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-core-2.4.1.jar" sourcepath="lib/log4j-core-2.4.1-javadoc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
