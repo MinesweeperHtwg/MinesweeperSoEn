@@ -74,6 +74,7 @@ public class Cell {
 		return "(" + col + ", " + row + ") = " + toString();
 	}
 
+	@Override
 	public String toString() {
 		switch (state) {
 		case CLOSED:

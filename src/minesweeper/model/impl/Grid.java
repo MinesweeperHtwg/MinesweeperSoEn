@@ -76,6 +76,7 @@ public class Grid {
 		return result;
 	}
 
+	@Override
 	public String toString() {
 		return Arrays.stream(cells)
 				.map(rows -> Arrays.stream(rows).map(Cell::toString).collect(Collectors.joining("|")))
