@@ -106,7 +106,7 @@ public class GridTest {
 
     @Test
     public void testMkString() {
-        assertEquals(" |M\nF|1\n", grid.mkString());
+        assertEquals(" |M\nF|1\n", grid.toString());
     }
 
 }

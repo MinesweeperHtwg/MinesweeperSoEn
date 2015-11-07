@@ -102,19 +102,19 @@ public class CellTest {
     }
 
     @Test
-    public void testMkString() {
+    public void testToString() {
         cell.setState(State.CLOSED);
-        assertEquals(" ", cell.mkString());
+        assertEquals(" ", cell.toString());
         cell.setState(State.FLAG);
-        assertEquals("F", cell.mkString());
+        assertEquals("F", cell.toString());
         cell.setState(State.OPENED);
         cell.setIsMine(true);
-        assertEquals("M", cell.mkString());
+        assertEquals("M", cell.toString());
         cell.setIsMine(false);
         cell.setMines(1);
-        assertEquals("1", cell.mkString());
+        assertEquals("1", cell.toString());
         cell.setMines(0);
-        assertEquals("0", cell.mkString());
+        assertEquals("0", cell.toString());
     }
 
     @Test
