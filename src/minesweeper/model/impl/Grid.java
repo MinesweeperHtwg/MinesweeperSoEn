@@ -77,12 +77,9 @@ public class Grid {
 	}
 
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		for (Cell[] rows : cells) {
-			sb.append(Arrays.stream(rows).map(Cell::toString).collect(Collectors.joining("|")));
-			sb.append("\n");
-		}
-		return sb.toString();
+		return Arrays.stream(cells)
+				.map(rows -> Arrays.stream(rows).map(Cell::toString).collect(Collectors.joining("|")))
+				.collect(Collectors.joining("\n"));
 	}
 
 	private boolean checkBounds(int row, int col) {
