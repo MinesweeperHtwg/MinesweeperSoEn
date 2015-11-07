@@ -1,22 +1,29 @@
 package minesweeper;
 
+import org.apache.log4j.PropertyConfigurator;
+
+import minesweeper.aview.tui.TextUI;
+import minesweeper.controller.impl.MinesweeperController;
 import minesweeper.model.IGridFactory;
-import minesweeper.model.impl.Cell;
-import minesweeper.model.impl.Grid;
 import minesweeper.model.impl.GridFactory;
-import minesweeper.model.impl.Cell.State;
 
 public class Minesweeper {
-    private Minesweeper() {
-    }
+	private Minesweeper() {
+	}
 
-    public static void main(String[] args) {
-        IGridFactory gFact = new GridFactory(10, 20, 50);
-        Grid grid = gFact.getGrid();
-        for (Cell cell : grid.getCells()) {
-            cell.setState(State.OPENED);
-        }
+	public static void main(String[] args) {
+		// Set up logging through log4j
+		PropertyConfigurator.configure("log4j.properties");
 
-        System.out.println(grid.mkString());
-    }
+		IGridFactory gFact = new GridFactory(10, 20, 50);
+		MinesweeperController controller = new MinesweeperController(gFact);
+		TextUI tui = new TextUI(controller);
+		
+		controller.newGame();
+		controller.openCell(0, 0);
+		controller.openCell(1, 0);
+		controller.openCell(0, 1);
+		controller.openCell(1, 1);
+		controller.openCell(1, 1);
+	}
 }
