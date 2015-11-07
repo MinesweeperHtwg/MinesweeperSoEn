@@ -3,18 +3,18 @@ package minesweeper.controller.impl;
 import java.util.List;
 
 import minesweeper.controller.IMinesweeperController;
+import minesweeper.model.IGridFactory;
 import minesweeper.model.impl.Cell;
 import minesweeper.model.impl.Cell.State;
 import minesweeper.model.impl.Grid;
-import minesweeper.model.impl.GridFactory;
 import minesweeper.util.observer.Observable;
 
 public class MinesweeperController extends Observable implements IMinesweeperController {
 	private String statusLine = "Welcome to Minesweeper!";
 	private Grid grid;
-	private GridFactory gFact;
+	private IGridFactory gFact;
 
-	public MinesweeperController(GridFactory gFact) {
+	public MinesweeperController(IGridFactory gFact) {
 		this.grid = gFact.getGrid();
 		this.gFact = gFact;
 	}
