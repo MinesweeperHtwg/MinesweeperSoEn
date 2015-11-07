@@ -84,8 +84,12 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	}
 
 	@Override
+	public String getGridString() {
+		return grid.toString();
+	}
+
+	@Override
 	public String getStatusLine() {
 		return statusLine;
 	}
-
 }
