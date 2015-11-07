@@ -1,20 +1,21 @@
 package minesweeper.model.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Grid {
 	private Cell[][] cells;
 	private final int height;
 	private final int width;
 
-	private static final int[][] adjCord = { { -1, -1 }, { -1, 0 }, { -1, 1 },
-			{ 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 }, { 1, 1 } };
+	private static final int[][] adjCord = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 },
+			{ 1, 1 } };
 
 	protected Grid(Cell[][] cells) {
-		if (cells == null || cells.length < 1 || cells[0] == null
-				|| cells[0].length < 1) {
+		if (cells == null || cells.length < 1 || cells[0] == null || cells[0].length < 1) {
 			throw new IllegalArgumentException("Cells input array illegal");
 		}
 		this.cells = cells;
@@ -75,15 +76,11 @@ public class Grid {
 		return result;
 	}
 
-	public String mkString() {
+	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		for (Cell[] rows : cells) {
-			for (Cell cell : rows) {
-				sb.append(cell.mkString()).append('|');
-			}
-			// Delete the last '|' in the line
-			sb.deleteCharAt(sb.length() - 1);
-			sb.append('\n');
+			sb.append(Arrays.stream(rows).map(Cell::toString).collect(Collectors.joining("|")));
+			sb.append("\n");
 		}
 		return sb.toString();
 	}
