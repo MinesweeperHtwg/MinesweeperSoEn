@@ -1,8 +1,10 @@
 package minesweeper.controller;
 
 public interface IMinesweeperController {
-
-	void newGame();
 	void exit();
-	void openField(int col, int row);
+	void newGame();
+	String getStatusLine();
+	void openCell(int row, int col);
+	void openAround(int row, int col);
+	void toggleFlag(int row, int col);
 }
