@@ -11,7 +11,7 @@ public class TextUI implements IObserver {
 
 	private MinesweeperController controller;
 
-	private Logger logger = Logger.getLogger(this.getClass());
+	private static final Logger logger = Logger.getLogger(TextUI.class);
 
 	public TextUI(MinesweeperController controller) {
 		this.controller = controller;
