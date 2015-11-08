@@ -31,21 +31,25 @@ public class TextUI implements IObserver {
 			controller.newGame();
 			break;
 		default:
-			if (line.matches("(o|open) \\d+ \\d+")) {
-				String[] args = line.split(" ");
-				controller.openCell(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
-			} else if (line.matches("(a|around) \\d+ \\d+")) {
-				String[] args = line.split(" ");
-				controller.openAround(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
-			} else if (line.matches("(f|flag) \\d+ \\d+")) {
-				String[] args = line.split(" ");
-				controller.toggleFlag(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
-			} else {
-				printCommands();
-			}
+			processCordLine(line);
 			break;
 		}
 		return cont;
+	}
+
+	private void processCordLine(String line) {
+		if (line.matches("(o|open) \\d+ \\d+")) {
+			String[] args = line.split(" ");
+			controller.openCell(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+		} else if (line.matches("(a|around) \\d+ \\d+")) {
+			String[] args = line.split(" ");
+			controller.openAround(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+		} else if (line.matches("(f|flag) \\d+ \\d+")) {
+			String[] args = line.split(" ");
+			controller.toggleFlag(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+		} else {
+			printCommands();
+		}
 	}
 
 	@Override
@@ -59,7 +63,7 @@ public class TextUI implements IObserver {
 		printCommands();
 	}
 	
-	public void printCommands() {
+	private void printCommands() {
 		logger.info(NEWLINE + "Commands: q|quit; n|new|newGame; o|open ROW COL; a|around ROW COL; f|flag ROW COL");
 	}
 }
