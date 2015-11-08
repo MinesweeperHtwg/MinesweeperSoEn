@@ -20,11 +20,6 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	}
 
 	@Override
-	public void exit() {
-		System.exit(0);
-	}
-
-	@Override
 	public void newGame() {
 		grid = gFact.getGrid();
 		statusLine = "New game started";
@@ -32,7 +27,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	}
 
 	@Override
-	public void openCell(int col, int row) {
+	public void openCell(int row, int col) {
 		Cell cell = grid.getCell(row, col);
 		if (cell.isFlag()) {
 			statusLine = "The cell " + cell.mkString() + " can't be opened because it has a flag";
