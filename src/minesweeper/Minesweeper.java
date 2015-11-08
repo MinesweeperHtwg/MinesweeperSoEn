@@ -1,5 +1,7 @@
 package minesweeper;
 
+import java.util.Scanner;
+
 import org.apache.log4j.PropertyConfigurator;
 
 import minesweeper.aview.tui.TextUI;
@@ -15,15 +17,17 @@ public class Minesweeper {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		IGridFactory gFact = new GridFactory(10, 20, 50);
+		IGridFactory gFact = new GridFactory(10, 20, 20);
 		MinesweeperController controller = new MinesweeperController(gFact);
 		TextUI tui = new TextUI(controller);
 		
 		controller.newGame();
-		controller.openCell(0, 0);
-		controller.openCell(1, 0);
-		controller.openCell(0, 1);
-		controller.openCell(1, 1);
-		controller.openCell(1, 1);
+		
+		boolean cont = true;
+		Scanner scanner = new Scanner(System.in);
+		while (cont) {
+			cont = tui.processLine(scanner.nextLine());
+		}
+		scanner.close();
 	}
 }
