@@ -90,8 +90,8 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 			// Get the number of flags around the requested cell
 			List<Cell> adjCells = grid.getAdjCells(row, col);
 			long flagCount = adjCells.stream().filter(Cell::isFlag).count();
-
-			if (flagCount != cell.getMines()) {
+			
+			if (flagCount == cell.getMines()) {
 				// If the number of flags matches the mine number, open all
 				// closed Cells expect Cells with a flag on it
 				adjCells.stream().filter(c -> c.getState() == State.CLOSED).forEach(c -> c.setState(State.OPENED));
