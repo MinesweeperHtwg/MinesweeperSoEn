@@ -71,7 +71,7 @@ public class Cell {
 	}
 
 	public String mkString() {
-		return "(" + col + ", " + row + ") = " + toString();
+		return "(" + row + ", " + col + ") = " + toString();
 	}
 
 	@Override
