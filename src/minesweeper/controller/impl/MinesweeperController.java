@@ -11,6 +11,7 @@ import minesweeper.util.observer.Observable;
 
 public class MinesweeperController extends Observable implements IMinesweeperController {
 	private String statusLine = "Welcome to Minesweeper!";
+	private boolean gameOver = false;
 	private Grid grid;
 	private IGridFactory gFact;
 
@@ -22,6 +23,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	@Override
 	public void newGame() {
 		grid = gFact.getGrid();
+		gameOver = false;
 		statusLine = "New game started";
 		notifyObservers();
 	}
@@ -34,10 +36,34 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		} else if (cell.isOpened()) {
 			statusLine = "The cell " + cell.mkString() + " can't be opened because it is already open";
 		} else {
-			cell.setState(State.OPENED);
-			statusLine = "The cell " + cell.mkString() + " has been opened";
+			executeOpenCell(cell);
 		}
 		notifyObservers();
+	}
+
+	private void executeOpenCell(Cell cell) {
+		cell.setState(State.OPENED);
+		if (cell.isMine()) {
+			gameOver = true;
+			statusLine = "Game over. Mine opened at " + cell.mkString();
+			return;
+		}
+		if (cell.getMines() == 0) {
+			floodOpen(cell);
+		}
+		statusLine = "The cell " + cell.mkString() + " has been opened";
+	}
+
+	private void floodOpen(Cell cell) {
+		List<Cell> adjCells = grid.getAdjCells(cell.getRow(), cell.getCol());
+		for (Cell adjCell : adjCells) {
+			if (adjCell.isClosed()) {
+				adjCell.setState(State.OPENED);
+				if (adjCell.getMines() == 0) {
+					floodOpen(adjCell);
+				}
+			}
+		}
 	}
 
 	@Override
