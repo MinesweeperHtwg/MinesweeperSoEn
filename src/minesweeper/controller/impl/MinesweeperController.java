@@ -28,8 +28,20 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		notifyObservers();
 	}
 
+	private boolean checkGameOver() {
+		if (gameOver) {
+			statusLine = "Game over";
+			notifyObservers();
+			return true;
+		}
+		return false;
+	}
+
 	@Override
 	public void openCell(int row, int col) {
+		if (checkGameOver()) {
+			return;
+		}
 		Cell cell = grid.getCell(row, col);
 		if (cell.isFlag()) {
 			statusLine = "The cell " + cell.mkString() + " can't be opened because it has a flag";
@@ -68,6 +80,9 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void openAround(int row, int col) {
+		if (checkGameOver()) {
+			return;
+		}
 		Cell cell = grid.getCell(row, col);
 		if (cell.isClosed()) {
 			statusLine = "Can't open cells around the cell " + cell.mkString() + " because it is closed";
@@ -91,15 +106,18 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void toggleFlag(int row, int col) {
+		if (checkGameOver()) {
+			return;
+		}
 		Cell cell = grid.getCell(row, col);
 		if (cell.isOpened()) {
 			statusLine = "The cell " + cell.mkString() + " can't have a flag because it is opened";
 		} else if (cell.isFlag()) {
 			cell.setState(State.CLOSED);
-			statusLine = "The cell " + cell.mkString() + " now has a Flag";
+			statusLine = "Flag removed at " + cell.mkString();
 		} else {
 			cell.setState(State.FLAG);
-			statusLine = "The cell " + cell.mkString() + " now has no Flag";
+			statusLine = "Flag set at " + cell.mkString();
 		}
 		notifyObservers();
 	}
