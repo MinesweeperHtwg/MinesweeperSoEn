@@ -60,26 +60,6 @@ public class GridTest {
     }
 
     @Test
-    public void testGetMines() {
-        assertEquals(1, grid.getMines(1, 1));
-    }
-
-    @Test
-    public void testIsFlag() {
-        assertEquals(true, grid.isFlag(1, 0));
-    }
-
-    @Test
-    public void testIsMine() {
-        assertEquals(true, grid.isMine(0, 1));
-    }
-
-    @Test
-    public void testIsOpened() {
-        assertEquals(true, grid.isOpened(1, 1));
-    }
-
-    @Test
     public void testCheckBounds() {
         thrown.expect(IllegalArgumentException.class);
         grid.getCell(0, 2);

@@ -25,7 +25,7 @@ public class Grid {
 
 	public Cell getCell(int row, int col) throws IllegalArgumentException {
 		if (!checkBounds(row, col)) {
-			throw new IllegalArgumentException("Index out of bounds");
+			throw new IllegalArgumentException("Cell does not exist at this location");
 		}
 		return cells[row][col];
 	}
@@ -36,22 +36,6 @@ public class Grid {
 
 	public int getWidth() {
 		return width;
-	}
-
-	public int getMines(int row, int col) {
-		return getCell(row, col).getMines();
-	}
-
-	public boolean isFlag(int row, int col) {
-		return getCell(row, col).isFlag();
-	}
-
-	public boolean isMine(int row, int col) {
-		return getCell(row, col).isMine();
-	}
-
-	public boolean isOpened(int row, int col) {
-		return getCell(row, col).isOpened();
 	}
 
 	public List<Cell> getCells() {
