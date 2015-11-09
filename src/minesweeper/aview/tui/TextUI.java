@@ -57,7 +57,7 @@ public class TextUI implements IObserver {
 		printTUI();
 	}
 
-	public void printTUI() {
+	private void printTUI() {
 		logger.info(NEWLINE + controller.getGridString());
 		logger.info(NEWLINE + controller.getStatusLine());
 		printCommands();
