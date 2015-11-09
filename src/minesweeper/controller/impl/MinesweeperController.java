@@ -44,9 +44,9 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 		Cell cell = grid.getCell(row, col);
 		if (cell.isFlag()) {
-			statusLine = "The cell " + cell.mkString() + " can't be opened because it has a flag";
+			statusLine = "Can't open " + cell.mkString() + " because there is a flag";
 		} else if (cell.isOpened()) {
-			statusLine = "The cell " + cell.mkString() + " can't be opened because it is already open";
+			statusLine = "Can't open " + cell.mkString() + " because the cell has been opened already";
 		} else {
 			executeOpenCell(cell);
 		}
@@ -63,7 +63,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		if (cell.getMines() == 0) {
 			floodOpen(cell);
 		}
-		statusLine = "The cell " + cell.mkString() + " has been opened";
+		statusLine =  "Opened "+ cell.mkString();
 	}
 
 	private void floodOpen(Cell cell) {
@@ -85,7 +85,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 		Cell cell = grid.getCell(row, col);
 		if (cell.isClosed()) {
-			statusLine = "Can't open cells around the cell " + cell.mkString() + " because it is closed";
+			statusLine = "Can't open cells around " + cell.mkString() + " because the cell is closed";
 		} else {
 			// Get the number of flags around the requested cell
 			List<Cell> adjCells = grid.getAdjCells(row, col);
@@ -95,9 +95,9 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 				// If the number of flags matches the mine number, open all
 				// closed Cells expect Cells with a flag on it
 				adjCells.stream().filter(c -> c.getState() == State.CLOSED).forEach(c -> c.setState(State.OPENED));
-				statusLine = "Opened all fields around the cell " + cell.mkString();
+				statusLine = "Opened all fields around " + cell.mkString();
 			} else {
-				statusLine = "Can't open cells around the cell " + cell.mkString()
+				statusLine = "Can't open cells around " + cell.mkString()
 						+ " because there is an incorrect number of flags around this cell";
 			}
 		}
@@ -111,7 +111,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 		Cell cell = grid.getCell(row, col);
 		if (cell.isOpened()) {
-			statusLine = "The cell " + cell.mkString() + " can't have a flag because it is opened";
+			statusLine = "Can't place flag at " + cell.mkString() + " because the cell has been opened";
 		} else if (cell.isFlag()) {
 			cell.setState(State.CLOSED);
 			statusLine = "Flag removed at " + cell.mkString();
