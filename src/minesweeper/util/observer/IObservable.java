@@ -1,5 +1,8 @@
 package minesweeper.util.observer;
 
+/**
+ * @author Marko Boger
+ */
 public interface IObservable {
 
 	 void addObserver(IObserver s);
