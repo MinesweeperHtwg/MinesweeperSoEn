@@ -95,7 +95,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 				// If the number of flags matches the mine number, open all
 				// closed Cells expect Cells with a flag on it
 				adjCells.stream().filter(c -> c.getState() == State.CLOSED).forEach(c -> c.setState(State.OPENED));
-				statusLine = "Opened all fields around " + cell.mkString();
+				statusLine = "Opened all cells around " + cell.mkString();
 			} else {
 				statusLine = "Can't open cells around " + cell.mkString()
 						+ " because there is an incorrect number of flags around this cell";
