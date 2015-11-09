@@ -9,16 +9,27 @@ public class GridFactory implements IGridFactory {
 	private int height;
 	private int width;
 	private int mines;
+	private int[][] mineLocations;
 
 	public GridFactory(int height, int width, int mines) {
 		if (height * width < mines) {
-			throw new IllegalArgumentException(
-					"Cant construct a grid with more mines than cells!");
+			throw new IllegalArgumentException("Cant construct a grid with more mines than cells");
 		}
 
 		this.height = height;
 		this.width = width;
 		this.mines = mines;
+	}
+
+	public GridFactory(int height, int width, int[][] mineLocations) {
+		for (int[] mineLocation : mineLocations) {
+			if (mineLocation.length != 2) {
+				throw new IllegalArgumentException("Wrong mine location format");
+			}
+		}
+		this.height = height;
+		this.width = width;
+		this.mineLocations = mineLocations;
 	}
 
 	/*
@@ -38,17 +49,34 @@ public class GridFactory implements IGridFactory {
 
 		Grid grid = new Grid(cells);
 
-		// Distribute mines on the grid
+		if (mineLocations == null) {
+			distributeMinesRandomly(grid);
+		} else {
+			distributeMinesSpecified(grid);
+		}
+		updateMineNumbers(grid);
+
+		return grid;
+	}
+
+	private void distributeMinesRandomly(Grid grid) {
 		List<Cell> cellList = grid.getCells();
 		Collections.shuffle(cellList);
 		for (int i = 0; i < mines; i++) {
 			cellList.get(i).setIsMine(true);
 		}
+	}
 
-		// Update Mines
+	private void distributeMinesSpecified(Grid grid) {
+		for (int[] mineLocation : mineLocations) {
+			grid.getCell(mineLocation[0], mineLocation[1]).setIsMine(true);
+		}
+	}
+
+	private void updateMineNumbers(Grid grid) {
+		List<Cell> cellList = grid.getCells();
 		for (Cell cell : cellList) {
-			List<Cell> adjCells = grid
-					.getAdjCells(cell.getRow(), cell.getCol());
+			List<Cell> adjCells = grid.getAdjCells(cell.getRow(), cell.getCol());
 			int adjMines = 0;
 			for (Cell adjCell : adjCells) {
 				if (adjCell.isMine()) {
@@ -57,8 +85,5 @@ public class GridFactory implements IGridFactory {
 			}
 			cell.setMines(adjMines);
 		}
-
-		return grid;
 	}
-
 }
