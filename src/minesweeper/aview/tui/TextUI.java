@@ -11,7 +11,7 @@ public class TextUI implements IObserver {
 
 	private MinesweeperController controller;
 
-	private static final Logger logger = Logger.getLogger(TextUI.class);
+	private static final Logger LOGGER = Logger.getLogger(TextUI.class);
 
 	public TextUI(MinesweeperController controller) {
 		this.controller = controller;
@@ -58,12 +58,12 @@ public class TextUI implements IObserver {
 	}
 
 	private void printTUI() {
-		logger.info(NEWLINE + controller.getGridString());
-		logger.info(NEWLINE + controller.getStatusLine());
+		LOGGER.info(NEWLINE + controller.getGridString());
+		LOGGER.info(NEWLINE + controller.getStatusLine());
 		printCommands();
 	}
 	
 	private void printCommands() {
-		logger.info(NEWLINE + "Commands: q|quit; n|new|newGame; o|open ROW COL; a|around ROW COL; f|flag ROW COL");
+		LOGGER.info(NEWLINE + "Commands: q|quit; n|new|newGame; o|open ROW COL; a|around ROW COL; f|flag ROW COL");
 	}
 }
