@@ -2,6 +2,8 @@ package minesweeper.model.impl;
 
 import static org.junit.Assert.*;
 import minesweeper.model.impl.Cell.State;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -100,6 +102,11 @@ public class CellTest {
     public void testSetMinesIllegal() {
         cell.setMines(-1);
     }
+    
+    @Test
+    public void testMkString() {
+    	assertEquals("(2, 1) =  ", cell.mkString());
+    }
 
     @Test
     public void testToString() {
@@ -118,26 +125,7 @@ public class CellTest {
     }
 
     @Test
-    public void testEquals() {
-        Cell c1 = new Cell(2, 1);
-        assertEquals(c1, c1);
-        assertFalse(c1.equals(null));
-        assertFalse(c1.equals(1));
-
-        Cell c2 = new Cell(2, 2);
-        assertFalse(c1.equals(c2));
-        c2 = new Cell(1, 1);
-        assertFalse(c1.equals(c2));
-        c2 = new Cell(2, 1);
-        c2.setState(State.FLAG);
-        assertFalse(c1.equals(c2));
-        c2.setState(State.CLOSED);
-        c2.setIsMine(true);
-        assertFalse(c1.equals(c2));
-        c2.setIsMine(false);
-        c2.setMines(1);
-        assertFalse(c1.equals(c2));
-        c2.setMines(0);
-        assertTrue(c1.equals(c2));
+    public void testEqualsContract() {
+    	EqualsVerifier.forClass(Cell.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 }
