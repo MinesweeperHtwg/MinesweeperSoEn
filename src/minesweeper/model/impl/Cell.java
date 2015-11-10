@@ -1,5 +1,8 @@
 package minesweeper.model.impl;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class Cell {
 	public enum State {
 		OPENED, CLOSED, FLAG
@@ -91,35 +94,21 @@ public class Cell {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + col;
-		result = prime * result + (isMine ? 1231 : 1237);
-		result = prime * result + mines;
-		result = prime * result + row;
-		result = prime * result + ((state == null) ? 0 : state.hashCode());
-		return result;
+		return new HashCodeBuilder().append(col).append(row).append(state).append(mines).append(isMine).toHashCode();
 	}
 
-	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
 			return true;
-		if (obj == null)
+		}
+		if (obj.getClass() != getClass()) {
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Cell other = (Cell) obj;
-		if (col != other.col)
-			return false;
-		if (isMine != other.isMine)
-			return false;
-		if (mines != other.mines)
-			return false;
-		if (row != other.row)
-			return false;
-		if (state != other.state)
-			return false;
-		return true;
+		}
+		Cell rhs = (Cell) obj;
+		return new EqualsBuilder().appendSuper(super.equals(obj)).append(col, rhs.col).append(row, rhs.row)
+				.append(state, rhs.state).append(isMine, rhs.isMine).isEquals();
 	}
 }
