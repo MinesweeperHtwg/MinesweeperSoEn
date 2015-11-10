@@ -108,7 +108,7 @@ public class Cell {
 			return false;
 		}
 		Cell rhs = (Cell) obj;
-		return new EqualsBuilder().appendSuper(super.equals(obj)).append(col, rhs.col).append(row, rhs.row)
-				.append(state, rhs.state).append(isMine, rhs.isMine).isEquals();
+		return new EqualsBuilder().append(col, rhs.col).append(row, rhs.row)
+				.append(state, rhs.state).append(mines, rhs.mines).append(isMine, rhs.isMine).isEquals();
 	}
 }
