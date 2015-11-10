@@ -25,6 +25,7 @@ idea {
 dependencies {
     compile group: 'com.google.inject',        name: 'guice',      version: '3.0'
     compile 'log4j:log4j:1.2.17'
+    compile 'org.apache.commons:commons-lang3:3.4'
     testCompile "junit:junit:4.11"
 }
 
