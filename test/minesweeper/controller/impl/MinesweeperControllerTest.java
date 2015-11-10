@@ -2,8 +2,6 @@ package minesweeper.controller.impl;
 
 import static org.junit.Assert.*;
 
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +9,7 @@ import minesweeper.model.impl.GridFactory;
 
 public class MinesweeperControllerTest {
 	private MinesweeperController controller;
-	
+
 	@Before
 	public void setUp() throws Exception {
 		int[][] mineLocations = { { 0, 0 }, { 0, 1 }, { 2, 2 } };
@@ -45,10 +43,10 @@ public class MinesweeperControllerTest {
 		controller.openCell(0, 0);
 		assertEquals("Game over. Mine opened at (0, 0) = M", controller.getStatusLine());
 	}
-	
+
 	@Test
 	public void testFloodOpen() {
-		int[][] mineLocations = { { 0, 0 },{3,3} };
+		int[][] mineLocations = { { 0, 0 }, { 3, 3 } };
 		controller = new MinesweeperController(new GridFactory(4, 4, mineLocations));
 		controller.openCell(3, 0);
 		assertEquals("Opened (3, 0) = 0", controller.getStatusLine());
@@ -87,7 +85,7 @@ public class MinesweeperControllerTest {
 
 	@Test
 	public void testGetStatusLine() {
-		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());		
+		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
 	}
 
 }
