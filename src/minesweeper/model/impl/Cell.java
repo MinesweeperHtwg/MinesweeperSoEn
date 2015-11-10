@@ -97,6 +97,7 @@ public final class Cell {
 		return new HashCodeBuilder().append(col).append(row).append(state).append(mines).append(isMine).toHashCode();
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) {
 			return false;
