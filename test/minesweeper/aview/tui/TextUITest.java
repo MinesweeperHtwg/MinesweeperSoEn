@@ -60,6 +60,14 @@ public class TextUITest {
 	}
 	
 	@Test
+	public void testIllegalLocation() {
+		assertTrue(tui.processLine("o 0 3"));
+		assertTrue(tui.processLine("f 3 0"));
+		assertTrue(tui.processLine("a 3 3"));
+		assertTrue(tui.processLine("o -1 3"));
+	}
+	
+	@Test
 	public void testIllegalComand() {
 		assertTrue(tui.processLine("foobar"));
 	}

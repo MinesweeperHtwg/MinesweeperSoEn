@@ -77,6 +77,11 @@ public class MinesweeperControllerTest {
 		controller.toggleFlag(1, 1);
 		assertEquals("Can't place flag at (1, 1) = 3 because the cell has been opened", controller.getStatusLine());
 	}
+	
+	@Test
+	public void testGetGameStats() {
+		assertTrue(controller.getGameStats().contains("Mines left: 3 Time: "));
+	}
 
 	@Test
 	public void testGetGridString() {

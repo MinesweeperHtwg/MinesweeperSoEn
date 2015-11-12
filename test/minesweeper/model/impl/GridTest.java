@@ -11,6 +11,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TestGenerator;
+
 public class GridTest {
     Grid grid;
     Cell[][] cells;
@@ -22,37 +24,11 @@ public class GridTest {
         cells[0][1] = new Cell(0, 1, State.OPENED,0,true);
         cells[1][0] = new Cell(1, 0, State.FLAG,0,false);
         cells[1][1] = new Cell(1, 1, State.OPENED,1,false);
-        grid = new Grid(cells);
+        grid = new Grid(cells,1);
     }
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
-
-    @Test
-    public void testGridNull() {
-        thrown.expect(IllegalArgumentException.class);
-        new Grid(null);
-    }
-
-    @Test
-    public void testGridIllegalArrayEmpty() {
-        thrown.expect(IllegalArgumentException.class);
-        new Grid(new Cell[0][]);
-    }
-
-    @Test
-    public void testGridIllegalArrayTwoDimensionsNull() {
-        thrown.expect(IllegalArgumentException.class);
-        Cell[][] cells = new Cell[10][10];
-        cells[0] = null;
-        new Grid(cells);
-    }
-
-    @Test
-    public void testGridIllegalArrayTwoDimensionsLengthZero() {
-        thrown.expect(IllegalArgumentException.class);
-        new Grid(new Cell[10][0]);
-    }
 
     @Test
     public void testGetCell() {
@@ -63,6 +39,27 @@ public class GridTest {
     public void testCheckBounds() {
         thrown.expect(IllegalArgumentException.class);
         grid.getCell(0, 2);
+    }
+    
+    @Test
+    public void testGetHeight() {
+    	assertEquals(2, grid.getHeight());
+    }
+    
+    @Test
+    public void testGetWidth() {
+    	assertEquals(2, grid.getWidth());
+    }
+    
+    @Test
+    public void testGetMines() {
+    	assertEquals(1, grid.getMines());
+    }
+    
+    @Test
+    public void testGetSecondsSinceCreated() {
+    	long seconds = grid.getSecondsSinceCreated();
+    	assertTrue(seconds >= 0 && seconds < 60);
     }
 
     @Test
