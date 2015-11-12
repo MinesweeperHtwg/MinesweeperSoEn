@@ -63,7 +63,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		if (cell.getMines() == 0) {
 			floodOpen(cell);
 		}
-		statusLine =  "Opened "+ cell.mkString();
+		statusLine = "Opened " + cell.mkString();
 	}
 
 	private void floodOpen(Cell cell) {
@@ -90,7 +90,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 			// Get the number of flags around the requested cell
 			List<Cell> adjCells = grid.getAdjCells(row, col);
 			long flagCount = adjCells.stream().filter(Cell::isFlag).count();
-			
+
 			if (flagCount == cell.getMines()) {
 				// If the number of flags matches the mine number, open all
 				// closed Cells expect Cells with a flag on it
