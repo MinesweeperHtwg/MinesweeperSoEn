@@ -66,8 +66,7 @@ public class TextUI implements IObserver {
 	}
 
 	private void printTUI() {
-		LOGGER.info(NEWLINE + controller.getGridString());
-		LOGGER.info(NEWLINE + controller.getStatusLine());
+		LOGGER.info(NEWLINE + controller.getGameStats() + NEWLINE + controller.getGridString() + NEWLINE + controller.getStatusLine());
 		printCommands();
 	}
 	

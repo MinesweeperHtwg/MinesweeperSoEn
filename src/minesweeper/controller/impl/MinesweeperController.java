@@ -11,7 +11,10 @@ import minesweeper.util.observer.Observable;
 
 public class MinesweeperController extends Observable implements IMinesweeperController {
 	private String statusLine = "Welcome to Minesweeper!";
+
 	private boolean gameOver = false;
+	private int flags = 0;
+
 	private Grid grid;
 	private IGridFactory gFact;
 
@@ -24,11 +27,12 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	public void newGame() {
 		grid = gFact.getGrid();
 		gameOver = false;
+		flags = 0;
 		statusLine = "New game started";
 		notifyObservers();
 	}
 
-	private boolean checkGameOver() {
+	private boolean checkGameEnd() {
 		if (gameOver) {
 			statusLine = "Game over";
 			notifyObservers();
@@ -39,7 +43,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void openCell(int row, int col) {
-		if (checkGameOver()) {
+		if (checkGameEnd()) {
 			return;
 		}
 		Cell cell = grid.getCell(row, col);
@@ -80,7 +84,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void openAround(int row, int col) {
-		if (checkGameOver()) {
+		if (checkGameEnd()) {
 			return;
 		}
 		Cell cell = grid.getCell(row, col);
@@ -106,7 +110,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void toggleFlag(int row, int col) {
-		if (checkGameOver()) {
+		if (checkGameEnd()) {
 			return;
 		}
 		Cell cell = grid.getCell(row, col);
@@ -115,11 +119,17 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		} else if (cell.isFlag()) {
 			cell.setState(State.CLOSED);
 			statusLine = "Flag removed at " + cell.mkString();
+			flags--;
 		} else {
 			cell.setState(State.FLAG);
 			statusLine = "Flag set at " + cell.mkString();
+			flags++;
 		}
 		notifyObservers();
+	}
+
+	public String getGameStats() {
+		return "Mines left: " + (grid.getMines() - flags) + " Time: " + grid.getSecondsSinceCreated() + "s";
 	}
 
 	@Override

@@ -47,11 +47,13 @@ public class GridFactory implements IGridFactory {
 			}
 		}
 
-		Grid grid = new Grid(cells);
+		Grid grid;
 
 		if (mineLocations == null) {
+			grid = new Grid(cells, mines);
 			distributeMinesRandomly(grid);
 		} else {
+			grid = new Grid(cells, mineLocations.length);
 			distributeMinesSpecified(grid);
 		}
 		updateMineNumbers(grid);

@@ -1,5 +1,7 @@
 package minesweeper.model.impl;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -8,17 +10,18 @@ import java.util.stream.Collectors;
 
 public class Grid {
 	private Cell[][] cells;
+	private final int mines;
 	private final int height;
 	private final int width;
+	private final Instant created;
 
 	private static final int[][] adjCord = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 },
 			{ 1, 1 } };
 
-	protected Grid(Cell[][] cells) {
-		if (cells == null || cells.length < 1 || cells[0] == null || cells[0].length < 1) {
-			throw new IllegalArgumentException("Cells input array illegal");
-		}
+	protected Grid(Cell[][] cells, int mines) {
 		this.cells = cells;
+		this.mines = mines;
+		this.created = Instant.now();
 		height = cells.length;
 		width = cells[0].length;
 	}
@@ -36,6 +39,14 @@ public class Grid {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public int getMines() {
+		return mines;
+	}
+
+	public long getSecondsSinceCreated() {
+		return Duration.between(created, Instant.now()).getSeconds();
 	}
 
 	public List<Cell> getCells() {
