@@ -38,17 +38,25 @@ public class TextUI implements IObserver {
 	}
 
 	private void processCordLine(String line) {
-		if (line.matches("(o|open) \\d+ \\d+")) {
-			String[] args = line.split(" ");
-			controller.openCell(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
-		} else if (line.matches("(a|around) \\d+ \\d+")) {
-			String[] args = line.split(" ");
-			controller.openAround(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
-		} else if (line.matches("(f|flag) \\d+ \\d+")) {
-			String[] args = line.split(" ");
-			controller.toggleFlag(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
-		} else {
-			printCommands();
+		try {
+			if (line.matches("(o|open) \\d+ \\d+")) {
+				String[] args = line.split(" ");
+				controller.openCell(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+			} else if (line.matches("(a|around) \\d+ \\d+")) {
+				String[] args = line.split(" ");
+				controller.openAround(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+			} else if (line.matches("(f|flag) \\d+ \\d+")) {
+				String[] args = line.split(" ");
+				controller.toggleFlag(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+			} else {
+				printCommands();
+			}
+		} catch (IllegalArgumentException e) {
+			if (e.getMessage() == "Cell does not exist at this location") {
+				printCommands();
+			} else {
+				throw e;
+			}
 		}
 	}
 
