@@ -1,5 +1,7 @@
 package minesweeper.model.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -59,13 +61,12 @@ public final class Cell {
 		return state == State.OPENED;
 	}
 
-	public void setIsMine(boolean isMine) {
+	protected void setIsMine(boolean isMine) {
 		this.isMine = isMine;
 	}
 
-	public void setMines(int mines) {
-		if (mines < 0)
-			throw new IllegalArgumentException("Surrounding mines should not be negative.");
+	protected void setMines(int mines) {
+		checkArgument(mines >= 0,"Surrounding mines should be positive");
 		this.mines = mines;
 	}
 
