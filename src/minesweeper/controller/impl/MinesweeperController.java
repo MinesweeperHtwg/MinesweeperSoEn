@@ -12,6 +12,7 @@ import minesweeper.util.observer.Observable;
 public class MinesweeperController extends Observable implements IMinesweeperController {
 	private String statusLine = "Welcome to Minesweeper!";
 
+	//TODO: Add win
 	private boolean gameOver = false;
 	private int flags = 0;
 
@@ -82,7 +83,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 	}
 
-	//TODO: Wrong flags end game
+	//TODO: Fix bug: Wrong flags end game
 	@Override
 	public void openAround(int row, int col) {
 		if (checkGameEnd()) {
