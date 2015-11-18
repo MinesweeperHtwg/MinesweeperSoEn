@@ -80,7 +80,7 @@ public class MinesweeperControllerTest {
 	
 	@Test
 	public void testGetGameStats() {
-		assertTrue(controller.getGameStats().contains("Mines left: 3 Time: "));
+		assertTrue(controller.getGameStats().contains("Unflagged mines left: 3 Time: "));
 	}
 
 	@Test

@@ -82,6 +82,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 	}
 
+	//TODO: Wrong flags end game
 	@Override
 	public void openAround(int row, int col) {
 		if (checkGameEnd()) {
@@ -129,7 +130,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	}
 
 	public String getGameStats() {
-		return "Mines left: " + (grid.getMines() - flags) + " Time: " + grid.getSecondsSinceCreated() + "s";
+		return "Unflagged mines left: " + (grid.getMines() - flags) + " Time: " + grid.getSecondsSinceCreated() + "s";
 	}
 
 	@Override

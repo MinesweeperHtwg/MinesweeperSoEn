@@ -11,8 +11,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.TestGenerator;
-
 public class GridTest {
     Grid grid;
     Cell[][] cells;
