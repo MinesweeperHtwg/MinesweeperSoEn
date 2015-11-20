@@ -11,6 +11,7 @@ public class GridFactory implements IGridFactory {
     private final int mines;
     private final int[][] mineLocations;
 
+    //TODO: Strategy pattern for different mine place modes
     //TODO: Add parameter for first click
     public GridFactory(int height, int width, int mines) {
         if (height * width < mines) {
