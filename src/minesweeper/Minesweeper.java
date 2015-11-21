@@ -17,11 +17,10 @@ public class Minesweeper {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		IGridFactory gFact = new GridFactory(10, 20).mines(20).random();
+		IGridFactory gFact = new GridFactory();
 		MinesweeperController controller = new MinesweeperController(gFact);
 		TextUI tui = new TextUI(controller);
-
-		controller.newGame();
+		controller.changeSettings(10, 20, 10);
 
 		boolean cont = true;
 		Scanner scanner = new Scanner(System.in);

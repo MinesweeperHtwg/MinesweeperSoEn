@@ -7,6 +7,7 @@ import minesweeper.model.ICell;
 import minesweeper.model.ICell.State;
 import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
+import minesweeper.model.IGridFactory.Strategy;
 import minesweeper.util.observer.Observable;
 
 public class MinesweeperController extends Observable implements IMinesweeperController {
@@ -16,8 +17,8 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		RUNNING, FIRSTCLICK, WIN, LOOSE
 	}
 
-	private GameStatus gameStatus = GameStatus.RUNNING;
-	private int flags = 0;
+	private GameStatus gameStatus;
+	private int flags;
 	private int openFields;
 
 	private IGrid<ICell> grid;
@@ -25,25 +26,36 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	public MinesweeperController(IGridFactory gFact) {
 		this.gFact = gFact;
-		changeSettings(10, 20, 10);
+		try {
+			reset();
+		} catch (IllegalStateException e) {
+			// gFact isn't set up yet, caller must use changeSettings
+		}
 	}
 
 	@Override
 	public void changeSettings(int height, int width, int mines) {
 		gFact.size(height, width).mines(mines).random();
-		newGame();
+		reset();
+		notifyObservers();
 	}
 
 	@Override
 	public void newGame() {
+		reset();
+		statusLine = "New game started";
+		notifyObservers();
+	}
+
+	private void reset() {
 		grid = gFact.getGrid();
-		gameStatus = GameStatus.FIRSTCLICK;
+		if (gFact.getStrategy() == Strategy.SPECIFIED) {
+			gameStatus = GameStatus.RUNNING;
+		} else {
+			gameStatus = GameStatus.FIRSTCLICK;
+		}
 		flags = 0;
 		openFields = grid.getHeight() * grid.getWidth();
-		if (!statusLine.equals("Welcome to Minesweeper!")) {
-			statusLine = "New game started";
-		}
-		notifyObservers();
 	}
 
 	private boolean checkGameEnd() {
@@ -61,7 +73,6 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 	}
 
-	// TODO: First click cant be a mine
 	@Override
 	public void openCell(int row, int col) {
 		if (checkGameEnd()) {

@@ -2,12 +2,18 @@ package minesweeper.model;
 
 public interface IGridFactory {
 
+	public enum Strategy {
+		RANDOM, RANDOMCLEAR, SPECIFIED
+	}
+
 	/**
 	 * Returns a generated grid
 	 * 
 	 * @return a generated grid
 	 */
 	IGrid<ICell> getGrid();
+
+	Strategy getStrategy();
 
 	IGridFactory specified(int[][] mineLocations);
 

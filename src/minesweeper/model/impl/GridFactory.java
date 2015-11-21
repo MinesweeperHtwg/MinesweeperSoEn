@@ -16,6 +16,7 @@ public class GridFactory implements IGridFactory {
 	private int width;
 	private int mines = -1;
 	private IMineDistributeStrategy distributor;
+	private Strategy strategy;
 
 	public GridFactory() {
 	}
@@ -41,6 +42,7 @@ public class GridFactory implements IGridFactory {
 	public IGridFactory random() {
 		checkMines();
 		distributor = new RandomDistribute(mines);
+		strategy = Strategy.RANDOM;
 		return this;
 	}
 
@@ -48,6 +50,7 @@ public class GridFactory implements IGridFactory {
 	public IGridFactory randomClear(int rowClear, int colClear) {
 		checkMines();
 		distributor = new RandomClearDistribute(mines, rowClear, colClear);
+		strategy = Strategy.RANDOMCLEAR;
 		return this;
 	}
 
@@ -63,6 +66,7 @@ public class GridFactory implements IGridFactory {
 			}
 		}
 		distributor = new SpecifiedDistribute(mineLocations);
+		strategy = Strategy.SPECIFIED;
 		this.mines = mineLocations.length;
 		return this;
 	}
@@ -127,5 +131,10 @@ public class GridFactory implements IGridFactory {
 			}
 			cell.setMines(adjMines);
 		}
+	}
+
+	@Override
+	public Strategy getStrategy() {
+		return strategy;
 	}
 }
