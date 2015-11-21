@@ -9,4 +9,12 @@ public interface IGridFactory {
 	 */
 	public abstract IGrid<ICell> getGrid();
 
+	IGridFactory specified(int[][] mineLocations);
+
+	IGridFactory randomClear(int mines, int rowClear, int colClear);
+
+	IGridFactory random(int mines);
+
+	IGridFactory size(int height, int width);
+
 }

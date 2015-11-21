@@ -18,23 +18,23 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomIllegalNumberOfMines() {
-		new GridFactory(2, 2).random(4);
+		new GridFactory(2, 2).random(4).getGrid();
 		thrown.expect(IllegalArgumentException.class);
-		new GridFactory(2, 2).random(5);
+		new GridFactory(2, 2).random(5).getGrid();
 	}
 
 	@Test
 	public void testRandomClearIllegalNumberOfMines() {
-		new GridFactory(2, 2).randomClear(3, 0, 0);
+		new GridFactory(2, 2).randomClear(3, 0, 0).getGrid();
 		thrown.expect(IllegalArgumentException.class);
-		new GridFactory(2, 2).randomClear(4, 0, 0);
+		new GridFactory(2, 2).randomClear(4, 0, 0).getGrid();
 	}
 
 	@Test
 	public void testSpecifiedIllegalNumberOfMines() {
-		new GridFactory(2, 2).specified(new int[][] { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 } });
+		new GridFactory(2, 2).specified(new int[][] { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 } }).getGrid();
 		thrown.expect(IllegalArgumentException.class);
-		new GridFactory(2, 2).specified(new int[][] { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 }, { 1, 2 } });
+		new GridFactory(2, 2).specified(new int[][] { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 }, { 1, 2 } }).getGrid();
 	}
 
 	@Test

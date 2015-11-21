@@ -1,5 +1,8 @@
 package minesweeper.model.impl;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkState;
+
 import java.util.List;
 
 import minesweeper.model.ICell;
@@ -9,32 +12,41 @@ import minesweeper.model.IGridFactory;
 import minesweeper.model.IMineDistributeStrategy;
 
 public class GridFactory implements IGridFactory {
-	private final int height;
-	private final int width;
+	private int height;
+	private int width;
 	private int mines;
 	private IMineDistributeStrategy distributor;
 
-	public GridFactory(int height, int width) {
-		this.height = height;
-		this.width = width;
+	public GridFactory() {
 	}
 
-	public GridFactory random(int mines) {
-		checkParameters(height * width, mines);
+	public GridFactory(int height, int width) {
+		size(height, width);
+	}
+
+	@Override
+	public IGridFactory size(int height, int width) {
+		this.height = height;
+		this.width = width;
+		return this;
+	}
+
+	@Override
+	public IGridFactory random(int mines) {
 		distributor = new RandomDistribute(mines);
 		this.mines = mines;
 		return this;
 	}
 
-	public GridFactory randomClear(int mines, int rowClear, int colClear) {
-		checkParameters(height * width - 1, mines);
+	@Override
+	public IGridFactory randomClear(int mines, int rowClear, int colClear) {
 		distributor = new RandomClearDistribute(mines, rowClear, colClear);
 		this.mines = mines;
 		return this;
 	}
 
-	public GridFactory specified(int[][] mineLocations) {
-		checkParameters(height * width, mineLocations.length);
+	@Override
+	public IGridFactory specified(int[][] mineLocations) {
 		for (int[] mineLocation : mineLocations) {
 			if (mineLocation.length != 2) {
 				throw new IllegalArgumentException("Wrong mine location format");
@@ -45,7 +57,7 @@ public class GridFactory implements IGridFactory {
 		return this;
 	}
 
-	private void checkParameters(int cells, int mines) {
+	private void checkCellMineCount(int cells, int mines) {
 		if (cells < mines) {
 			throw new IllegalArgumentException("Cant construct a grid with more mines than cells");
 		}
@@ -58,8 +70,12 @@ public class GridFactory implements IGridFactory {
 	 */
 	@Override
 	public IGrid<ICell> getGrid() {
-		if (distributor == null) {
-			throw new IllegalStateException("Must specify mine placement before calling getGrid()");
+		checkState(distributor != null, "Must specify mine placement before calling getGrid");
+		checkArgument(height > 0 && width > 0, "Dimensions must be bigger than 0");
+		if (distributor instanceof RandomClearDistribute) {
+			checkCellMineCount(height * width - 1, mines);
+		} else {
+			checkCellMineCount(height * width, mines);
 		}
 
 		ICellMutable[][] cells = getEmptyCells();

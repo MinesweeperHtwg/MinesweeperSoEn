@@ -66,10 +66,11 @@ public class TextUI implements IObserver {
 	}
 
 	private void printTUI() {
-		LOGGER.info(NEWLINE + controller.getGameStats() + NEWLINE + controller.getGridString() + NEWLINE + controller.getStatusLine());
+		LOGGER.info(NEWLINE + controller.getGameStats() + NEWLINE + controller.getGridString() + NEWLINE
+				+ controller.getStatusLine());
 		printCommands();
 	}
-	
+
 	private void printCommands() {
 		LOGGER.info(NEWLINE + "Commands: q|quit; n|new|newGame; o|open ROW COL; a|around ROW COL; f|flag ROW COL");
 	}
