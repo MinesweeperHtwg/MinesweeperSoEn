@@ -57,7 +57,7 @@ public class TextUI implements IObserver {
 				printCommands();
 			}
 		} catch (IllegalArgumentException e) {
-			if (e.getMessage() == "Cell does not exist at this location") {
+			if (e.getMessage().equals("Cell does not exist at this location")) {
 				printCommands();
 			} else {
 				throw e;

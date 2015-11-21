@@ -92,7 +92,7 @@ public class GridFactory implements IGridFactory {
 	}
 
 	private void checkReadyForReturn() {
-		checkState(distributor != null, "Must specify mine placement before calling getGrid");
+		checkState(distributor != null, "Mine placement not specified");
 		checkArgument(height > 0 && width > 0, "Dimensions must be bigger than 0");
 		if (distributor instanceof RandomClearDistribute) {
 			checkCellMineCount(height * width - 1, mines);

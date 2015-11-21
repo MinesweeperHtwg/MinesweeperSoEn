@@ -29,8 +29,13 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		try {
 			reset();
 		} catch (IllegalStateException e) {
-			// gFact isn't set up yet, caller must use changeSettings
-			gameStatus = GameStatus.SETUPNEEDED;
+			if (e.getMessage().equals("Mine placement not specified")) {
+				// gFact isn't set up yet, caller must use changeSettings
+				gameStatus = GameStatus.SETUPNEEDED;
+			} else {
+				throw e;
+			}
+
 		}
 	}
 
@@ -65,6 +70,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private boolean checkStatus() {
 		switch (gameStatus) {
 		case RUNNING:
+			return false;
 		case FIRSTCLICK:
 			return false;
 		case LOOSE:
@@ -78,7 +84,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		case SETUPNEEDED:
 			return true;
 		default:
-			throw new RuntimeException("Enum changed!");
+			throw new IllegalStateException("Enum added!");
 		}
 	}
 
