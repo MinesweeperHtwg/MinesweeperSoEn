@@ -1,101 +1,96 @@
 package minesweeper.model.impl;
 
-import java.util.Collections;
 import java.util.List;
 
 import minesweeper.model.IGridFactory;
+import minesweeper.model.IMineDistributeStrategy;
 
 public class GridFactory implements IGridFactory {
-    private final int height;
-    private final int width;
-    private final int mines;
-    private final int[][] mineLocations;
+	private final int height;
+	private final int width;
+	private int mines;
+	private IMineDistributeStrategy distributor;
 
-    //TODO: Strategy pattern for different constructors
-    //TODO: Add parameter for first click
-    public GridFactory(int height, int width, int mines) {
-        if (height * width < mines) {
-            throw new IllegalArgumentException(
-                    "Cant construct a grid with more mines than cells");
-        }
-        this.height = height;
-        this.width = width;
-        this.mines = mines;
-        this.mineLocations = null;
-    }
+	public GridFactory(int height, int width) {
+		this.height = height;
+		this.width = width;
+	}
 
-    public GridFactory(int height, int width, int[][] mineLocations) {
-        for (int[] mineLocation : mineLocations) {
-            if (mineLocation.length != 2) {
-                throw new IllegalArgumentException(
-                        "Wrong mine location format");
-            }
-        }
-        if (height * width < mineLocations.length) {
-            throw new IllegalArgumentException(
-                    "Cant construct a grid with more mines than cells");
-        }
+	public GridFactory random(int mines) {
+		checkParameters(height * width, mines);
+		distributor = new RandomDistribute(mines);
+		this.mines = mines;
+		return this;
+	}
 
-        this.mines = mineLocations.length;
-        this.height = height;
-        this.width = width;
-        this.mineLocations = mineLocations;
-    }
+	public GridFactory randomClear(int mines, int rowClear, int colClear) {
+		checkParameters(height * width - 1, mines);
+		distributor = new RandomClearDistribute(mines, rowClear, colClear);
+		this.mines = mines;
+		return this;
+	}
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see minesweeper.model.impl.IGridFactory#getGrid()
-     */
-    @Override
-    public Grid getGrid() {
-        Cell[][] cells = new Cell[height][width];
+	public GridFactory specified(int[][] mineLocations) {
+		checkParameters(height * width, mineLocations.length);
+		for (int[] mineLocation : mineLocations) {
+			if (mineLocation.length != 2) {
+				throw new IllegalArgumentException("Wrong mine location format");
+			}
+		}
+		distributor = new SpecifiedDistribute(mineLocations);
+		this.mines = mineLocations.length;
+		return this;
+	}
 
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < width; col++) {
-                cells[row][col] = new Cell(row, col);
-            }
-        }
+	private void checkParameters(int cells, int mines) {
+		if (cells < mines) {
+			throw new IllegalArgumentException("Cant construct a grid with more mines than cells");
+		}
+	}
 
-        Grid grid = new Grid(cells, mines);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see minesweeper.model.impl.IGridFactory#getGrid()
+	 */
+	@Override
+	public Grid getGrid() {
+		if (distributor == null) {
+			throw new IllegalStateException("Must specify mine placement before calling getGrid()");
+		}
 
-        if (mineLocations == null) {
-            distributeMinesRandomly(grid);
-        } else {
-            distributeMinesSpecified(grid);
-        }
-        updateMineNumbers(grid);
+		Grid grid = getInitalGrid();
 
-        return grid;
-    }
+		distributor.distributeMines(grid);
 
-    //TODO: Dont place on clicked field
-    private void distributeMinesRandomly(Grid grid) {
-        List<Cell> cellList = grid.getCells();
-        Collections.shuffle(cellList);
-        for (int i = 0; i < mines; i++) {
-            cellList.get(i).setIsMine(true);
-        }
-    }
+		updateMineNumbers(grid);
 
-    private void distributeMinesSpecified(Grid grid) {
-        for (int[] mineLocation : mineLocations) {
-            grid.getCell(mineLocation[0], mineLocation[1]).setIsMine(true);
-        }
-    }
+		return grid;
+	}
 
-    private void updateMineNumbers(Grid grid) {
-        List<Cell> cellList = grid.getCells();
-        for (Cell cell : cellList) {
-            List<Cell> adjCells = grid.getAdjCells(cell.getRow(),
-                    cell.getCol());
-            int adjMines = 0;
-            for (Cell adjCell : adjCells) {
-                if (adjCell.isMine()) {
-                    adjMines++;
-                }
-            }
-            cell.setMines(adjMines);
-        }
-    }
+	private Grid getInitalGrid() {
+		Cell[][] cells = new Cell[height][width];
+
+		for (int row = 0; row < height; row++) {
+			for (int col = 0; col < width; col++) {
+				cells[row][col] = new Cell(row, col);
+			}
+		}
+
+		return new Grid(cells, mines);
+	}
+
+	private void updateMineNumbers(Grid grid) {
+		List<Cell> cellList = grid.getCells();
+		for (Cell cell : cellList) {
+			List<Cell> adjCells = grid.getAdjCells(cell.getRow(), cell.getCol());
+			int adjMines = 0;
+			for (Cell adjCell : adjCells) {
+				if (adjCell.isMine()) {
+					adjMines++;
+				}
+			}
+			cell.setMines(adjMines);
+		}
+	}
 }

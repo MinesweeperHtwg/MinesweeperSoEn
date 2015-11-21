@@ -1,6 +1,7 @@
 package minesweeper.controller.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +14,7 @@ public class MinesweeperControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		int[][] mineLocations = { { 0, 0 }, { 0, 1 }, { 2, 2 } };
-		controller = new MinesweeperController(new GridFactory(3, 3, mineLocations));
+		controller = new MinesweeperController(new GridFactory(3, 3).specified(mineLocations));
 	}
 
 	@Test
@@ -47,7 +48,7 @@ public class MinesweeperControllerTest {
 	@Test
 	public void testFloodOpen() {
 		int[][] mineLocations = { { 0, 0 }, { 3, 3 } };
-		controller = new MinesweeperController(new GridFactory(4, 4, mineLocations));
+		controller = new MinesweeperController(new GridFactory(4, 4).specified(mineLocations));
 		controller.openCell(3, 0);
 		assertEquals("Opened (3, 0) = 0", controller.getStatusLine());
 		assertEquals(" |1|0|0\n1|1|0|0\n0|0|1|1\n0|0|1| ", controller.getGridString());
@@ -77,7 +78,7 @@ public class MinesweeperControllerTest {
 		controller.toggleFlag(1, 1);
 		assertEquals("Can't place flag at (1, 1) = 3 because the cell has been opened", controller.getStatusLine());
 	}
-	
+
 	@Test
 	public void testGetGameStats() {
 		assertTrue(controller.getGameStats().contains("Unflagged mines left: 3 Time: "));

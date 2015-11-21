@@ -1,6 +1,8 @@
 package minesweeper.aview.tui;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
@@ -19,7 +21,7 @@ public class TextUITest {
 		PropertyConfigurator.configure("log4j.properties");
 
 		int[][] mineLocations = { { 0, 0 }, { 0, 1 }, { 2, 2 } };
-		controller = new MinesweeperController(new GridFactory(3, 3, mineLocations));
+		controller = new MinesweeperController(new GridFactory(3, 3).specified(mineLocations));
 		tui = new TextUI(controller);
 	}
 
@@ -58,7 +60,7 @@ public class TextUITest {
 		assertTrue(tui.processLine("f 0 0"));
 		assertEquals("Flag set at (0, 0) = F", controller.getStatusLine());
 	}
-	
+
 	@Test
 	public void testIllegalLocation() {
 		assertTrue(tui.processLine("o 0 3"));
@@ -66,7 +68,7 @@ public class TextUITest {
 		assertTrue(tui.processLine("a 3 3"));
 		assertTrue(tui.processLine("o -1 3"));
 	}
-	
+
 	@Test
 	public void testIllegalComand() {
 		assertTrue(tui.processLine("foobar"));
