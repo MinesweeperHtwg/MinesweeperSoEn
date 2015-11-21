@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import minesweeper.model.ICell;
+
 public class GridFactoryTest {
 
 	@Rule
@@ -48,23 +50,23 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomGetGrid() {
-		Grid grid = new GridFactory(5, 10).random(10).getGrid();
+		Grid<ICell> grid = new GridFactory(5, 10).random(10).getGrid();
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
 
-		long mines = grid.getCells().stream().filter(Cell::isMine).count();
+		long mines = grid.getCells().stream().filter(ICell::isMine).count();
 		assertEquals(10, mines);
 	}
 
 	@Test
 	public void testRandomClearGetGrid() {
-		Grid grid = new GridFactory(5, 10).randomClear(49, 1, 2).getGrid();
+		Grid<ICell> grid = new GridFactory(5, 10).randomClear(49, 1, 2).getGrid();
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
 
-		long mines = grid.getCells().stream().filter(Cell::isMine).count();
+		long mines = grid.getCells().stream().filter(ICell::isMine).count();
 		assertEquals(49, mines);
 
 		assertFalse(grid.getCell(1, 2).isMine());
@@ -73,11 +75,11 @@ public class GridFactoryTest {
 	@Test
 	public void testSpecifiedGetGrid() {
 		int[][] mineLocations = new int[][] { { 0, 0 }, { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 } };
-		Grid grid = new GridFactory(5, 10).specified(mineLocations).getGrid();
+		Grid<ICell> grid = new GridFactory(5, 10).specified(mineLocations).getGrid();
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
 
-		long mines = grid.getCells().stream().filter(Cell::isMine).count();
+		long mines = grid.getCells().stream().filter(ICell::isMine).count();
 		assertEquals(5, mines);
 
 		for (int i = 0; i < 5; i++) {

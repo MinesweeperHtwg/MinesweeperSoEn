@@ -3,8 +3,8 @@ package minesweeper.controller.impl;
 import java.util.List;
 
 import minesweeper.controller.IMinesweeperController;
+import minesweeper.model.ICell;
 import minesweeper.model.IGridFactory;
-import minesweeper.model.impl.Cell;
 import minesweeper.model.impl.Cell.State;
 import minesweeper.model.impl.Grid;
 import minesweeper.util.observer.Observable;
@@ -20,7 +20,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private int flags = 0;
 	private int openFields;
 
-	private Grid grid;
+	private Grid<ICell> grid;
 	private IGridFactory gFact;
 
 	public MinesweeperController(IGridFactory gFact) {
@@ -60,7 +60,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		if (checkGameEnd()) {
 			return;
 		}
-		Cell cell = grid.getCell(row, col);
+		ICell cell = grid.getCell(row, col);
 		if (cell.isFlag()) {
 			statusLine = "Can't open " + cell.mkString() + " because there is a flag";
 		} else if (cell.isOpened()) {
@@ -71,7 +71,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		notifyObservers();
 	}
 
-	private void executeOpenCell(Cell cell) {
+	private void executeOpenCell(ICell cell) {
 		cell.setState(State.OPENED);
 		openFields--;
 		if (cell.isMine()) {
@@ -90,9 +90,9 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		checkWin();
 	}
 
-	private void floodOpen(Cell cell) {
-		List<Cell> adjCells = grid.getAdjCells(cell.getRow(), cell.getCol());
-		for (Cell adjCell : adjCells) {
+	private void floodOpen(ICell cell) {
+		List<ICell> adjCells = grid.getAdjCells(cell.getRow(), cell.getCol());
+		for (ICell adjCell : adjCells) {
 			if (adjCell.getState() == State.CLOSED) {
 				adjCell.setState(State.OPENED);
 				openFields--;
@@ -115,12 +115,12 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		if (checkGameEnd()) {
 			return;
 		}
-		Cell cell = grid.getCell(row, col);
+		ICell cell = grid.getCell(row, col);
 		if (cell.isClosed()) {
 			statusLine = "Can't open cells around " + cell.mkString() + " because the cell is closed";
 		} else {
-			List<Cell> adjCells = grid.getAdjCells(row, col);
-			long flagCount = adjCells.stream().filter(Cell::isFlag).count();
+			List<ICell> adjCells = grid.getAdjCells(row, col);
+			long flagCount = adjCells.stream().filter(ICell::isFlag).count();
 
 			if (flagCount == cell.getMines()) {
 				adjCells.stream().filter(c -> c.getState() == State.CLOSED).forEach(c -> executeOpenCell(c));
@@ -141,7 +141,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		if (checkGameEnd()) {
 			return;
 		}
-		Cell cell = grid.getCell(row, col);
+		ICell cell = grid.getCell(row, col);
 		if (cell.isOpened()) {
 			statusLine = "Can't place flag at " + cell.mkString() + " because the cell has been opened";
 		} else if (cell.isFlag()) {

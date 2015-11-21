@@ -5,114 +5,126 @@ import static com.google.common.base.Preconditions.checkArgument;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-public final class Cell {
-    public enum State {
-        OPENED, CLOSED, FLAG
-    }
+import minesweeper.model.ICellMutable;
 
-    private final int col;
-    private final int row;
-    private State state;
-    private int mines;
+public final class Cell implements ICellMutable {
+	public enum State {
+		OPENED, CLOSED, FLAG
+	}
 
-    private boolean isMine;
+	private final int col;
+	private final int row;
+	private State state;
+	private int mines;
 
-    public Cell(int row, int col) {
-        this(row, col, State.CLOSED, 0, false);
-    }
+	private boolean isMine;
 
-    public Cell(int row, int col, State state, int mines, boolean isMine) {
-        this.col = col;
-        this.row = row;
-        setMines(mines);
-        setState(state);
-        setIsMine(isMine);
-    }
+	public Cell(int row, int col) {
+		this(row, col, State.CLOSED, 0, false);
+	}
 
-    public int getCol() {
-        return col;
-    }
+	public Cell(int row, int col, State state, int mines, boolean isMine) {
+		this.col = col;
+		this.row = row;
+		setMines(mines);
+		setState(state);
+		setIsMine(isMine);
+	}
 
-    public int getRow() {
-        return row;
-    }
+	@Override
+	public int getCol() {
+		return col;
+	}
 
-    public int getMines() {
-        return mines;
-    }
+	@Override
+	public int getRow() {
+		return row;
+	}
 
-    public State getState() {
-        return state;
-    }
+	@Override
+	public int getMines() {
+		return mines;
+	}
 
-    public boolean isClosed() {
-        return state != State.OPENED;
-    }
+	@Override
+	public State getState() {
+		return state;
+	}
 
-    public boolean isFlag() {
-        return state == State.FLAG;
-    }
+	@Override
+	public boolean isClosed() {
+		return state != State.OPENED;
+	}
 
-    public boolean isMine() {
-        return isMine;
-    }
+	@Override
+	public boolean isFlag() {
+		return state == State.FLAG;
+	}
 
-    public boolean isOpened() {
-        return state == State.OPENED;
-    }
+	@Override
+	public boolean isMine() {
+		return isMine;
+	}
 
-    protected void setIsMine(boolean isMine) {
-        this.isMine = isMine;
-    }
+	@Override
+	public boolean isOpened() {
+		return state == State.OPENED;
+	}
 
-    protected void setMines(int mines) {
-        checkArgument(mines >= 0, "Surrounding mines should be positive");
-        this.mines = mines;
-    }
+	@Override
+	public void setIsMine(boolean isMine) {
+		this.isMine = isMine;
+	}
 
-    public void setState(State state) {
-        this.state = state;
-    }
+	@Override
+	public void setMines(int mines) {
+		checkArgument(mines >= 0, "Surrounding mines should be positive");
+		this.mines = mines;
+	}
 
-    public String mkString() {
-        return "(" + row + ", " + col + ") = " + toString();
-    }
+	@Override
+	public void setState(State state) {
+		this.state = state;
+	}
 
-    @Override
-    public String toString() {
-        switch (state) {
-        case CLOSED:
-            return " ";
-        case FLAG:
-            return "F";
-        default:
-            if (isMine) {
-                return "M";
-            }
-            return String.valueOf(mines);
-        }
-    }
+	@Override
+	public String mkString() {
+		return "(" + row + ", " + col + ") = " + toString();
+	}
 
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder().append(col).append(row).append(state)
-                .append(mines).append(isMine).toHashCode();
-    }
+	@Override
+	public String toString() {
+		switch (state) {
+		case CLOSED:
+			return " ";
+		case FLAG:
+			return "F";
+		default:
+			if (isMine) {
+				return "M";
+			}
+			return String.valueOf(mines);
+		}
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null) {
-            return false;
-        }
-        if (obj == this) {
-            return true;
-        }
-        if (obj.getClass() != getClass()) {
-            return false;
-        }
-        Cell rhs = (Cell) obj;
-        return new EqualsBuilder().append(col, rhs.col).append(row, rhs.row)
-                .append(state, rhs.state).append(mines, rhs.mines)
-                .append(isMine, rhs.isMine).isEquals();
-    }
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder().append(col).append(row).append(state).append(mines).append(isMine).toHashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+		if (obj == this) {
+			return true;
+		}
+		if (obj.getClass() != getClass()) {
+			return false;
+		}
+		Cell rhs = (Cell) obj;
+		return new EqualsBuilder().append(col, rhs.col).append(row, rhs.row).append(state, rhs.state)
+				.append(mines, rhs.mines).append(isMine, rhs.isMine).isEquals();
+	}
 }
