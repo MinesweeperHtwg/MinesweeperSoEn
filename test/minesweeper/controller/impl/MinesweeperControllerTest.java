@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
+import minesweeper.controller.impl.MinesweeperController.GameStatus;
 import minesweeper.model.impl.GridFactory;
 
 public class MinesweeperControllerTest {
@@ -33,6 +34,32 @@ public class MinesweeperControllerTest {
 	}
 
 	@Test
+	public void testCommandLockGameOver() {
+		controller.openCell(0, 0);
+		controller.openCell(0, 0);
+		assertEquals("Game over", controller.getStatusLine());
+		controller.openAround(0, 0);
+		assertEquals("Game over", controller.getStatusLine());
+		controller.toggleFlag(0, 0);
+		assertEquals("Game over", controller.getStatusLine());
+	}
+
+	@Test
+	public void testCommandLockWin() {
+		controller.toggleFlag(0, 0);
+		controller.toggleFlag(0, 1);
+		controller.toggleFlag(2, 2);
+		controller.openCell(1, 1);
+		controller.openAround(1, 1);
+		controller.openCell(0, 0);
+		assertEquals("You've won!", controller.getStatusLine());
+		controller.openAround(0, 0);
+		assertEquals("You've won!", controller.getStatusLine());
+		controller.toggleFlag(0, 0);
+		assertEquals("You've won!", controller.getStatusLine());
+	}
+
+	@Test
 	public void testOpenCell() {
 		controller.toggleFlag(1, 1);
 		controller.openCell(1, 0);
@@ -50,7 +77,7 @@ public class MinesweeperControllerTest {
 		int[][] mineLocations = { { 0, 0 }, { 3, 3 } };
 		controller = new MinesweeperController(new GridFactory(4, 4).specified(mineLocations));
 		controller.openCell(3, 0);
-		assertEquals("Opened (3, 0) = 0", controller.getStatusLine());
+		assertEquals("You've won!", controller.getStatusLine());
 		assertEquals(" |1|0|0\n1|1|0|0\n0|0|1|1\n0|0|1| ", controller.getGridString());
 	}
 
@@ -66,6 +93,18 @@ public class MinesweeperControllerTest {
 		controller.toggleFlag(2, 2);
 		controller.openAround(2, 1);
 		assertEquals("Opened all cells around (2, 1) = 1", controller.getStatusLine());
+		controller.toggleFlag(0, 1);
+		controller.openAround(1, 2);
+		assertEquals("You've won!", controller.getStatusLine());
+	}
+
+	@Test
+	public void testOpenAroundLoose() {
+		controller.openCell(1, 2);
+		controller.toggleFlag(2, 2);
+		controller.toggleFlag(0, 2);
+		controller.openAround(1, 2);
+		assertEquals("Game over. Mine opened at (0, 1) = M", controller.getStatusLine());
 	}
 
 	@Test
@@ -92,6 +131,12 @@ public class MinesweeperControllerTest {
 	@Test
 	public void testGetStatusLine() {
 		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
+	}
+
+	@Test
+	public void testEnum() {
+		assertEquals(GameStatus.RUNNING, GameStatus.valueOf("RUNNING"));
+		assertEquals(3, GameStatus.values().length);
 	}
 
 }
