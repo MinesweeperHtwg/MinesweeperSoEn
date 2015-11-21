@@ -19,16 +19,22 @@ public class MinesweeperControllerTest {
 	}
 
 	@Test
-	public void testNewGame() {
-		controller.newGame();
-		assertEquals("New game started", controller.getStatusLine());
+	public void testHalfInitialized() {
+		controller = new MinesweeperController(new GridFactory());
 		controller.openCell(0, 0);
-		controller.openCell(0, 0);
-		assertEquals("Game over", controller.getStatusLine());
+		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
 		controller.openAround(0, 0);
-		assertEquals("Game over", controller.getStatusLine());
+		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
 		controller.toggleFlag(0, 0);
-		assertEquals("Game over", controller.getStatusLine());
+		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
+		controller.newGame();
+		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
+		controller.changeSettings(1, 2, 1);
+		assertEquals("New Settings: height=1 width=2 mines=1", controller.getStatusLine());
+	}
+
+	@Test
+	public void testNewGame() {
 		controller.newGame();
 		assertEquals("New game started", controller.getStatusLine());
 	}
@@ -70,6 +76,13 @@ public class MinesweeperControllerTest {
 		assertEquals("Can't open (1, 1) = F because there is a flag", controller.getStatusLine());
 		controller.openCell(0, 0);
 		assertEquals("Game over. Mine opened at (0, 0) = M", controller.getStatusLine());
+	}
+
+	@Test
+	public void testFairOpen() {
+		controller.changeSettings(10, 10, 99);
+		controller.openCell(5, 5);
+		assertEquals("You've won!", controller.getStatusLine());
 	}
 
 	@Test

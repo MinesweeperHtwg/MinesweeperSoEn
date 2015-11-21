@@ -49,6 +49,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	public void changeSettings(int height, int width, int mines) {
 		gFact.size(height, width).mines(mines).random();
 		reset();
+		statusLine = "New Settings: height=" + height + " width=" + width + " mines=" + mines;
 		notifyObservers();
 	}
 
