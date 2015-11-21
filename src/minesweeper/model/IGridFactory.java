@@ -7,14 +7,16 @@ public interface IGridFactory {
 	 * 
 	 * @return a generated grid
 	 */
-	public abstract IGrid<ICell> getGrid();
+	IGrid<ICell> getGrid();
 
 	IGridFactory specified(int[][] mineLocations);
 
-	IGridFactory randomClear(int mines, int rowClear, int colClear);
+	IGridFactory randomClear(int rowClear, int colClear);
 
-	IGridFactory random(int mines);
+	IGridFactory random();
 
 	IGridFactory size(int height, int width);
+
+	IGridFactory mines(int mines);
 
 }

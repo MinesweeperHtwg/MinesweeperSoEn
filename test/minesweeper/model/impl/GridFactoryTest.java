@@ -18,16 +18,16 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomIllegalNumberOfMines() {
-		new GridFactory(2, 2).random(4).getGrid();
+		new GridFactory(2, 2).mines(4).random().getGrid();
 		thrown.expect(IllegalArgumentException.class);
-		new GridFactory(2, 2).random(5).getGrid();
+		new GridFactory(2, 2).mines(5).random().getGrid();
 	}
 
 	@Test
 	public void testRandomClearIllegalNumberOfMines() {
-		new GridFactory(2, 2).randomClear(3, 0, 0).getGrid();
+		new GridFactory(2, 2).mines(3).randomClear(0, 0).getGrid();
 		thrown.expect(IllegalArgumentException.class);
-		new GridFactory(2, 2).randomClear(4, 0, 0).getGrid();
+		new GridFactory(2, 2).mines(4).randomClear(0, 0).getGrid();
 	}
 
 	@Test
@@ -51,7 +51,7 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomGetGrid() {
-		IGrid<ICell> grid = new GridFactory(5, 10).random(10).getGrid();
+		IGrid<ICell> grid = new GridFactory(5, 10).mines(10).random().getGrid();
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
@@ -62,7 +62,7 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomClearGetGrid() {
-		IGrid<ICell> grid = new GridFactory(5, 10).randomClear(49, 1, 2).getGrid();
+		IGrid<ICell> grid = new GridFactory(5, 10).mines(49).randomClear(1, 2).getGrid();
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());

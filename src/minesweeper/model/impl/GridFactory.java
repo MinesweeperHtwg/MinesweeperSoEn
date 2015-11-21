@@ -14,7 +14,7 @@ import minesweeper.model.IMineDistributeStrategy;
 public class GridFactory implements IGridFactory {
 	private int height;
 	private int width;
-	private int mines;
+	private int mines = -1;
 	private IMineDistributeStrategy distributor;
 
 	public GridFactory() {
@@ -32,16 +32,22 @@ public class GridFactory implements IGridFactory {
 	}
 
 	@Override
-	public IGridFactory random(int mines) {
-		distributor = new RandomDistribute(mines);
+	public IGridFactory mines(int mines) {
 		this.mines = mines;
 		return this;
 	}
 
 	@Override
-	public IGridFactory randomClear(int mines, int rowClear, int colClear) {
+	public IGridFactory random() {
+		checkArgument(mines >= 0, "Must specify number of mines >= 0");
+		distributor = new RandomDistribute(mines);
+		return this;
+	}
+
+	@Override
+	public IGridFactory randomClear(int rowClear, int colClear) {
+		checkArgument(mines >= 0, "Must specify number of mines >= 0");
 		distributor = new RandomClearDistribute(mines, rowClear, colClear);
-		this.mines = mines;
 		return this;
 	}
 
