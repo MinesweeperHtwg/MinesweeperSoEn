@@ -51,8 +51,8 @@ task pom << {
     pom {
         project {
         	groupId 'de.htwg.se'
-  			artifactId 'de.htwg.se.minesweeper'
-            version '0.1'
+  			artifactId 'SE2015WS-13-Minesweeper'
+            version '1.0'
         }
     }.withXml {
     asNode().appendNode('build').with {
@@ -65,7 +65,7 @@ sonarqube {
     properties {
     property "sonar.projectName", "SE2015WS-13-Minesweeper"
     property "sonar.projectKey", "SE2015WS-13-Minesweeper"
-    property "sonar.projectVersion", "0.1"
+    property "sonar.projectVersion", "1.0"
     property "sonar.binaries", "build/classes"
     property "sonar.java.coveragePlugin", "jacoco"
   }
