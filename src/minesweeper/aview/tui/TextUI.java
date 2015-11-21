@@ -1,5 +1,7 @@
 package minesweeper.aview.tui;
 
+import static java.lang.Integer.parseInt;
+
 import org.apache.log4j.Logger;
 
 import minesweeper.controller.impl.MinesweeperController;
@@ -41,13 +43,16 @@ public class TextUI implements IObserver {
 		try {
 			if (line.matches("(o|open) \\d+ \\d+")) {
 				String[] args = line.split(" ");
-				controller.openCell(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+				controller.openCell(parseInt(args[1]), parseInt(args[2]));
 			} else if (line.matches("(a|around) \\d+ \\d+")) {
 				String[] args = line.split(" ");
-				controller.openAround(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+				controller.openAround(parseInt(args[1]), parseInt(args[2]));
 			} else if (line.matches("(f|flag) \\d+ \\d+")) {
 				String[] args = line.split(" ");
-				controller.toggleFlag(Integer.valueOf(args[1]), Integer.valueOf(args[2]));
+				controller.toggleFlag(parseInt(args[1]), parseInt(args[2]));
+			} else if (line.matches("(s|set) \\d+ \\d+ \\d+")) {
+				String[] args = line.split(" ");
+				controller.changeSettings(parseInt(args[1]), parseInt(args[2]), parseInt(args[3]));
 			} else {
 				printCommands();
 			}
@@ -72,6 +77,7 @@ public class TextUI implements IObserver {
 	}
 
 	private void printCommands() {
-		LOGGER.info(NEWLINE + "Commands: q|quit; n|new|newGame; o|open ROW COL; a|around ROW COL; f|flag ROW COL");
+		LOGGER.info(NEWLINE
+				+ "Commands: q|quit; n|new|newGame; s|set HEIGHT WIDTH MINES o|open ROW COL; a|around ROW COL; f|flag ROW COL");
 	}
 }

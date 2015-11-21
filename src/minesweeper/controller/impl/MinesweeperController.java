@@ -13,7 +13,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private String statusLine = "Welcome to Minesweeper!";
 
 	public enum GameStatus {
-		RUNNING, WIN, LOOSE
+		RUNNING, FIRSTCLICK, WIN, LOOSE
 	}
 
 	private GameStatus gameStatus = GameStatus.RUNNING;
@@ -24,24 +24,30 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private IGridFactory gFact;
 
 	public MinesweeperController(IGridFactory gFact) {
-		this.grid = gFact.getGrid();
-		openFields = grid.getHeight() * grid.getWidth();
 		this.gFact = gFact;
+		changeSettings(10, 20, 10);
 	}
 
-	// TODO: Different game modes
+	@Override
+	public void changeSettings(int height, int width, int mines) {
+		gFact.size(height, width).mines(mines).random();
+		newGame();
+	}
+
 	@Override
 	public void newGame() {
 		grid = gFact.getGrid();
-		gameStatus = GameStatus.RUNNING;
+		gameStatus = GameStatus.FIRSTCLICK;
 		flags = 0;
 		openFields = grid.getHeight() * grid.getWidth();
-		statusLine = "New game started";
+		if (!statusLine.equals("Welcome to Minesweeper!")) {
+			statusLine = "New game started";
+		}
 		notifyObservers();
 	}
 
 	private boolean checkGameEnd() {
-		if (gameStatus == GameStatus.RUNNING) {
+		if (gameStatus == GameStatus.RUNNING || gameStatus == GameStatus.FIRSTCLICK) {
 			return false;
 		}
 		if (gameStatus == GameStatus.LOOSE) {
@@ -55,11 +61,18 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 	}
 
+	// TODO: First click cant be a mine
 	@Override
 	public void openCell(int row, int col) {
 		if (checkGameEnd()) {
 			return;
 		}
+
+		if (gameStatus == GameStatus.FIRSTCLICK) {
+			grid = gFact.randomClear(row, col).getGrid();
+			gameStatus = GameStatus.RUNNING;
+		}
+
 		ICell cell = grid.getCell(row, col);
 		if (cell.isFlag()) {
 			statusLine = "Can't open " + cell.mkString() + " because there is a flag";
