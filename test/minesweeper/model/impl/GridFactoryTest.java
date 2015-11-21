@@ -17,21 +17,21 @@ public class GridFactoryTest {
 	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
-	public void testRandomIllegalNumberOfMines() {
+	public void testRandomIllegalTooManyMines() {
 		new GridFactory(2, 2).mines(4).random().getGrid();
 		thrown.expect(IllegalArgumentException.class);
 		new GridFactory(2, 2).mines(5).random().getGrid();
 	}
 
 	@Test
-	public void testRandomClearIllegalNumberOfMines() {
+	public void testRandomClearIllegalTooManyMines() {
 		new GridFactory(2, 2).mines(3).randomClear(0, 0).getGrid();
 		thrown.expect(IllegalArgumentException.class);
 		new GridFactory(2, 2).mines(4).randomClear(0, 0).getGrid();
 	}
 
 	@Test
-	public void testSpecifiedIllegalNumberOfMines() {
+	public void testSpecifiedIllegalTooManyMines() {
 		new GridFactory(2, 2).specified(new int[][] { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 } }).getGrid();
 		thrown.expect(IllegalArgumentException.class);
 		new GridFactory(2, 2).specified(new int[][] { { 0, 0 }, { 0, 1 }, { 1, 0 }, { 1, 1 }, { 1, 2 } }).getGrid();
@@ -47,6 +47,31 @@ public class GridFactoryTest {
 	public void testGetGridIllegalState() {
 		thrown.expect(IllegalStateException.class);
 		new GridFactory(2, 2).getGrid();
+	}
+
+	@Test
+	public void testSize() {
+		IGrid<ICell> grid = new GridFactory().size(1, 2).mines(1).random().getGrid();
+		assertEquals(1, grid.getHeight());
+		assertEquals(2, grid.getWidth());
+	}
+
+	@Test
+	public void testSizeIllegalHeight() {
+		thrown.expect(IllegalArgumentException.class);
+		new GridFactory().size(0, 1).mines(0).random().getGrid();
+	}
+
+	@Test
+	public void testSizeIllegalWidth() {
+		thrown.expect(IllegalArgumentException.class);
+		new GridFactory().size(1, 0).mines(0).random().getGrid();
+	}
+
+	@Test
+	public void testMinesIllegal() {
+		thrown.expect(IllegalArgumentException.class);
+		new GridFactory(1, 2).random().getGrid();
 	}
 
 	@Test

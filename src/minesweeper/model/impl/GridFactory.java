@@ -39,16 +39,20 @@ public class GridFactory implements IGridFactory {
 
 	@Override
 	public IGridFactory random() {
-		checkArgument(mines >= 0, "Must specify number of mines >= 0");
+		checkMines();
 		distributor = new RandomDistribute(mines);
 		return this;
 	}
 
 	@Override
 	public IGridFactory randomClear(int rowClear, int colClear) {
-		checkArgument(mines >= 0, "Must specify number of mines >= 0");
+		checkMines();
 		distributor = new RandomClearDistribute(mines, rowClear, colClear);
 		return this;
+	}
+
+	private void checkMines() {
+		checkArgument(mines >= 0, "Must specify number of mines >= 0");
 	}
 
 	@Override
@@ -63,12 +67,6 @@ public class GridFactory implements IGridFactory {
 		return this;
 	}
 
-	private void checkCellMineCount(int cells, int mines) {
-		if (cells < mines) {
-			throw new IllegalArgumentException("Cant construct a grid with more mines than cells");
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -76,13 +74,7 @@ public class GridFactory implements IGridFactory {
 	 */
 	@Override
 	public IGrid<ICell> getGrid() {
-		checkState(distributor != null, "Must specify mine placement before calling getGrid");
-		checkArgument(height > 0 && width > 0, "Dimensions must be bigger than 0");
-		if (distributor instanceof RandomClearDistribute) {
-			checkCellMineCount(height * width - 1, mines);
-		} else {
-			checkCellMineCount(height * width, mines);
-		}
+		checkReadyForReturn();
 
 		ICellMutable[][] cells = getEmptyCells();
 
@@ -93,6 +85,22 @@ public class GridFactory implements IGridFactory {
 		updateMineNumbers(grid);
 
 		return new Grid<ICell>(cells, mines);
+	}
+
+	private void checkReadyForReturn() {
+		checkState(distributor != null, "Must specify mine placement before calling getGrid");
+		checkArgument(height > 0 && width > 0, "Dimensions must be bigger than 0");
+		if (distributor instanceof RandomClearDistribute) {
+			checkCellMineCount(height * width - 1, mines);
+		} else {
+			checkCellMineCount(height * width, mines);
+		}
+	}
+
+	private void checkCellMineCount(int cells, int mines) {
+		if (cells < mines) {
+			throw new IllegalArgumentException("Cant construct a grid with more mines than cells");
+		}
 	}
 
 	private ICellMutable[][] getEmptyCells() {

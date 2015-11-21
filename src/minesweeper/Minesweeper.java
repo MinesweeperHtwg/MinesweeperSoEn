@@ -17,7 +17,7 @@ public class Minesweeper {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		IGridFactory gFact = new GridFactory(10, 20).random(20);
+		IGridFactory gFact = new GridFactory(10, 20).mines(20).random();
 		MinesweeperController controller = new MinesweeperController(gFact);
 		TextUI tui = new TextUI(controller);
 
