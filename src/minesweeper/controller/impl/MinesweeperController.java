@@ -14,7 +14,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private String statusLine = "Welcome to Minesweeper!";
 
 	public enum GameStatus {
-		RUNNING, FIRSTCLICK, WIN, LOOSE
+		SETUPNEEDED, RUNNING, FIRSTCLICK, WIN, LOOSE
 	}
 
 	private GameStatus gameStatus;
@@ -30,6 +30,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 			reset();
 		} catch (IllegalStateException e) {
 			// gFact isn't set up yet, caller must use changeSettings
+			gameStatus = GameStatus.SETUPNEEDED;
 		}
 	}
 
@@ -42,6 +43,9 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void newGame() {
+		if (gameStatus == GameStatus.SETUPNEEDED) {
+			return;
+		}
 		reset();
 		statusLine = "New game started";
 		notifyObservers();
@@ -58,24 +62,29 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		openFields = grid.getHeight() * grid.getWidth();
 	}
 
-	private boolean checkGameEnd() {
-		if (gameStatus == GameStatus.RUNNING || gameStatus == GameStatus.FIRSTCLICK) {
+	private boolean checkStatus() {
+		switch (gameStatus) {
+		case RUNNING:
+		case FIRSTCLICK:
 			return false;
-		}
-		if (gameStatus == GameStatus.LOOSE) {
+		case LOOSE:
 			statusLine = "Game over";
 			notifyObservers();
 			return true;
-		} else {
+		case WIN:
 			statusLine = "You've won!";
 			notifyObservers();
 			return true;
+		case SETUPNEEDED:
+			return true;
+		default:
+			throw new RuntimeException("Enum changed!");
 		}
 	}
 
 	@Override
 	public void openCell(int row, int col) {
-		if (checkGameEnd()) {
+		if (checkStatus()) {
 			return;
 		}
 
@@ -136,7 +145,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void openAround(int row, int col) {
-		if (checkGameEnd()) {
+		if (checkStatus()) {
 			return;
 		}
 		ICell cell = grid.getCell(row, col);
@@ -162,7 +171,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	@Override
 	public void toggleFlag(int row, int col) {
-		if (checkGameEnd()) {
+		if (checkStatus()) {
 			return;
 		}
 		ICell cell = grid.getCell(row, col);

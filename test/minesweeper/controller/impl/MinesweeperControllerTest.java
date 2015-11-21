@@ -136,7 +136,7 @@ public class MinesweeperControllerTest {
 	@Test
 	public void testEnum() {
 		assertEquals(GameStatus.RUNNING, GameStatus.valueOf("RUNNING"));
-		assertEquals(4, GameStatus.values().length);
+		assertEquals(5, GameStatus.values().length);
 	}
 
 }
