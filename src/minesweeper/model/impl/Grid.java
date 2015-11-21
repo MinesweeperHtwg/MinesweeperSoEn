@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import minesweeper.model.ICell;
+import minesweeper.model.IGrid;
 
-public class Grid<T extends ICell> {
+public class Grid<T extends ICell> implements IGrid<T> {
 	private T[][] cells;
 	private final int mines;
 	private final int height;

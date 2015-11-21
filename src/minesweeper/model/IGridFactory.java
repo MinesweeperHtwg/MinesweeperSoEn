@@ -1,7 +1,5 @@
 package minesweeper.model;
 
-import minesweeper.model.impl.Grid;
-
 public interface IGridFactory {
 
 	/**
@@ -9,6 +7,6 @@ public interface IGridFactory {
 	 * 
 	 * @return a generated grid
 	 */
-	public abstract Grid<ICell> getGrid();
+	public abstract IGrid<ICell> getGrid();
 
 }

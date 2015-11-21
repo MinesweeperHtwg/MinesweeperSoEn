@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import minesweeper.model.ICellMutable;
+import minesweeper.model.IGrid;
 import minesweeper.model.IMineDistributeStrategy;
 
 public class RandomDistribute implements IMineDistributeStrategy {
@@ -14,7 +15,7 @@ public class RandomDistribute implements IMineDistributeStrategy {
 	}
 
 	@Override
-	public void distributeMines(Grid<ICellMutable> grid) {
+	public void distributeMines(IGrid<ICellMutable> grid) {
 		List<ICellMutable> cellList = grid.getCells();
 		Collections.shuffle(cellList);
 		for (int i = 0; i < mines; i++) {

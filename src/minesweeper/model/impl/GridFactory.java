@@ -4,6 +4,7 @@ import java.util.List;
 
 import minesweeper.model.ICell;
 import minesweeper.model.ICellMutable;
+import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
 import minesweeper.model.IMineDistributeStrategy;
 
@@ -56,20 +57,20 @@ public class GridFactory implements IGridFactory {
 	 * @see minesweeper.model.impl.IGridFactory#getGrid()
 	 */
 	@Override
-	public Grid<ICell> getGrid() {
+	public IGrid<ICell> getGrid() {
 		if (distributor == null) {
 			throw new IllegalStateException("Must specify mine placement before calling getGrid()");
 		}
 
 		ICellMutable[][] cells = getEmptyCells();
 
-		Grid<ICellMutable> grid = new Grid<ICellMutable>(cells, mines);
+		IGrid<ICellMutable> grid = new Grid<ICellMutable>(cells, mines);
 
 		distributor.distributeMines(grid);
 
 		updateMineNumbers(grid);
 
-		Grid<ICell> gridICell = new Grid<ICell>(cells, mines);
+		IGrid<ICell> gridICell = new Grid<ICell>(cells, mines);
 
 		return gridICell;
 	}
@@ -86,7 +87,7 @@ public class GridFactory implements IGridFactory {
 		return cells;
 	}
 
-	private void updateMineNumbers(Grid<ICellMutable> grid) {
+	private void updateMineNumbers(IGrid<ICellMutable> grid) {
 		List<ICellMutable> cellList = grid.getCells();
 		for (ICellMutable cell : cellList) {
 			List<ICellMutable> adjCells = grid.getAdjCells(cell.getRow(), cell.getCol());

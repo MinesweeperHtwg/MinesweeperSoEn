@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import minesweeper.model.ICell;
+import minesweeper.model.IGrid;
 
 public class GridFactoryTest {
 
@@ -50,7 +51,7 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomGetGrid() {
-		Grid<ICell> grid = new GridFactory(5, 10).random(10).getGrid();
+		IGrid<ICell> grid = new GridFactory(5, 10).random(10).getGrid();
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
@@ -61,7 +62,7 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomClearGetGrid() {
-		Grid<ICell> grid = new GridFactory(5, 10).randomClear(49, 1, 2).getGrid();
+		IGrid<ICell> grid = new GridFactory(5, 10).randomClear(49, 1, 2).getGrid();
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
@@ -75,7 +76,7 @@ public class GridFactoryTest {
 	@Test
 	public void testSpecifiedGetGrid() {
 		int[][] mineLocations = new int[][] { { 0, 0 }, { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 } };
-		Grid<ICell> grid = new GridFactory(5, 10).specified(mineLocations).getGrid();
+		IGrid<ICell> grid = new GridFactory(5, 10).specified(mineLocations).getGrid();
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
 

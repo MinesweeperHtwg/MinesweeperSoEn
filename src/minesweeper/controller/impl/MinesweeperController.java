@@ -4,9 +4,9 @@ import java.util.List;
 
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.model.ICell;
+import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
 import minesweeper.model.impl.Cell.State;
-import minesweeper.model.impl.Grid;
 import minesweeper.util.observer.Observable;
 
 public class MinesweeperController extends Observable implements IMinesweeperController {
@@ -20,7 +20,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private int flags = 0;
 	private int openFields;
 
-	private Grid<ICell> grid;
+	private IGrid<ICell> grid;
 	private IGridFactory gFact;
 
 	public MinesweeperController(IGridFactory gFact) {
