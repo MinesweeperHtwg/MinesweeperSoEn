@@ -67,10 +67,11 @@ public class TextUI implements IObserver {
 			// Illegal location
 			printCommands();
 		} else if ("Cant construct a grid with more mines than cells".equals(message)
-				|| "Dimensions must be bigger than 0".equals(message) || "Mines must be positive".equals(message)) {
+				|| "Dimensions must be bigger than 0".equals(message)) {
 			// Illegal set
 			printCommands();
 		} else {
+			// Unknown exception
 			throw e;
 		}
 	}

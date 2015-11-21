@@ -78,7 +78,7 @@ public class TextUITest {
 	@Test
 	public void testIllegalSet() {
 		assertTrue(tui.processLine("s 2 2 5"));
-		assertTrue(tui.processLine("s -1 0 0"));
+		assertTrue(tui.processLine("s 1 0 0"));
 		assertTrue(tui.processLine("s 1	1 -1"));
 	}
 
