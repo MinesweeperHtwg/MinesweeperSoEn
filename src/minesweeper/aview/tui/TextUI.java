@@ -64,9 +64,11 @@ public class TextUI implements IObserver {
 	private void handleError(IllegalArgumentException e) {
 		String message = e.getMessage();
 		if ("Cell does not exist at this location".equals(message)) {
+			// Illegal location
 			printCommands();
 		} else if ("Cant construct a grid with more mines than cells".equals(message)
 				|| "Dimensions must be bigger than 0".equals(message) || "Mines must be positive".equals(message)) {
+			// Illegal set
 			printCommands();
 		} else {
 			throw e;
@@ -86,6 +88,6 @@ public class TextUI implements IObserver {
 
 	private void printCommands() {
 		LOGGER.info(NEWLINE
-				+ "Commands: q|quit; n|new|newGame; s|set HEIGHT WIDTH MINES o|open ROW COL; a|around ROW COL; f|flag ROW COL");
+				+ "Commands: q|quit; n|new|newGame; s|set HEIGHT WIDTH MINES; o|open ROW COL; a|around ROW COL; f|flag ROW COL");
 	}
 }
