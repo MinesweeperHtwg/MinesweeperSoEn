@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface IGrid<T extends ICell> {
 
-	T getCell(int row, int col) throws IllegalArgumentException;
+	T getCell(int row, int col);
 
 	int getHeight();
 

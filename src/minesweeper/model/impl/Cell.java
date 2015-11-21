@@ -8,10 +8,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import minesweeper.model.ICellMutable;
 
 public final class Cell implements ICellMutable {
-	public enum State {
-		OPENED, CLOSED, FLAG
-	}
-
 	private final int col;
 	private final int row;
 	private State state;
@@ -54,6 +50,11 @@ public final class Cell implements ICellMutable {
 	@Override
 	public boolean isClosed() {
 		return state != State.OPENED;
+	}
+
+	@Override
+	public boolean isClosedWithoutFlag() {
+		return state == State.CLOSED;
 	}
 
 	@Override
@@ -127,4 +128,5 @@ public final class Cell implements ICellMutable {
 		return new EqualsBuilder().append(col, rhs.col).append(row, rhs.row).append(state, rhs.state)
 				.append(mines, rhs.mines).append(isMine, rhs.isMine).isEquals();
 	}
+
 }

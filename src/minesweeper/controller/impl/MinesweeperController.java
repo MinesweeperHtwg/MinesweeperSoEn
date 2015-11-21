@@ -4,9 +4,9 @@ import java.util.List;
 
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.model.ICell;
+import minesweeper.model.ICell.State;
 import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
-import minesweeper.model.impl.Cell.State;
 import minesweeper.util.observer.Observable;
 
 public class MinesweeperController extends Observable implements IMinesweeperController {
@@ -93,7 +93,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private void floodOpen(ICell cell) {
 		List<ICell> adjCells = grid.getAdjCells(cell.getRow(), cell.getCol());
 		for (ICell adjCell : adjCells) {
-			if (adjCell.getState() == State.CLOSED) {
+			if (adjCell.isClosedWithoutFlag()) {
 				adjCell.setState(State.OPENED);
 				openFields--;
 				if (adjCell.getMines() == 0) {
@@ -123,7 +123,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 			long flagCount = adjCells.stream().filter(ICell::isFlag).count();
 
 			if (flagCount == cell.getMines()) {
-				adjCells.stream().filter(c -> c.getState() == State.CLOSED).forEach(c -> executeOpenCell(c));
+				adjCells.stream().filter(c -> c.isClosedWithoutFlag()).forEach(c -> executeOpenCell(c));
 				// only print status if we haven't lost or won
 				if (gameStatus == GameStatus.RUNNING) {
 					statusLine = "Opened all cells around " + cell.mkString();

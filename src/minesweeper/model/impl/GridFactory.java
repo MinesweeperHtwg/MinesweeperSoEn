@@ -70,9 +70,7 @@ public class GridFactory implements IGridFactory {
 
 		updateMineNumbers(grid);
 
-		IGrid<ICell> gridICell = new Grid<ICell>(cells, mines);
-
-		return gridICell;
+		return new Grid<ICell>(cells, mines);
 	}
 
 	private ICellMutable[][] getEmptyCells() {

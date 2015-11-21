@@ -1,8 +1,10 @@
 package minesweeper.model;
 
-import minesweeper.model.impl.Cell.State;
-
 public interface ICell {
+
+	public enum State {
+		OPENED, CLOSED, FLAG
+	}
 
 	int getCol();
 
@@ -14,11 +16,13 @@ public interface ICell {
 
 	boolean isClosed();
 
+	boolean isClosedWithoutFlag();
+
+	boolean isOpened();
+
 	boolean isFlag();
 
 	boolean isMine();
-
-	boolean isOpened();
 
 	void setState(State state);
 
