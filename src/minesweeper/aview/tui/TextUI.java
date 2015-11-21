@@ -63,10 +63,10 @@ public class TextUI implements IObserver {
 
 	private void handleError(IllegalArgumentException e) {
 		String message = e.getMessage();
-		if (message.equals("Cell does not exist at this location")) {
+		if ("Cell does not exist at this location".equals(message)) {
 			printCommands();
-		} else if (message.equals("Cant construct a grid with more mines than cells")
-				|| message.equals("Dimensions must be bigger than 0") || message.equals("Mines must be positive")) {
+		} else if ("Cant construct a grid with more mines than cells".equals(message)
+				|| "Dimensions must be bigger than 0".equals(message) || "Mines must be positive".equals(message)) {
 			printCommands();
 		} else {
 			throw e;
