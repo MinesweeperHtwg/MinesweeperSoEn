@@ -55,7 +55,7 @@ public class GridFactory implements IGridFactory {
 	}
 
 	private void checkMines() {
-		checkArgument(mines >= 0, "Must specify number of mines >= 0");
+		checkArgument(mines >= 0, "Mines must be positive");
 	}
 
 	@Override
