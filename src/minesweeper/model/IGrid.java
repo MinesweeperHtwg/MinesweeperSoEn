@@ -18,6 +18,7 @@ public interface IGrid<T extends ICell> {
 
 	List<T> getAdjCells(int row, int col);
 
+	@Override
 	String toString();
 
 }

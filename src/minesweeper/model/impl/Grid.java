@@ -29,29 +29,35 @@ public class Grid<T extends ICell> implements IGrid<T> {
 		width = cells[0].length;
 	}
 
-	public T getCell(int row, int col) throws IllegalArgumentException {
+	@Override
+	public T getCell(int row, int col) {
 		if (!checkBounds(row, col)) {
 			throw new IllegalArgumentException("Cell does not exist at this location");
 		}
 		return cells[row][col];
 	}
 
+	@Override
 	public int getHeight() {
 		return height;
 	}
 
+	@Override
 	public int getWidth() {
 		return width;
 	}
 
+	@Override
 	public int getMines() {
 		return mines;
 	}
 
+	@Override
 	public long getSecondsSinceCreated() {
 		return Duration.between(created, Instant.now()).getSeconds();
 	}
 
+	@Override
 	public List<T> getCells() {
 		List<T> cellList = new LinkedList<>();
 		for (T[] rows : cells) {
@@ -62,6 +68,7 @@ public class Grid<T extends ICell> implements IGrid<T> {
 		return cellList;
 	}
 
+	@Override
 	public List<T> getAdjCells(final int row, final int col) {
 		List<T> result = new ArrayList<>(8);
 		for (int[] cord : adjCord) {
