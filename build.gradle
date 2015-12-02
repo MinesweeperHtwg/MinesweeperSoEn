@@ -46,20 +46,6 @@ sourceSets {
 jar {
     manifest.attributes "Main-Class":"minesweeper.Minesweeper"
 }
-
-task pom << {
-    pom {
-        project {
-        	groupId 'de.htwg.se'
-  			artifactId 'SE2015WS-13-Minesweeper'
-            version '1.0'
-        }
-    }.withXml {
-    asNode().appendNode('build').with {
-        appendNode('sourceDirectory', 'src').parent().appendNode('testSourceDirectory', 'test')
-    }
-}.writeTo("pom.xml")
-}
     
 sonarqube {
     properties {

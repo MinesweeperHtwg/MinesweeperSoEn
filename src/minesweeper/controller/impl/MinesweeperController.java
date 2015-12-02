@@ -36,7 +36,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 			reset();
 		} catch (IllegalStateException e) {
 			if ("Mine placement not specified".equals(e.getMessage())) {
-				// gFact isn't set up yet, caller must use changeSettings
+				// gFact isn't set up, caller must use changeSettings
 				gameStatus = SETUPNEEDED;
 			} else {
 				throw e;
