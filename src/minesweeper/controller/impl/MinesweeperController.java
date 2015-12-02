@@ -1,11 +1,5 @@
 package minesweeper.controller.impl;
 
-import static minesweeper.controller.impl.MinesweeperController.GameStatus.FIRSTCLICK;
-import static minesweeper.controller.impl.MinesweeperController.GameStatus.LOSE;
-import static minesweeper.controller.impl.MinesweeperController.GameStatus.RUNNING;
-import static minesweeper.controller.impl.MinesweeperController.GameStatus.SETUPNEEDED;
-import static minesweeper.controller.impl.MinesweeperController.GameStatus.WIN;
-
 import java.util.List;
 
 import minesweeper.model.ICell;
@@ -17,11 +11,49 @@ import minesweeper.model.IGridFactory.Strategy;
 public class MinesweeperController {
 	private String statusLine = "Welcome to Minesweeper!";
 
-	public enum GameStatus {
-		SETUPNEEDED, RUNNING, FIRSTCLICK, WIN, LOSE
+	private interface GameState {
+		boolean checkStatus();
 	}
 
-	private GameStatus gameStatus;
+	private class SetupNeeded implements GameState {
+		@Override
+		public boolean checkStatus() {
+			return true;
+		}
+	}
+
+	private class Running implements GameState {
+		@Override
+		public boolean checkStatus() {
+			return false;
+		}
+	}
+
+	private class FirstClick implements GameState {
+		@Override
+		public boolean checkStatus() {
+			return false;
+		}
+	}
+
+	private class Win implements GameState {
+		@Override
+		public boolean checkStatus() {
+			statusLine = "You've won!";
+			return true;
+		}
+	}
+
+	private class Lose implements GameState {
+		@Override
+		public boolean checkStatus() {
+			statusLine = "Game over";
+			return true;
+		}
+	}
+
+	private GameState gameState;
+
 	private int flags;
 	private int openFields;
 
@@ -35,7 +67,7 @@ public class MinesweeperController {
 		} catch (IllegalStateException e) {
 			if ("Mine placement not specified".equals(e.getMessage())) {
 				// gFact isn't set up, caller must use changeSettings
-				gameStatus = SETUPNEEDED;
+				gameState = new SetupNeeded();
 			} else {
 				throw e;
 			}
@@ -50,7 +82,7 @@ public class MinesweeperController {
 	}
 
 	public void newGame() {
-		if (gameStatus == SETUPNEEDED) {
+		if (gameState instanceof SetupNeeded) {
 			return;
 		}
 		reset();
@@ -60,41 +92,22 @@ public class MinesweeperController {
 	private void reset() {
 		grid = gFact.getGrid();
 		if (gFact.getStrategy() == Strategy.SPECIFIED) {
-			gameStatus = RUNNING;
+			gameState = new Running();
 		} else {
-			gameStatus = FIRSTCLICK;
+			gameState = new FirstClick();
 		}
 		flags = 0;
 		openFields = grid.getHeight() * grid.getWidth();
 	}
 
-	private boolean checkStatus() {
-		if (gameStatus == RUNNING || gameStatus == FIRSTCLICK) {
-			return false;
-		}
-		if (gameStatus == LOSE) {
-			statusLine = "Game over";
-			return true;
-		}
-		if (gameStatus == WIN) {
-			statusLine = "You've won!";
-			return true;
-		}
-		if (gameStatus == SETUPNEEDED) {
-			return true;
-		} else {
-			throw new IllegalStateException("Enum added!");
-		}
-	}
-
 	public void openCell(int row, int col) {
-		if (checkStatus()) {
+		if (gameState.checkStatus()) {
 			return;
 		}
 
-		if (gameStatus == FIRSTCLICK) {
+		if (gameState instanceof FirstClick) {
 			grid = gFact.randomClear(row, col).getGrid();
-			gameStatus = RUNNING;
+			gameState = new Running();
 		}
 
 		ICell cell = grid.getCell(row, col);
@@ -111,7 +124,7 @@ public class MinesweeperController {
 		cell.setState(State.OPENED);
 		openFields--;
 		if (cell.isMine()) {
-			gameStatus = LOSE;
+			gameState = new Lose();
 			statusLine = "Game over. Mine opened at " + cell.mkString();
 			return;
 		}
@@ -120,7 +133,7 @@ public class MinesweeperController {
 		}
 		// check to ensure that an game over message does not get
 		// overwritten when called from openAround.
-		if (gameStatus == RUNNING) {
+		if (gameState instanceof Running) {
 			statusLine = "Opened " + cell.mkString();
 		}
 		checkWin();
@@ -140,14 +153,14 @@ public class MinesweeperController {
 	}
 
 	private void checkWin() {
-		if (gameStatus == RUNNING && openFields == grid.getMines()) {
-			gameStatus = WIN;
+		if (gameState instanceof Running && openFields == grid.getMines()) {
+			gameState = new Win();
 			statusLine = "You've won!";
 		}
 	}
 
 	public void openAround(int row, int col) {
-		if (checkStatus()) {
+		if (gameState.checkStatus()) {
 			return;
 		}
 		ICell cell = grid.getCell(row, col);
@@ -160,7 +173,7 @@ public class MinesweeperController {
 			if (flagCount == cell.getMines()) {
 				adjCells.stream().filter(c -> c.isClosedWithoutFlag()).forEach(c -> executeOpenCell(c));
 				// only print status if we haven't lost or won
-				if (gameStatus == RUNNING) {
+				if (gameState instanceof Running) {
 					statusLine = "Opened all cells around " + cell.mkString();
 				}
 			} else {
@@ -171,7 +184,7 @@ public class MinesweeperController {
 	}
 
 	public void toggleFlag(int row, int col) {
-		if (checkStatus()) {
+		if (gameState.checkStatus()) {
 			return;
 		}
 		ICell cell = grid.getCell(row, col);

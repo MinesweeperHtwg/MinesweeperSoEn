@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import minesweeper.controller.impl.MinesweeperController.GameStatus;
 import minesweeper.model.impl.GridFactory;
 
 public class MinesweeperControllerTest {
@@ -144,12 +143,6 @@ public class MinesweeperControllerTest {
 	@Test
 	public void testGetStatusLine() {
 		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
-	}
-
-	@Test
-	public void testEnum() {
-		assertEquals(GameStatus.RUNNING, GameStatus.valueOf("RUNNING"));
-		assertEquals(5, GameStatus.values().length);
 	}
 
 }
