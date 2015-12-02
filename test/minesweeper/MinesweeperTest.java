@@ -11,6 +11,6 @@ public class MinesweeperTest {
 	public void testMain() {
 		InputStream systemIn = new ByteArrayInputStream("q".getBytes());
 		System.setIn(systemIn);
-		Minesweeper.main();
+		Minesweeper.main(null);
 	}
 }
