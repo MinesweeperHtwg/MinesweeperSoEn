@@ -14,7 +14,7 @@ public class Minesweeper {
 	private Minesweeper() {
 	}
 
-	public static void main(String[] args) {
+	public static void main() {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
