@@ -5,7 +5,8 @@ import java.util.Scanner;
 import org.apache.log4j.PropertyConfigurator;
 
 import minesweeper.aview.tui.TextUI;
-import minesweeper.controller.impl.MinesweeperController;
+import minesweeper.controller.IMinesweeperController;
+import minesweeper.controller.impl.ControllerWrapper;
 import minesweeper.model.IGridFactory;
 import minesweeper.model.impl.GridFactory;
 
@@ -18,7 +19,7 @@ public class Minesweeper {
 		PropertyConfigurator.configure("log4j.properties");
 
 		IGridFactory gFact = new GridFactory();
-		MinesweeperController controller = new MinesweeperController(gFact);
+		IMinesweeperController controller = new ControllerWrapper(gFact);
 		TextUI tui = new TextUI(controller);
 		controller.changeSettings(10, 20, 10);
 

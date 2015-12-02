@@ -8,15 +8,13 @@ import static minesweeper.controller.impl.MinesweeperController.GameStatus.WIN;
 
 import java.util.List;
 
-import minesweeper.controller.IMinesweeperController;
 import minesweeper.model.ICell;
 import minesweeper.model.ICell.State;
 import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
 import minesweeper.model.IGridFactory.Strategy;
-import minesweeper.util.observer.Observable;
 
-public class MinesweeperController extends Observable implements IMinesweeperController {
+public class MinesweeperController {
 	private String statusLine = "Welcome to Minesweeper!";
 
 	public enum GameStatus {
@@ -30,7 +28,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private IGrid<ICell> grid;
 	private IGridFactory gFact;
 
-	public MinesweeperController(IGridFactory gFact) {
+	protected MinesweeperController(IGridFactory gFact) {
 		this.gFact = gFact;
 		try {
 			reset();
@@ -45,22 +43,18 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 	}
 
-	@Override
 	public void changeSettings(int height, int width, int mines) {
 		gFact.size(height, width).mines(mines).random();
 		reset();
 		statusLine = "New Settings: height=" + height + " width=" + width + " mines=" + mines;
-		notifyObservers();
 	}
 
-	@Override
 	public void newGame() {
 		if (gameStatus == SETUPNEEDED) {
 			return;
 		}
 		reset();
 		statusLine = "New game started";
-		notifyObservers();
 	}
 
 	private void reset() {
@@ -80,12 +74,10 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 		if (gameStatus == LOSE) {
 			statusLine = "Game over";
-			notifyObservers();
 			return true;
 		}
 		if (gameStatus == WIN) {
 			statusLine = "You've won!";
-			notifyObservers();
 			return true;
 		}
 		if (gameStatus == SETUPNEEDED) {
@@ -95,7 +87,6 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 	}
 
-	@Override
 	public void openCell(int row, int col) {
 		if (checkStatus()) {
 			return;
@@ -114,7 +105,6 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		} else {
 			executeOpenCell(cell);
 		}
-		notifyObservers();
 	}
 
 	private void executeOpenCell(ICell cell) {
@@ -156,7 +146,6 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 	}
 
-	@Override
 	public void openAround(int row, int col) {
 		if (checkStatus()) {
 			return;
@@ -179,10 +168,8 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 						+ " because there is an incorrect number of flags around this cell";
 			}
 		}
-		notifyObservers();
 	}
 
-	@Override
 	public void toggleFlag(int row, int col) {
 		if (checkStatus()) {
 			return;
@@ -199,20 +186,16 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 			statusLine = "Flag set at " + cell.mkString();
 			flags++;
 		}
-		notifyObservers();
 	}
 
-	@Override
 	public String getGameStats() {
 		return "Unflagged mines left: " + (grid.getMines() - flags) + " Time: " + grid.getSecondsSinceCreated() + "s";
 	}
 
-	@Override
 	public String getGridString() {
 		return grid.toString();
 	}
 
-	@Override
 	public String getStatusLine() {
 		return statusLine;
 	}

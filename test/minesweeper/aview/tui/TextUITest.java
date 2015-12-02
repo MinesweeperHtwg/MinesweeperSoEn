@@ -8,12 +8,13 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
-import minesweeper.controller.impl.MinesweeperController;
+import minesweeper.controller.IMinesweeperController;
+import minesweeper.controller.impl.ControllerWrapper;
 import minesweeper.model.impl.GridFactory;
 
 public class TextUITest {
 	private TextUI tui;
-	private MinesweeperController controller;
+	private IMinesweeperController controller;
 
 	@Before
 	public void setUp() throws Exception {
@@ -21,7 +22,7 @@ public class TextUITest {
 		PropertyConfigurator.configure("log4j.properties");
 
 		int[][] mineLocations = { { 0, 0 }, { 0, 1 }, { 2, 2 } };
-		controller = new MinesweeperController(new GridFactory(3, 3).specified(mineLocations));
+		controller = new ControllerWrapper(new GridFactory(3, 3).specified(mineLocations));
 		tui = new TextUI(controller);
 	}
 
