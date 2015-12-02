@@ -4,18 +4,18 @@ import static java.lang.Integer.parseInt;
 
 import org.apache.log4j.Logger;
 
-import minesweeper.controller.impl.MinesweeperController;
+import minesweeper.controller.IMinesweeperController;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
 
 public class TextUI implements IObserver {
 	private static final String NEWLINE = System.getProperty("line.separator");
 
-	private MinesweeperController controller;
+	private IMinesweeperController controller;
 
 	private static final Logger LOGGER = Logger.getLogger(TextUI.class);
 
-	public TextUI(MinesweeperController controller) {
+	public TextUI(IMinesweeperController controller) {
 		this.controller = controller;
 		controller.addObserver(this);
 	}
@@ -41,17 +41,14 @@ public class TextUI implements IObserver {
 
 	private void processCordLine(String line) {
 		try {
+			String[] args = line.split(" ");
 			if (line.matches("(o|open) \\d+ \\d+")) {
-				String[] args = line.split(" ");
 				controller.openCell(parseInt(args[1]), parseInt(args[2]));
 			} else if (line.matches("(a|around) \\d+ \\d+")) {
-				String[] args = line.split(" ");
 				controller.openAround(parseInt(args[1]), parseInt(args[2]));
 			} else if (line.matches("(f|flag) \\d+ \\d+")) {
-				String[] args = line.split(" ");
 				controller.toggleFlag(parseInt(args[1]), parseInt(args[2]));
 			} else if (line.matches("(s|set) \\d+ \\d+ \\d+")) {
-				String[] args = line.split(" ");
 				controller.changeSettings(parseInt(args[1]), parseInt(args[2]), parseInt(args[3]));
 			} else {
 				printCommands();

@@ -1,6 +1,8 @@
 package minesweeper.controller;
 
-public interface IMinesweeperController {
+import minesweeper.util.observer.IObservable;
+
+public interface IMinesweeperController extends IObservable {
 	void changeSettings(int height, int width, int mines);
 
 	void newGame();
@@ -10,6 +12,8 @@ public interface IMinesweeperController {
 	void openAround(int row, int col);
 
 	void toggleFlag(int row, int col);
+
+	String getGameStats();
 
 	String getGridString();
 

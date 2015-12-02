@@ -202,6 +202,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		notifyObservers();
 	}
 
+	@Override
 	public String getGameStats() {
 		return "Unflagged mines left: " + (grid.getMines() - flags) + " Time: " + grid.getSecondsSinceCreated() + "s";
 	}
