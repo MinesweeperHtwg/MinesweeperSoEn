@@ -17,6 +17,8 @@ public class CellPanel extends JPanel {
 
 	private IMinesweeperController controller;
 	private JLabel label;
+	
+	private static final long serialVersionUID = 1L;
 
 	public CellPanel(IMinesweeperController controller, int row, int col) {
 		this.row = row;
@@ -50,8 +52,14 @@ public class CellPanel extends JPanel {
 			}
 			setBorder(new MatteBorder(1, 1, 0, 0, Color.GRAY));
 		}
-
 	}
 
-	private static final long serialVersionUID = 1L;
+	public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
 }

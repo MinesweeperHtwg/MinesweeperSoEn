@@ -2,9 +2,12 @@ package minesweeper.aview.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.JFrame;
 import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
@@ -45,12 +48,12 @@ public class MinesweeperFrame extends JFrame implements IObserver {
         gameStatsPanel = new GameStatsPanel(controller);
         pane.add(gameStatsPanel, BorderLayout.NORTH);
 
-        gridPanel = new GridPanel(controller);
+        gridPanel = new GridPanel(controller, new CellListener());
         add(gridPanel, BorderLayout.CENTER);
 
         statusPanel = new StatusPanel(controller);
         pane.add(statusPanel, BorderLayout.SOUTH);
-        
+
         repaintMgr = RepaintManager.currentManager(this);
 
         update(new UpdateAllEvent());
@@ -60,6 +63,31 @@ public class MinesweeperFrame extends JFrame implements IObserver {
         setResizable(true);
         pack();
         setVisible(true);
+    }
+
+    private class CellListener extends MouseAdapter {
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            Object source = e.getSource();
+            if (!(source instanceof CellPanel)) {
+                throw new IllegalArgumentException("Unsupported Event");
+            }
+            CellPanel cellPanel = (CellPanel) source;
+            int row = cellPanel.getRow();
+            int col = cellPanel.getCol();
+            if (SwingUtilities.isLeftMouseButton(e)) {
+                controller.openCell(row, col);
+                return;
+            }
+            if (SwingUtilities.isMiddleMouseButton(e)) {
+                controller.openAround(row, col);
+                return;
+            }
+            if (SwingUtilities.isRightMouseButton(e)) {
+                controller.toggleFlag(row, col);
+                return;
+            }
+        }
     }
 
     @Override

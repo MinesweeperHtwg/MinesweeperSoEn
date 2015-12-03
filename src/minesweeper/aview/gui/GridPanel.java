@@ -1,6 +1,7 @@
 package minesweeper.aview.gui;
 
 import java.awt.GridLayout;
+import java.awt.event.MouseListener;
 
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
@@ -8,20 +9,26 @@ import javax.swing.RepaintManager;
 import minesweeper.controller.IMinesweeperController;
 
 public class GridPanel extends JPanel {
+    private IMinesweeperController controller;
+    
 	private int height;
 	private int width;
+	
 	private CellPanel[][] cellPanels;
+	
+	private final MouseListener cellListener;
 	
 	private final RepaintManager repaintMgr;
 
-	private IMinesweeperController controller;
 	
 	private static final long serialVersionUID = 1L;
 
-	public GridPanel(final IMinesweeperController controller) {
+	public GridPanel(final IMinesweeperController controller, MouseListener cellListener) {
 		this.controller = controller;
+		this.cellListener = cellListener;
+		repaintMgr = RepaintManager.currentManager(this);
+		
 		rebuildCells();
-        repaintMgr = RepaintManager.currentManager(this);
 	}
 
 	public void rebuildCells() {
@@ -37,8 +44,10 @@ public class GridPanel extends JPanel {
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
 				CellPanel cellPanel = new CellPanel(controller, row, col);
+				cellPanel.addMouseListener(cellListener);
 				cellPanels[row][col] = cellPanel;
 				add(cellPanel);
+				repaintMgr.markCompletelyClean(cellPanel);
 			}
 		}
 	}
