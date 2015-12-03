@@ -1,6 +1,7 @@
 package minesweeper.aview.gui;
 
-import javax.swing.BoxLayout;
+import java.awt.BorderLayout;
+
 import javax.swing.JPanel;
 
 import minesweeper.controller.IMinesweeperController;
@@ -11,13 +12,21 @@ public class MainPanel extends JPanel {
 	private GameStatsPanel gameStatsPanel;
 
 	public MainPanel(final IMinesweeperController controller) {
-		gridPanel = new GridPanel(controller);
-		add(gridPanel);
+		setLayout(new BorderLayout());
 
 		gameStatsPanel = new GameStatsPanel(controller);
-		add(gameStatsPanel);
+		add(gameStatsPanel, BorderLayout.NORTH);
 
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		gridPanel = new GridPanel(controller);
+		add(gridPanel, BorderLayout.CENTER);
+	}
+
+	public GridPanel getGridPanel() {
+		return gridPanel;
+	}
+
+	public GameStatsPanel getGameStatsPanel() {
+		return gameStatsPanel;
 	}
 
 	private static final long serialVersionUID = 1L;

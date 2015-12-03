@@ -8,7 +8,7 @@ import minesweeper.util.observer.Observable;
 
 public class ControllerWrapper extends Observable implements IMinesweeperController {
 
-	private MinesweeperController controller;
+	private IMinesweeperController controller;
 
 	private static final Logger LOGGER = Logger.getLogger(ControllerWrapper.class);
 
@@ -73,6 +73,21 @@ public class ControllerWrapper extends Observable implements IMinesweeperControl
 	@Override
 	public String getStatusLine() {
 		return controller.getStatusLine();
+	}
+
+	@Override
+	public String getCellString(int row, int col) {
+		return controller.getCellString(row, col);
+	}
+
+	@Override
+	public int getHeight() {
+		return controller.getHeight();
+	}
+
+	@Override
+	public int getWidth() {
+		return controller.getWidth();
 	}
 
 }

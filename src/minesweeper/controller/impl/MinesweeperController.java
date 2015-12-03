@@ -2,24 +2,18 @@ package minesweeper.controller.impl;
 
 import java.util.List;
 
+import minesweeper.controller.IMinesweeperController;
 import minesweeper.model.ICell;
 import minesweeper.model.ICell.State;
 import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
 import minesweeper.model.IGridFactory.Strategy;
+import minesweeper.util.observer.Observable;
 
-public class MinesweeperController {
-	private String statusLine = "Welcome to Minesweeper!";
+public class MinesweeperController extends Observable implements IMinesweeperController {
 
 	private interface GameState {
 		boolean checkStatus();
-	}
-
-	private class SetupNeeded implements GameState {
-		@Override
-		public boolean checkStatus() {
-			return true;
-		}
 	}
 
 	private class Running implements GameState {
@@ -52,6 +46,8 @@ public class MinesweeperController {
 		}
 	}
 
+	private String statusLine = "Welcome to Minesweeper!";
+
 	private GameState gameState;
 
 	private int flags;
@@ -66,8 +62,9 @@ public class MinesweeperController {
 			reset();
 		} catch (IllegalStateException e) {
 			if ("Mine placement not specified".equals(e.getMessage())) {
-				// gFact isn't set up, caller must use changeSettings
-				gameState = new SetupNeeded();
+				// gFact isn't set up, use default settings
+				this.gFact.size(10, 20).mines(10).random();
+				reset();
 			} else {
 				throw e;
 			}
@@ -75,16 +72,15 @@ public class MinesweeperController {
 		}
 	}
 
+	@Override
 	public void changeSettings(int height, int width, int mines) {
 		gFact.size(height, width).mines(mines).random();
 		reset();
 		statusLine = "New Settings: height=" + height + " width=" + width + " mines=" + mines;
 	}
 
+	@Override
 	public void newGame() {
-		if (gameState instanceof SetupNeeded) {
-			return;
-		}
 		reset();
 		statusLine = "New game started";
 	}
@@ -100,6 +96,7 @@ public class MinesweeperController {
 		openFields = grid.getHeight() * grid.getWidth();
 	}
 
+	@Override
 	public void openCell(int row, int col) {
 		if (gameState.checkStatus()) {
 			return;
@@ -159,6 +156,7 @@ public class MinesweeperController {
 		}
 	}
 
+	@Override
 	public void openAround(int row, int col) {
 		if (gameState.checkStatus()) {
 			return;
@@ -183,6 +181,7 @@ public class MinesweeperController {
 		}
 	}
 
+	@Override
 	public void toggleFlag(int row, int col) {
 		if (gameState.checkStatus()) {
 			return;
@@ -201,15 +200,33 @@ public class MinesweeperController {
 		}
 	}
 
+	@Override
 	public String getGameStats() {
 		return "Unflagged mines left: " + (grid.getMines() - flags) + " Time: " + grid.getSecondsSinceCreated() + "s";
 	}
 
+	@Override
 	public String getGridString() {
 		return grid.toString();
 	}
 
+	@Override
 	public String getStatusLine() {
 		return statusLine;
+	}
+
+	@Override
+	public String getCellString(int row, int col) {
+		return grid.getCell(row, col).toString();
+	}
+
+	@Override
+	public int getHeight() {
+		return grid.getHeight();
+	}
+
+	@Override
+	public int getWidth() {
+		return grid.getWidth();
 	}
 }

@@ -23,7 +23,6 @@ public class Minesweeper {
 		IMinesweeperController controller = new ControllerWrapper(gFact);
 		TextUI tui = new TextUI(controller);
 		MinesweeperFrame gui = new MinesweeperFrame(controller);
-		controller.changeSettings(10, 20, 10);
 
 		boolean cont = true;
 		Scanner scanner = new Scanner(System.in);

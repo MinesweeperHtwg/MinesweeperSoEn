@@ -21,15 +21,10 @@ public class MinesweeperControllerTest {
 	public void testHalfInitialized() {
 		controller = new MinesweeperController(new GridFactory());
 		controller.openCell(0, 0);
-		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
 		controller.openAround(0, 0);
-		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
 		controller.toggleFlag(0, 0);
-		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
 		controller.newGame();
-		assertEquals("Welcome to Minesweeper!", controller.getStatusLine());
 		controller.changeSettings(1, 2, 1);
-		assertEquals("New Settings: height=1 width=2 mines=1", controller.getStatusLine());
 	}
 
 	@Test

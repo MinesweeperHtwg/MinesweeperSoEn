@@ -14,6 +14,7 @@ class StatusPanel extends JPanel {
 	private IMinesweeperController controller;
 
 	StatusPanel(final IMinesweeperController controller) {
+		this.controller = controller;
 		setBorder(LineBorder.createBlackLineBorder());
 		statusLabel = new JLabel();
 		statusLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
@@ -22,7 +23,7 @@ class StatusPanel extends JPanel {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 	}
 
-	void setText(String s) {
+	void updateText() {
 		statusLabel.setText(controller.getStatusLine());
 	}
 

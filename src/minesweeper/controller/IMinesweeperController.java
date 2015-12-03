@@ -18,4 +18,10 @@ public interface IMinesweeperController extends IObservable {
 	String getGridString();
 
 	String getStatusLine();
+
+	String getCellString(int row, int col);
+
+	int getHeight();
+
+	int getWidth();
 }
