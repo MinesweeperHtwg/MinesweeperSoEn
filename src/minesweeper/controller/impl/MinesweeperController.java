@@ -8,6 +8,7 @@ import minesweeper.model.ICell.State;
 import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
 import minesweeper.model.IGridFactory.Strategy;
+import minesweeper.util.observer.Event;
 import minesweeper.util.observer.Observable;
 
 public class MinesweeperController extends Observable implements IMinesweeperController {
@@ -49,6 +50,8 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private String statusLine = "Welcome to Minesweeper!";
 
 	private GameState gameState;
+	
+	private Event event;
 
 	private int flags;
 	private int openFields;
@@ -94,6 +97,8 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 		flags = 0;
 		openFields = grid.getHeight() * grid.getWidth();
+		
+		event = null;
 	}
 
 	@Override

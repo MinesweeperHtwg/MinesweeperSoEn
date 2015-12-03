@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.JFrame;
+import javax.swing.RepaintManager;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
@@ -16,48 +17,57 @@ import minesweeper.util.observer.IObserver;
 
 @SuppressWarnings("serial")
 public class MinesweeperFrame extends JFrame implements IObserver {
-	private static final Logger LOGGER = Logger.getLogger(MinesweeperFrame.class);
+    private static final Logger LOGGER = Logger
+            .getLogger(MinesweeperFrame.class);
 
-	private IMinesweeperController controller;
+    private IMinesweeperController controller;
 
-	private Container pane;
-	private StatusPanel statusPanel;
-	private MainPanel mainPanel;
-	private GridPanel gridPanel;
-	private GameStatsPanel gameStatsPanel;
+    private final RepaintManager repaintMgr;
 
-	public MinesweeperFrame(final IMinesweeperController controller) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			LOGGER.info("Can't change look and feel: " + e);
-		}
+    private Container pane;
+    private StatusPanel statusPanel;
+    private GridPanel gridPanel;
+    private GameStatsPanel gameStatsPanel;
 
-		this.controller = controller;
-		controller.addObserver(this);
+    public MinesweeperFrame(final IMinesweeperController controller) {
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            LOGGER.info("Can't change look and feel: " + e);
+        }
 
-		pane = getContentPane();
-		pane.setLayout(new BorderLayout());
+        this.controller = controller;
+        controller.addObserver(this);
 
-		mainPanel = new MainPanel(controller);
-		pane.add(mainPanel, BorderLayout.CENTER);
-		gridPanel = mainPanel.getGridPanel();
-		gameStatsPanel = mainPanel.getGameStatsPanel();
+        pane = getContentPane();
+        pane.setLayout(new BorderLayout());
 
-		statusPanel = new StatusPanel(controller);
-		pane.add(statusPanel, BorderLayout.SOUTH);
+        gameStatsPanel = new GameStatsPanel(controller);
+        pane.add(gameStatsPanel, BorderLayout.NORTH);
 
-		update(new UpdateAllEvent());
+        gridPanel = new GridPanel(controller);
+        add(gridPanel, BorderLayout.CENTER);
 
-		setTitle("Minesweeper");
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		setResizable(true);
-		pack();
-		setVisible(true);
-	}
+        statusPanel = new StatusPanel(controller);
+        pane.add(statusPanel, BorderLayout.SOUTH);
+        
+        repaintMgr = RepaintManager.currentManager(this);
 
-	@Override
-	public void update(Event e) {
-		statusPanel.updateText();
-	}
+        update(new UpdateAllEvent());
+
+        setTitle("Minesweeper");
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(true);
+        pack();
+        setVisible(true);
+    }
+
+    @Override
+    public void update(Event e) {
+        gameStatsPanel.updateGameStats();
+        gridPanel.updateAllCells();
+        statusPanel.updateText();
+
+        repaintMgr.markCompletelyDirty(gridPanel);
+    }
 }

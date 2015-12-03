@@ -3,6 +3,7 @@ package minesweeper.aview.gui;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
+import javax.swing.RepaintManager;
 
 import minesweeper.controller.IMinesweeperController;
 
@@ -10,15 +11,22 @@ public class GridPanel extends JPanel {
 	private int height;
 	private int width;
 	private CellPanel[][] cellPanels;
+	
+	private final RepaintManager repaintMgr;
 
 	private IMinesweeperController controller;
+	
+	private static final long serialVersionUID = 1L;
 
 	public GridPanel(final IMinesweeperController controller) {
 		this.controller = controller;
-		reset();
+		rebuildCells();
+        repaintMgr = RepaintManager.currentManager(this);
 	}
 
-	public void reset() {
+	public void rebuildCells() {
+	    removeAll();
+	    
 		height = controller.getHeight();
 		width = controller.getWidth();
 
@@ -34,6 +42,17 @@ public class GridPanel extends JPanel {
 			}
 		}
 	}
-
-	private static final long serialVersionUID = 1L;
+	
+	public void updateCell(int row, int col) {
+	    cellPanels[row][col].updateCell();
+	}
+	
+	public void updateAllCells() {
+	    for (CellPanel[] rows : cellPanels) {
+	        for (CellPanel cellPanel : rows) {
+                cellPanel.updateCell();
+                repaintMgr.markCompletelyClean(cellPanel);
+            }
+        }
+	}
 }
