@@ -1,4 +1,4 @@
-package minesweeper.controller.impl;
+package minesweeper.controller;
 
 import minesweeper.util.observer.Event;
 

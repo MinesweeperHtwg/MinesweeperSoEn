@@ -14,7 +14,9 @@ import javax.swing.WindowConstants;
 import org.apache.log4j.Logger;
 
 import minesweeper.controller.IMinesweeperController;
-import minesweeper.controller.impl.UpdateAllEvent;
+import minesweeper.controller.UpdateAllEvent;
+import minesweeper.controller.UpdateCell;
+import minesweeper.controller.UpdateRebuild;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
 
@@ -92,10 +94,19 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 
     @Override
     public void update(Event e) {
-        gameStatsPanel.updateGameStats();
-        gridPanel.updateAllCells();
-        statusPanel.updateText();
+        if (e instanceof UpdateAllEvent) {
+            gridPanel.updateAllCells();
+        } else if (e instanceof UpdateCell) {
+            UpdateCell updateCell = (UpdateCell) e;
+            gridPanel.updateCell(updateCell.getRow(), updateCell.getCol());
+        } else if (e instanceof UpdateRebuild) {
+            gridPanel.rebuildCells();
+        } else {
+            throw new IllegalArgumentException("Illegal Event Type");
+        }
 
+        gameStatsPanel.updateGameStats();
+        statusPanel.updateText();
         repaintMgr.markCompletelyDirty(gridPanel);
     }
 }
