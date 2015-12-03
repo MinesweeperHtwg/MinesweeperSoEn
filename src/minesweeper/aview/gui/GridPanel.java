@@ -1,7 +1,6 @@
 package minesweeper.aview.gui;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
@@ -23,10 +22,7 @@ public class GridPanel extends JPanel {
 		height = controller.getHeight();
 		width = controller.getWidth();
 
-		setLayout(new GridBagLayout());
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.BOTH;
+		setLayout(new GridLayout(height, width));
 
 		cellPanels = new CellPanel[height][width];
 
@@ -34,9 +30,7 @@ public class GridPanel extends JPanel {
 			for (int col = 0; col < width; col++) {
 				CellPanel cellPanel = new CellPanel(controller, row, col);
 				cellPanels[row][col] = cellPanel;
-				c.gridy = row;
-				c.gridx = col;
-				add(cellPanel, c);
+				add(cellPanel);
 			}
 		}
 	}
