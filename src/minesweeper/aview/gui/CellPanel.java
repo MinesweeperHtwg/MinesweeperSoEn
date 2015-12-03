@@ -38,12 +38,12 @@ public class CellPanel extends JPanel {
 
 	public void updateCell() {
 		String cellString = controller.getCellString(row, col);
-		if (cellString.equals(" ")) {
+		if (" ".equals(cellString)) {
 			label.setText("");
 			setBorder(new BevelBorder(BevelBorder.RAISED));
 		} else {
 			// TODO: mine/mineClicked icon, colored text/icons
-			if (cellString.equals("0")) {
+			if ("0".equals(cellString)) {
 				label.setText("");
 			} else {
 				label.setText(cellString);
