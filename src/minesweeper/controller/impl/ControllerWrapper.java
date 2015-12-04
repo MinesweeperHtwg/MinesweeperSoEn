@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.model.IGridFactory;
+import minesweeper.util.observer.Event;
 import minesweeper.util.observer.Observable;
 
 public class ControllerWrapper extends Observable implements IMinesweeperController {
@@ -22,7 +23,7 @@ public class ControllerWrapper extends Observable implements IMinesweeperControl
 	}
 
 	private void post() {
-		notifyObservers();
+		notifyObservers(controller.getEvent());
 	}
 
 	@Override
@@ -88,6 +89,11 @@ public class ControllerWrapper extends Observable implements IMinesweeperControl
 	@Override
 	public int getWidth() {
 		return controller.getWidth();
+	}
+
+	@Override
+	public Event getEvent() {
+		return controller.getEvent();
 	}
 
 }

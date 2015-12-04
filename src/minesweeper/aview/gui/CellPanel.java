@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.MatteBorder;
 
 import minesweeper.controller.IMinesweeperController;
 
@@ -17,7 +17,7 @@ public class CellPanel extends JPanel {
 
 	private IMinesweeperController controller;
 	private JLabel label;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	public CellPanel(IMinesweeperController controller, int row, int col) {
@@ -42,7 +42,10 @@ public class CellPanel extends JPanel {
 		String cellString = controller.getCellString(row, col);
 		if (" ".equals(cellString)) {
 			label.setText("");
-			setBorder(new BevelBorder(BevelBorder.RAISED));
+			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
+		} else if ("F".equals(cellString)) {
+			label.setText("F");
+			setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		} else {
 			// TODO: mine/mineClicked icon, colored text/icons
 			if ("0".equals(cellString)) {
@@ -50,16 +53,16 @@ public class CellPanel extends JPanel {
 			} else {
 				label.setText(cellString);
 			}
-			setBorder(new MatteBorder(1, 1, 0, 0, Color.GRAY));
+			setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, Color.GRAY));
 		}
 	}
 
 	public int getRow() {
-        return row;
-    }
+		return row;
+	}
 
-    public int getCol() {
-        return col;
-    }
+	public int getCol() {
+		return col;
+	}
 
 }

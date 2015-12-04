@@ -1,5 +1,6 @@
 package minesweeper.controller;
 
+import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObservable;
 
 public interface IMinesweeperController extends IObservable {
@@ -24,4 +25,6 @@ public interface IMinesweeperController extends IObservable {
 	int getHeight();
 
 	int getWidth();
+
+	Event getEvent();
 }

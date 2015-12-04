@@ -1,8 +1,13 @@
 package minesweeper.controller.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+import minesweeper.controller.DimensionsChanged;
 import minesweeper.controller.IMinesweeperController;
+import minesweeper.controller.MultipleCellsChanged;
+import minesweeper.controller.NoCellChanged;
+import minesweeper.controller.SingleCellChanged;
 import minesweeper.model.ICell;
 import minesweeper.model.ICell.State;
 import minesweeper.model.IGrid;
@@ -14,12 +19,20 @@ import minesweeper.util.observer.Observable;
 public class MinesweeperController extends Observable implements IMinesweeperController {
 
 	private interface GameState {
+		/**
+		 * Checks the game status. If game has ended, sets statusLine, event and
+		 * returns true. If game is still running, resets event and returns
+		 * false.
+		 * 
+		 * @return if the game has ended.
+		 */
 		boolean checkStatus();
 	}
 
 	private class Running implements GameState {
 		@Override
 		public boolean checkStatus() {
+			event = null;
 			return false;
 		}
 	}
@@ -27,6 +40,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private class FirstClick implements GameState {
 		@Override
 		public boolean checkStatus() {
+			event = null;
 			return false;
 		}
 	}
@@ -35,6 +49,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		@Override
 		public boolean checkStatus() {
 			statusLine = "You've won!";
+			event = new NoCellChanged();
 			return true;
 		}
 	}
@@ -43,6 +58,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		@Override
 		public boolean checkStatus() {
 			statusLine = "Game over";
+			event = new NoCellChanged();
 			return true;
 		}
 	}
@@ -50,7 +66,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private String statusLine = "Welcome to Minesweeper!";
 
 	private GameState gameState;
-	
+
 	private Event event;
 
 	private int flags;
@@ -80,12 +96,14 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		gFact.size(height, width).mines(mines).random();
 		reset();
 		statusLine = "New Settings: height=" + height + " width=" + width + " mines=" + mines;
+		event = new DimensionsChanged();
 	}
 
 	@Override
 	public void newGame() {
 		reset();
 		statusLine = "New game started";
+		event = new MultipleCellsChanged();
 	}
 
 	private void reset() {
@@ -97,8 +115,6 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 		flags = 0;
 		openFields = grid.getHeight() * grid.getWidth();
-		
-		event = null;
 	}
 
 	@Override
@@ -115,9 +131,12 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		ICell cell = grid.getCell(row, col);
 		if (cell.isFlag()) {
 			statusLine = "Can't open " + cell.mkString() + " because there is a flag";
+			event = new NoCellChanged();
 		} else if (cell.isOpened()) {
 			statusLine = "Can't open " + cell.mkString() + " because the cell has been opened already";
+			event = new NoCellChanged();
 		} else {
+			event = new SingleCellChanged(row, col);
 			executeOpenCell(cell);
 		}
 	}
@@ -132,6 +151,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 		if (cell.getMines() == 0) {
 			floodOpen(cell);
+			event = new MultipleCellsChanged();
 		}
 		// check to ensure that an game over message does not get
 		// overwritten when called from openAround.
@@ -169,19 +189,29 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		ICell cell = grid.getCell(row, col);
 		if (cell.isClosed()) {
 			statusLine = "Can't open cells around " + cell.mkString() + " because the cell is closed";
+			event = new NoCellChanged();
 		} else {
 			List<ICell> adjCells = grid.getAdjCells(row, col);
 			long flagCount = adjCells.stream().filter(ICell::isFlag).count();
 
 			if (flagCount == cell.getMines()) {
-				adjCells.stream().filter(c -> c.isClosedWithoutFlag()).forEach(c -> executeOpenCell(c));
-				// only print status if we haven't lost or won
-				if (gameState instanceof Running) {
-					statusLine = "Opened all cells around " + cell.mkString();
+				List<ICell> cellsToOpen = adjCells.stream().filter(c -> c.isClosedWithoutFlag())
+						.collect(Collectors.toList());
+				if (cellsToOpen.size() == 0) {
+					statusLine = "No cells to open around " + cell.mkString();
+					event = new NoCellChanged();
+				} else {
+					cellsToOpen.forEach(c -> executeOpenCell(c));
+					// only change statusLine if we haven't lost or won
+					if (gameState instanceof Running) {
+						statusLine = "Opened all cells around " + cell.mkString();
+					}
+					event = new MultipleCellsChanged();
 				}
 			} else {
 				statusLine = "Can't open cells around " + cell.mkString()
 						+ " because there is an incorrect number of flags around this cell";
+				event = new NoCellChanged();
 			}
 		}
 	}
@@ -194,13 +224,16 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		ICell cell = grid.getCell(row, col);
 		if (cell.isOpened()) {
 			statusLine = "Can't place flag at " + cell.mkString() + " because the cell has been opened";
+			event = new NoCellChanged();
 		} else if (cell.isFlag()) {
 			cell.setState(State.CLOSED);
 			statusLine = "Flag removed at " + cell.mkString();
+			event = new SingleCellChanged(row, col);
 			flags--;
 		} else {
 			cell.setState(State.FLAG);
 			statusLine = "Flag set at " + cell.mkString();
+			event = new SingleCellChanged(row, col);
 			flags++;
 		}
 	}
@@ -233,5 +266,10 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	@Override
 	public int getWidth() {
 		return grid.getWidth();
+	}
+
+	@Override
+	public Event getEvent() {
+		return event;
 	}
 }

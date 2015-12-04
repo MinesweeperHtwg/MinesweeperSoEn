@@ -21,11 +21,8 @@ public class Minesweeper {
 
 		IGridFactory gFact = new GridFactory();
 		IMinesweeperController controller = new ControllerWrapper(gFact);
-		// Debug open for gui
-		controller.openCell(5, 5);
-
 		TextUI tui = new TextUI(controller);
-		MinesweeperFrame gui = new MinesweeperFrame(controller);
+		new MinesweeperFrame(controller);
 
 		boolean cont = true;
 		Scanner scanner = new Scanner(System.in);
