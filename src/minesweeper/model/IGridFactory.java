@@ -3,7 +3,7 @@ package minesweeper.model;
 public interface IGridFactory {
 
 	public enum Strategy {
-		RANDOM, RANDOMCLEAR, SPECIFIED
+		RANDOM, RANDOMCLEAR, SPECIFIED, NOMINES
 	}
 
 	/**
@@ -24,5 +24,7 @@ public interface IGridFactory {
 	IGridFactory size(int height, int width);
 
 	IGridFactory mines(int mines);
+
+	IGridFactory noMines();
 
 }

@@ -44,12 +44,6 @@ public class GridFactoryTest {
 	}
 
 	@Test
-	public void testGetGridIllegalState() {
-		thrown.expect(IllegalStateException.class);
-		new GridFactory(2, 2).getGrid();
-	}
-
-	@Test
 	public void testSize() {
 		IGrid<ICell> grid = new GridFactory().size(1, 2).mines(1).random().getGrid();
 		assertEquals(1, grid.getHeight());
@@ -66,12 +60,6 @@ public class GridFactoryTest {
 	public void testSizeIllegalWidth() {
 		thrown.expect(IllegalArgumentException.class);
 		new GridFactory().size(1, 0).mines(0).random().getGrid();
-	}
-
-	@Test
-	public void testMinesIllegal() {
-		thrown.expect(IllegalArgumentException.class);
-		new GridFactory(1, 2).random().getGrid();
 	}
 
 	@Test

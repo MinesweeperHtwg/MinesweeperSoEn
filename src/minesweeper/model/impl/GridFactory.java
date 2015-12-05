@@ -1,7 +1,6 @@
 package minesweeper.model.impl;
 
 import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkState;
 
 import java.util.List;
 
@@ -12,21 +11,42 @@ import minesweeper.model.IGridFactory;
 import minesweeper.model.IMineDistributeStrategy;
 
 public class GridFactory implements IGridFactory {
+	// Only one instance of NoMinesDistribute is needed
+	private static final IMineDistributeStrategy NOMINESDISTRIBUTE = new NoMinesDistribute();
+
 	private int height;
 	private int width;
-	private int mines = -1;
+	private int mines;
+
 	private IMineDistributeStrategy distributor;
 	private Strategy strategy;
 
+	/**
+	 * Generates new GridFactory, initialized with a gridsize of 1,1 and
+	 * noMines()
+	 */
 	public GridFactory() {
+		this(1, 1);
 	}
 
+	/**
+	 * Generates new GridFactory, initialized with a specified gridsize and
+	 * noMines()
+	 * 
+	 * @param height
+	 *            the height of the generated grid
+	 * @param width
+	 *            the with of the generated grid
+	 */
 	public GridFactory(int height, int width) {
 		size(height, width);
+		noMines();
+		mines = 0;
 	}
 
 	@Override
 	public IGridFactory size(int height, int width) {
+		checkArgument(height > 0 && width > 0, "Dimensions must be bigger than 0");
 		this.height = height;
 		this.width = width;
 		return this;
@@ -34,13 +54,13 @@ public class GridFactory implements IGridFactory {
 
 	@Override
 	public IGridFactory mines(int mines) {
+		checkArgument(mines >= 0, "Mines must be positive");
 		this.mines = mines;
 		return this;
 	}
 
 	@Override
 	public IGridFactory random() {
-		checkMines();
 		distributor = new RandomDistribute(mines);
 		strategy = Strategy.RANDOM;
 		return this;
@@ -48,14 +68,9 @@ public class GridFactory implements IGridFactory {
 
 	@Override
 	public IGridFactory randomClear(int rowClear, int colClear) {
-		checkMines();
 		distributor = new RandomClearDistribute(mines, rowClear, colClear);
 		strategy = Strategy.RANDOMCLEAR;
 		return this;
-	}
-
-	private void checkMines() {
-		checkArgument(mines >= 0, "Mines must be positive");
 	}
 
 	@Override
@@ -71,11 +86,13 @@ public class GridFactory implements IGridFactory {
 		return this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see minesweeper.model.impl.IGridFactory#getGrid()
-	 */
+	@Override
+	public IGridFactory noMines() {
+		distributor = NOMINESDISTRIBUTE;
+		strategy = Strategy.NOMINES;
+		return this;
+	}
+
 	@Override
 	public IGrid<ICell> getGrid() {
 		checkReadyForReturn();
@@ -92,8 +109,6 @@ public class GridFactory implements IGridFactory {
 	}
 
 	private void checkReadyForReturn() {
-		checkState(distributor != null, "Mine placement not specified");
-		checkArgument(height > 0 && width > 0, "Dimensions must be bigger than 0");
 		if (distributor instanceof RandomClearDistribute) {
 			checkCellMineCount(height * width - 1, mines);
 		} else {
