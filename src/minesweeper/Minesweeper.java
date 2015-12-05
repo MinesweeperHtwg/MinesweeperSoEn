@@ -2,6 +2,8 @@ package minesweeper;
 
 import java.util.Scanner;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.log4j.PropertyConfigurator;
 
 import minesweeper.aview.gui.MinesweeperFrame;
@@ -23,10 +25,12 @@ public class Minesweeper {
 		gFact.size(10, 20).mines(10);
 		IMinesweeperController controller = new ControllerWrapper(gFact);
 		TextUI tui = new TextUI(controller);
-
-		@SuppressWarnings("unused")
-		MinesweeperFrame gui = new MinesweeperFrame(controller);
-
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				new MinesweeperFrame(controller);
+			}
+		});
 		boolean cont = true;
 		Scanner scanner = new Scanner(System.in);
 		while (cont) {
