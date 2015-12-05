@@ -20,6 +20,7 @@ public class Minesweeper {
 		PropertyConfigurator.configure("log4j.properties");
 
 		IGridFactory gFact = new GridFactory();
+		gFact.size(10, 20).mines(10);
 		IMinesweeperController controller = new ControllerWrapper(gFact);
 		TextUI tui = new TextUI(controller);
 		new MinesweeperFrame(controller);

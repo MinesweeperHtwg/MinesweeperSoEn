@@ -77,23 +77,15 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	protected MinesweeperController(IGridFactory gFact) {
 		this.gFact = gFact;
-		try {
-			reset();
-		} catch (IllegalStateException e) {
-			if ("Mine placement not specified".equals(e.getMessage())) {
-				// gFact isn't set up, use default settings
-				this.gFact.size(10, 20).mines(10).random();
-				reset();
-			} else {
-				throw e;
-			}
-
-		}
+		reset();
 	}
 
 	@Override
 	public void changeSettings(int height, int width, int mines) {
-		gFact.size(height, width).mines(mines).random();
+		gFact.size(height, width).mines(mines);
+		if (gFact.getStrategy() == Strategy.SPECIFIED) {
+			gFact.noMines();
+		}
 		reset();
 		statusLine = "New Settings: height=" + height + " width=" + width + " mines=" + mines;
 		event = new DimensionsChanged();
@@ -107,10 +99,11 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	}
 
 	private void reset() {
-		grid = gFact.getGrid();
 		if (gFact.getStrategy() == Strategy.SPECIFIED) {
+			grid = gFact.getGrid();
 			gameState = new Running();
 		} else {
+			grid = gFact.noMines().getGrid();
 			gameState = new FirstClick();
 		}
 		flags = 0;
