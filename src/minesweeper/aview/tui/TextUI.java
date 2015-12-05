@@ -20,6 +20,7 @@ public class TextUI implements IObserver {
 	public TextUI(IMinesweeperController controller) {
 		this.controller = controller;
 		controller.addObserver(this);
+		printTUI();
 	}
 
 	public boolean processLine(String line) {
