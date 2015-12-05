@@ -61,6 +61,7 @@ public class MinesweeperControllerTest {
 		assertEquals(1, controller.getHeight());
 		assertEquals(2, controller.getWidth());
 		assertTrue(controller.getGameStats().contains("Unflagged mines left: 1"));
+		checkEventDimensions();
 	}
 
 	@Test
