@@ -28,9 +28,11 @@ public class Minesweeper {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				new MinesweeperFrame(controller);
+				MinesweeperFrame gui = new MinesweeperFrame(controller);
+				gui.setVisible(true);
 			}
 		});
+
 		boolean cont = true;
 		Scanner scanner = new Scanner(System.in);
 		while (cont) {

@@ -65,7 +65,6 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 		setResizable(true);
 		pack();
 		setMinimumSize(getSize());
-		setVisible(true);
 	}
 
 	private class CellListener extends MouseAdapter {

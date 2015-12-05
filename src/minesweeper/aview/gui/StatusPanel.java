@@ -13,6 +13,8 @@ class StatusPanel extends JPanel {
 	private JLabel statusLabel;
 	private IMinesweeperController controller;
 
+	private static final long serialVersionUID = 1L;
+
 	StatusPanel(final IMinesweeperController controller) {
 		this.controller = controller;
 		setBorder(LineBorder.createBlackLineBorder());
@@ -27,5 +29,4 @@ class StatusPanel extends JPanel {
 		statusLabel.setText(controller.getStatusLine());
 	}
 
-	private static final long serialVersionUID = 1L;
 }
