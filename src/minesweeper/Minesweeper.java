@@ -23,7 +23,9 @@ public class Minesweeper {
 		gFact.size(10, 20).mines(10);
 		IMinesweeperController controller = new ControllerWrapper(gFact);
 		TextUI tui = new TextUI(controller);
-		new MinesweeperFrame(controller);
+
+		@SuppressWarnings("unused")
+		MinesweeperFrame gui = new MinesweeperFrame(controller);
 
 		boolean cont = true;
 		Scanner scanner = new Scanner(System.in);

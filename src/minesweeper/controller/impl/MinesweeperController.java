@@ -183,30 +183,31 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		if (cell.isClosed()) {
 			statusLine = "Can't open cells around " + cell.mkString() + " because the cell is closed";
 			event = new NoCellChanged();
-		} else {
-			List<ICell> adjCells = grid.getAdjCells(row, col);
-			long flagCount = adjCells.stream().filter(ICell::isFlag).count();
-
-			if (flagCount == cell.getMines()) {
-				List<ICell> cellsToOpen = adjCells.stream().filter(c -> c.isClosedWithoutFlag())
-						.collect(Collectors.toList());
-				if (cellsToOpen.size() == 0) {
-					statusLine = "No cells to open around " + cell.mkString();
-					event = new NoCellChanged();
-				} else {
-					cellsToOpen.forEach(c -> executeOpenCell(c));
-					// only change statusLine if we haven't lost or won
-					if (gameState instanceof Running) {
-						statusLine = "Opened all cells around " + cell.mkString();
-					}
-					event = new MultipleCellsChanged();
-				}
-			} else {
-				statusLine = "Can't open cells around " + cell.mkString()
-						+ " because there is an incorrect number of flags around this cell";
-				event = new NoCellChanged();
-			}
+			return;
 		}
+		List<ICell> adjCells = grid.getAdjCells(row, col);
+		long flagCount = adjCells.stream().filter(ICell::isFlag).count();
+
+		if (flagCount == cell.getMines()) {
+			List<ICell> cellsToOpen = adjCells.stream().filter(c -> c.isClosedWithoutFlag())
+					.collect(Collectors.toList());
+			if (cellsToOpen.isEmpty()) {
+				statusLine = "No cells to open around " + cell.mkString();
+				event = new NoCellChanged();
+			} else {
+				cellsToOpen.forEach(c -> executeOpenCell(c));
+				// only change statusLine if we haven't lost or won
+				if (gameState instanceof Running) {
+					statusLine = "Opened all cells around " + cell.mkString();
+				}
+				event = new MultipleCellsChanged();
+			}
+		} else {
+			statusLine = "Can't open cells around " + cell.mkString()
+					+ " because there is an incorrect number of flags around this cell";
+			event = new NoCellChanged();
+		}
+
 	}
 
 	@Override

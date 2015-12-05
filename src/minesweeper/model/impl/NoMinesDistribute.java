@@ -10,5 +10,6 @@ public class NoMinesDistribute implements IMineDistributeStrategy {
 
 	@Override
 	public void distributeMines(IGrid<ICellMutable> grid) {
+		// This strategy places no mines
 	}
 }
