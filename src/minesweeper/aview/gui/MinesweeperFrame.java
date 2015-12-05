@@ -105,6 +105,7 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 			gridPanel.updateCell(updateCell.getRow(), updateCell.getCol());
 		} else if (e instanceof DimensionsChanged) {
 			gridPanel.rebuildCells();
+			repaintMgr.addInvalidComponent(gridPanel);
 		} else if (e instanceof NoCellChanged) {
 			// Nothing to do
 		} else {
