@@ -39,10 +39,12 @@ public class GridPanel extends JPanel {
 
 	private class CellListener extends MouseAdapter {
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			Object source = e.getSource();
+		public void mouseReleased(MouseEvent e) {
+			e = SwingUtilities.convertMouseEvent(e.getComponent(), e, GridPanel.this);
+			Object source = getComponentAt(e.getPoint());
 			if (!(source instanceof CellPanel)) {
-				throw new IllegalArgumentException("Unsupported Event");
+				// mouse is outside window or not over a cell
+				return;
 			}
 			CellPanel cellPanel = (CellPanel) source;
 			int row = cellPanel.getRow();

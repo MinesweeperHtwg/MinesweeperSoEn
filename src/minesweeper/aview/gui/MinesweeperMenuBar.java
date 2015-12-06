@@ -1,5 +1,8 @@
 package minesweeper.aview.gui;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -24,6 +27,12 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 		menuItem = new JMenuItem("New");
 		menuItem.setMnemonic(KeyEvent.VK_N);
+		menuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.newGame();
+			}
+		});
 		menu.add(menuItem);
 
 		menu.addSeparator();
@@ -32,16 +41,34 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 		rbMenuItem = new JRadioButtonMenuItem("Easy");
 		rbMenuItem.setMnemonic(KeyEvent.VK_1);
+		rbMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.changeSettings(8, 8, 10);
+			}
+		});
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
 		rbMenuItem = new JRadioButtonMenuItem("Intermediate");
 		rbMenuItem.setMnemonic(KeyEvent.VK_2);
+		rbMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.changeSettings(16, 16, 40);
+			}
+		});
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
 		rbMenuItem = new JRadioButtonMenuItem("Hard");
 		rbMenuItem.setMnemonic(KeyEvent.VK_3);
+		rbMenuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				controller.changeSettings(16, 30, 99);
+			}
+		});
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
