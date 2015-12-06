@@ -40,8 +40,8 @@ public class GridPanel extends JPanel {
 	private class CellListener extends MouseAdapter {
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			e = SwingUtilities.convertMouseEvent(e.getComponent(), e, GridPanel.this);
-			Object source = getComponentAt(e.getPoint());
+			MouseEvent eConverted = SwingUtilities.convertMouseEvent(e.getComponent(), e, GridPanel.this);
+			Object source = getComponentAt(eConverted.getPoint());
 			if (!(source instanceof CellPanel)) {
 				// mouse is outside window or not over a cell
 				return;
@@ -49,15 +49,15 @@ public class GridPanel extends JPanel {
 			CellPanel cellPanel = (CellPanel) source;
 			int row = cellPanel.getRow();
 			int col = cellPanel.getCol();
-			if (SwingUtilities.isLeftMouseButton(e)) {
+			if (SwingUtilities.isLeftMouseButton(eConverted)) {
 				controller.openCell(row, col);
 				return;
 			}
-			if (SwingUtilities.isMiddleMouseButton(e)) {
+			if (SwingUtilities.isMiddleMouseButton(eConverted)) {
 				controller.openAround(row, col);
 				return;
 			}
-			if (SwingUtilities.isRightMouseButton(e)) {
+			if (SwingUtilities.isRightMouseButton(eConverted)) {
 				controller.toggleFlag(row, col);
 				return;
 			}

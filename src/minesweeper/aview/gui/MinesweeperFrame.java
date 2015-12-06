@@ -26,8 +26,6 @@ import minesweeper.util.observer.IObserver;
 public class MinesweeperFrame extends JFrame implements IObserver {
 	private static final Logger LOGGER = Logger.getLogger(MinesweeperFrame.class);
 
-	private IMinesweeperController controller;
-
 	private final RepaintManager repaintMgr;
 
 	private StatusPanel statusPanel;
@@ -40,7 +38,6 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 
 	@Inject
 	public MinesweeperFrame(final IMinesweeperController controller) {
-		this.controller = controller;
 		controller.addObserver(this);
 
 		repaintMgr = RepaintManager.currentManager(this);
