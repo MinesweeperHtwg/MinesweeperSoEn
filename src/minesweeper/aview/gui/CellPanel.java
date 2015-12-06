@@ -33,7 +33,7 @@ public class CellPanel extends JPanel {
 
 		setMinimumSize(new Dimension(16, 16));
 		setPreferredSize(new Dimension(16, 16));
-		setBackground(new Color(192, 192, 192));
+		setBackground(MinesweeperFrame.BG);
 
 		updateCell();
 	}

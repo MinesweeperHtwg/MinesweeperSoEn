@@ -1,15 +1,15 @@
 package minesweeper.aview.gui;
 
 import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
+import javax.swing.border.CompoundBorder;
 
 import org.apache.log4j.Logger;
 
@@ -23,7 +23,6 @@ import minesweeper.controller.SingleCellChanged;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
 
-@SuppressWarnings("serial")
 public class MinesweeperFrame extends JFrame implements IObserver {
 	private static final Logger LOGGER = Logger.getLogger(MinesweeperFrame.class);
 
@@ -31,68 +30,52 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 
 	private final RepaintManager repaintMgr;
 
-	private Container pane;
 	private StatusPanel statusPanel;
 	private GridPanel gridPanel;
 	private GameStatsPanel gameStatsPanel;
 
+	static final Color BG = new Color(192, 192, 192);
+
+	private static final long serialVersionUID = 1L;
+
 	@Inject
 	public MinesweeperFrame(final IMinesweeperController controller) {
-		try {
-			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception e) {
-			LOGGER.info("Can't change look and feel: " + e);
-		}
-
 		this.controller = controller;
 		controller.addObserver(this);
 
-		pane = getContentPane();
-		pane.setLayout(new BorderLayout());
-
-		gameStatsPanel = new GameStatsPanel(controller);
-		pane.add(gameStatsPanel, BorderLayout.NORTH);
-
-		gridPanel = new GridPanel(controller, new CellListener());
-		add(gridPanel, BorderLayout.CENTER);
-
-		statusPanel = new StatusPanel(controller);
-		pane.add(statusPanel, BorderLayout.SOUTH);
-
 		repaintMgr = RepaintManager.currentManager(this);
 
-		update(new MultipleCellsChanged());
+		try {
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		} catch (Exception e) {
+			LOGGER.info("Can't change look and feel", e);
+		}
+
+		setJMenuBar(new MinesweeperMenuBar(controller));
+
+		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(new BorderLayout());
+		mainPanel.setBorder(new CompoundBorder(BorderFactory.createRaisedBevelBorder(),
+				BorderFactory.createEmptyBorder(6, 6, 6, 6)));
+		mainPanel.setBackground(BG);
+		add(mainPanel);
+
+		gameStatsPanel = new GameStatsPanel(controller);
+		mainPanel.add(gameStatsPanel, BorderLayout.NORTH);
+
+		gridPanel = new GridPanel(controller);
+		mainPanel.add(gridPanel, BorderLayout.CENTER);
+
+		statusPanel = new StatusPanel(controller);
+		mainPanel.add(statusPanel, BorderLayout.SOUTH);
+
+		update(new NoCellChanged());
 
 		setTitle("Minesweeper");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(true);
 		pack();
 		setMinimumSize(getSize());
-	}
-
-	private class CellListener extends MouseAdapter {
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			Object source = e.getSource();
-			if (!(source instanceof CellPanel)) {
-				throw new IllegalArgumentException("Unsupported Event");
-			}
-			CellPanel cellPanel = (CellPanel) source;
-			int row = cellPanel.getRow();
-			int col = cellPanel.getCol();
-			if (SwingUtilities.isLeftMouseButton(e)) {
-				controller.openCell(row, col);
-				return;
-			}
-			if (SwingUtilities.isMiddleMouseButton(e)) {
-				controller.openAround(row, col);
-				return;
-			}
-			if (SwingUtilities.isRightMouseButton(e)) {
-				controller.toggleFlag(row, col);
-				return;
-			}
-		}
 	}
 
 	@Override

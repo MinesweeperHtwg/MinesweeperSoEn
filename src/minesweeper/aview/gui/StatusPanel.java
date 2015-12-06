@@ -1,11 +1,11 @@
 package minesweeper.aview.gui;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.LineBorder;
 
 import minesweeper.controller.IMinesweeperController;
 
@@ -17,7 +17,7 @@ class StatusPanel extends JPanel {
 
 	StatusPanel(final IMinesweeperController controller) {
 		this.controller = controller;
-		setBorder(LineBorder.createBlackLineBorder());
+		setBorder(BorderFactory.createLoweredBevelBorder());
 		statusLabel = new JLabel();
 		statusLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
 		statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
