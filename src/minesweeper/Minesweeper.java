@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
 import com.google.inject.Guice;
@@ -13,6 +14,8 @@ import minesweeper.aview.gui.MinesweeperFrame;
 import minesweeper.aview.tui.TextUI;
 
 public class Minesweeper {
+	private static final Logger LOGGER = Logger.getLogger(Minesweeper.class);
+
 	private Minesweeper() {
 	}
 
@@ -33,7 +36,7 @@ public class Minesweeper {
 				}
 			});
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("GUI initialization error", e);
 		}
 
 		boolean cont = true;

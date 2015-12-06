@@ -10,6 +10,7 @@ import org.junit.rules.ExpectedException;
 
 import minesweeper.model.ICell;
 import minesweeper.model.IGrid;
+import minesweeper.model.IGridFactory.Strategy;
 
 public class GridFactoryTest {
 
@@ -45,7 +46,7 @@ public class GridFactoryTest {
 
 	@Test
 	public void testSize() {
-		IGrid<ICell> grid = new GridFactory().size(1, 2).mines(1).random().getGrid();
+		IGrid<ICell> grid = new GridFactory().size(1, 2).mines(1).noMines().getGrid();
 		assertEquals(1, grid.getHeight());
 		assertEquals(2, grid.getWidth());
 	}
@@ -63,8 +64,17 @@ public class GridFactoryTest {
 	}
 
 	@Test
+	public void testIllegalMines() {
+		thrown.expect(IllegalArgumentException.class);
+		new GridFactory().mines(-1);
+	}
+
+	@Test
 	public void testRandomGetGrid() {
-		IGrid<ICell> grid = new GridFactory(5, 10).mines(10).random().getGrid();
+		GridFactory gFact = new GridFactory(5, 10);
+		IGrid<ICell> grid = gFact.mines(10).random().getGrid();
+
+		assertEquals(Strategy.RANDOM, gFact.getStrategy());
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
@@ -75,7 +85,10 @@ public class GridFactoryTest {
 
 	@Test
 	public void testRandomClearGetGrid() {
-		IGrid<ICell> grid = new GridFactory(5, 10).mines(49).randomClear(1, 2).getGrid();
+		GridFactory gFact = new GridFactory(5, 10);
+		IGrid<ICell> grid = gFact.mines(49).randomClear(1, 2).getGrid();
+
+		assertEquals(Strategy.RANDOMCLEAR, gFact.getStrategy());
 
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
@@ -89,7 +102,12 @@ public class GridFactoryTest {
 	@Test
 	public void testSpecifiedGetGrid() {
 		int[][] mineLocations = new int[][] { { 0, 0 }, { 1, 1 }, { 2, 2 }, { 3, 3 }, { 4, 4 } };
-		IGrid<ICell> grid = new GridFactory(5, 10).specified(mineLocations).getGrid();
+
+		GridFactory gFact = new GridFactory(5, 10);
+		IGrid<ICell> grid = gFact.specified(mineLocations).getGrid();
+
+		assertEquals(Strategy.SPECIFIED, gFact.getStrategy());
+
 		assertEquals(5, grid.getHeight());
 		assertEquals(10, grid.getWidth());
 
@@ -102,5 +120,19 @@ public class GridFactoryTest {
 		assertEquals(2, grid.getCell(1, 0).getMines());
 		assertEquals(1, grid.getCell(2, 0).getMines());
 		assertEquals(0, grid.getCell(3, 0).getMines());
+	}
+
+	@Test
+	public void testNoMines() {
+		GridFactory gFact = new GridFactory(5, 10);
+		IGrid<ICell> grid = gFact.noMines().getGrid();
+
+		assertEquals(Strategy.NOMINES, gFact.getStrategy());
+
+		assertEquals(5, grid.getHeight());
+		assertEquals(10, grid.getWidth());
+
+		long mines = grid.getCells().stream().filter(ICell::isMine).count();
+		assertEquals(0, mines);
 	}
 }
