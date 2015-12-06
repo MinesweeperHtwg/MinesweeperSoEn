@@ -2,17 +2,22 @@ package minesweeper.controller.impl;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.model.IGridFactory;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.Observable;
 
+@Singleton
 public class ControllerWrapper extends Observable implements IMinesweeperController {
 
 	private IMinesweeperController controller;
 
 	private static final Logger LOGGER = Logger.getLogger(ControllerWrapper.class);
 
+	@Inject
 	public ControllerWrapper(IGridFactory gFact) {
 		controller = new MinesweeperController(gFact);
 	}

@@ -4,6 +4,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 
 import java.util.List;
 
+import com.google.inject.Inject;
+
 import minesweeper.model.ICell;
 import minesweeper.model.ICellMutable;
 import minesweeper.model.IGrid;
@@ -25,6 +27,7 @@ public class GridFactory implements IGridFactory {
 	 * Generates new GridFactory, initialized with a gridsize of 1,1 and
 	 * noMines()
 	 */
+	@Inject
 	public GridFactory() {
 		this(1, 1);
 	}

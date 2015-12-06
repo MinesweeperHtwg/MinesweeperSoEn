@@ -13,6 +13,8 @@ import javax.swing.WindowConstants;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+
 import minesweeper.controller.DimensionsChanged;
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.MultipleCellsChanged;
@@ -34,6 +36,7 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 	private GridPanel gridPanel;
 	private GameStatsPanel gameStatsPanel;
 
+	@Inject
 	public MinesweeperFrame(final IMinesweeperController controller) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

@@ -4,6 +4,8 @@ import static java.lang.Integer.parseInt;
 
 import org.apache.log4j.Logger;
 
+import com.google.inject.Inject;
+
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
@@ -17,6 +19,7 @@ public class TextUI implements IObserver {
 
 	private IMinesweeperController controller;
 
+	@Inject
 	public TextUI(IMinesweeperController controller) {
 		this.controller = controller;
 		controller.addObserver(this);

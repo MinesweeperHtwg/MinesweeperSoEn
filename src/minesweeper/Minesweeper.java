@@ -6,12 +6,11 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.PropertyConfigurator;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+
 import minesweeper.aview.gui.MinesweeperFrame;
 import minesweeper.aview.tui.TextUI;
-import minesweeper.controller.IMinesweeperController;
-import minesweeper.controller.impl.ControllerWrapper;
-import minesweeper.model.IGridFactory;
-import minesweeper.model.impl.GridFactory;
 
 public class Minesweeper {
 	private Minesweeper() {
@@ -21,14 +20,14 @@ public class Minesweeper {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		IGridFactory gFact = new GridFactory();
-		gFact.size(10, 20).mines(10);
-		IMinesweeperController controller = new ControllerWrapper(gFact);
-		TextUI tui = new TextUI(controller);
+		Injector injector = Guice.createInjector(new MinesweeperModule());
+
+		TextUI tui = injector.getInstance(TextUI.class);
+
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				MinesweeperFrame gui = new MinesweeperFrame(controller);
+				MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
 				gui.setVisible(true);
 			}
 		});
