@@ -24,13 +24,17 @@ public class Minesweeper {
 
 		TextUI tui = injector.getInstance(TextUI.class);
 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
-				gui.setVisible(true);
-			}
-		});
+		try {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
+					gui.setVisible(true);
+				}
+			});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		boolean cont = true;
 		Scanner scanner = new Scanner(System.in);
