@@ -70,7 +70,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	private Event event;
 
 	private int flags;
-	private int openFields;
+	private int openCells;
 
 	private IGrid<ICell> grid;
 	private IGridFactory gFact;
@@ -107,7 +107,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 			gameState = new FirstClick();
 		}
 		flags = 0;
-		openFields = grid.getHeight() * grid.getWidth();
+		openCells = grid.getHeight() * grid.getWidth();
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 
 	private void executeOpenCell(ICell cell) {
 		cell.setState(State.OPENED);
-		openFields--;
+		openCells--;
 		if (cell.isMine()) {
 			gameState = new Lose();
 			statusLine = "Game over. Mine opened at " + cell.mkString();
@@ -159,7 +159,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		for (ICell adjCell : adjCells) {
 			if (adjCell.isClosedWithoutFlag()) {
 				adjCell.setState(State.OPENED);
-				openFields--;
+				openCells--;
 				if (adjCell.getMines() == 0) {
 					floodOpen(adjCell);
 				}
@@ -168,7 +168,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	}
 
 	private void checkWin() {
-		if (gameState instanceof Running && openFields == grid.getMines()) {
+		if (gameState instanceof Running && openCells == grid.getMines()) {
 			gameState = new Win();
 			statusLine = "You've won!";
 		}
@@ -195,7 +195,12 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 				statusLine = "No cells to open around " + cell.mkString();
 				event = new NoCellChanged();
 			} else {
-				cellsToOpen.forEach(c -> executeOpenCell(c));
+				// Needs to be filtered because flood open would cause us to
+				// open cells multiple times and openFields becomes inconsitent.
+				// Can't call openCell directly because the gameOver lock would
+				// stop us from executing openings
+				cellsToOpen.stream().filter(ICell::isClosedWithoutFlag).forEach(c -> executeOpenCell(c));
+
 				// only change statusLine if we haven't lost or won
 				if (gameState instanceof Running) {
 					statusLine = "Opened all cells around " + cell.mkString();
