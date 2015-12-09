@@ -9,6 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JRadioButtonMenuItem;
+import javax.swing.SwingUtilities;
 
 import minesweeper.controller.IMinesweeperController;
 
@@ -79,6 +80,16 @@ public class MinesweeperMenuBar extends JMenuBar {
 		menu = new JMenu("Debug");
 		menu.setMnemonic(KeyEvent.VK_D);
 		add(menu);
+
+		menuItem = new JMenuItem("Repack/Resize");
+		menuItem.setMnemonic(KeyEvent.VK_R);
+		menuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				((MinesweeperFrame) SwingUtilities.getWindowAncestor(MinesweeperMenuBar.this)).repack();
+			}
+		});
+		menu.add(menuItem);
 
 		menu = new JMenu("Solve");
 		menu.setMnemonic(KeyEvent.VK_D);

@@ -117,6 +117,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		}
 
 		if (gameState instanceof FirstClick) {
+			// TODO: Save set flags before resetting Grid
 			grid = gFact.randomClear(row, col).getGrid();
 			gameState = new Running();
 		}

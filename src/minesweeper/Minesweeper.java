@@ -12,6 +12,7 @@ import com.google.inject.Injector;
 
 import minesweeper.aview.gui.MinesweeperFrame;
 import minesweeper.aview.tui.TextUI;
+import minesweeper.controller.IMinesweeperController;
 
 public class Minesweeper {
 	private static final Logger LOGGER = Logger.getLogger(Minesweeper.class);
@@ -24,6 +25,9 @@ public class Minesweeper {
 		PropertyConfigurator.configure("log4j.properties");
 
 		Injector injector = Guice.createInjector(new MinesweeperModule());
+
+		IMinesweeperController controller = injector.getInstance(IMinesweeperController.class);
+		controller.changeSettings(1, 1, 0);
 
 		TextUI tui = injector.getInstance(TextUI.class);
 

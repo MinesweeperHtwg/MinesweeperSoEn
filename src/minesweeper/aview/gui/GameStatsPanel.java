@@ -1,5 +1,7 @@
 package minesweeper.aview.gui;
 
+import java.awt.FlowLayout;
+
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,7 +20,8 @@ public class GameStatsPanel extends JPanel {
 		add(label);
 		setBorder(BorderFactory.createLoweredBevelBorder());
 
-		setMinimumSize(getPreferredSize());
+		setLayout(new FlowLayout());
+		System.out.println(getMinimumSize());
 	}
 
 	public void updateGameStats() {

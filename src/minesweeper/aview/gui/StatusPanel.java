@@ -1,7 +1,9 @@
 package minesweeper.aview.gui;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
@@ -17,19 +19,25 @@ class StatusPanel extends JPanel {
 	StatusPanel(final IMinesweeperController controller) {
 		this.controller = controller;
 		setBorder(BorderFactory.createLoweredBevelBorder());
-		statusLabel = new JTextArea(1, 15);
+		statusLabel = new JTextArea(2, 30);
 		statusLabel.setEditable(false);
 		statusLabel.setHighlighter(null);
 		statusLabel.setLineWrap(true);
 		statusLabel.setWrapStyleWord(true);
 		statusLabel.setBorder(new EmptyBorder(0, 5, 0, 5));
+		statusLabel.setBackground(getBackground());
+		statusLabel.setFont(getFont());
 		add(statusLabel);
-		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
+		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
 	}
 
 	void updateText() {
 		statusLabel.setText(controller.getStatusLine());
+	}
+
+	@Override
+	public Dimension getMinimumSize() {
+		return getPreferredSize();
 	}
 
 }
