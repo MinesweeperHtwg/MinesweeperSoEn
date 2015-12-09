@@ -75,5 +75,22 @@ public class MinesweeperMenuBar extends JMenuBar {
 		rbMenuItem.setMnemonic(KeyEvent.VK_4);
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
+
+		menu = new JMenu("Debug");
+		menu.setMnemonic(KeyEvent.VK_D);
+		add(menu);
+
+		menu = new JMenu("Solve");
+		menu.setMnemonic(KeyEvent.VK_D);
+		add(menu);
+
+		menuItem = new JMenuItem("Placeholder");
+		menuItem.setMnemonic(KeyEvent.VK_R);
+		menuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		menu.add(menuItem);
 	}
 }

@@ -2,11 +2,13 @@ package minesweeper.aview.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.RepaintManager;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.border.CompoundBorder;
@@ -26,9 +28,8 @@ import minesweeper.util.observer.IObserver;
 public class MinesweeperFrame extends JFrame implements IObserver {
 	private static final Logger LOGGER = Logger.getLogger(MinesweeperFrame.class);
 
-	private final RepaintManager repaintMgr;
-
 	private StatusPanel statusPanel;
+	private GridPanelWrapper gridPanelWrapper;
 	private GridPanel gridPanel;
 	private GameStatsPanel gameStatsPanel;
 
@@ -36,11 +37,11 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 
 	private static final long serialVersionUID = 1L;
 
+	private MinesweeperMenuBar menubar;
+
 	@Inject
 	public MinesweeperFrame(final IMinesweeperController controller) {
 		controller.addObserver(this);
-
-		repaintMgr = RepaintManager.currentManager(this);
 
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -48,7 +49,8 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 			LOGGER.info("Can't change look and feel", e);
 		}
 
-		setJMenuBar(new MinesweeperMenuBar(controller));
+		menubar = new MinesweeperMenuBar(controller);
+		setJMenuBar(menubar);
 
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
@@ -60,8 +62,9 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 		gameStatsPanel = new GameStatsPanel(controller);
 		mainPanel.add(gameStatsPanel, BorderLayout.NORTH);
 
-		gridPanel = new GridPanel(controller);
-		mainPanel.add(gridPanel, BorderLayout.CENTER);
+		gridPanelWrapper = new GridPanelWrapper(controller);
+		gridPanel = gridPanelWrapper.getGridPanel();
+		mainPanel.add(gridPanelWrapper, BorderLayout.CENTER);
 
 		statusPanel = new StatusPanel(controller);
 		mainPanel.add(statusPanel, BorderLayout.SOUTH);
@@ -71,8 +74,13 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 		setTitle("Minesweeper");
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(true);
-		pack();
-		setMinimumSize(getSize());
+
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override
+			public void run() {
+				setMinSizeAndResize();
+			}
+		});
 	}
 
 	@Override
@@ -87,13 +95,33 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 			gridPanel.updateCell(updateCell.getRow(), updateCell.getCol());
 		} else if (e instanceof DimensionsChanged) {
 			gridPanel.rebuildCells();
-			repaintMgr.addInvalidComponent(gridPanel);
+			gridPanelWrapper.dispatchEvent(new ComponentEvent(this, ComponentEvent.COMPONENT_RESIZED));
+			repack();
 		} else if (e instanceof NoCellChanged) {
 			// Nothing to do
 		} else {
 			throw new IllegalArgumentException("Illegal Event Type");
 		}
+	}
 
-		repaintMgr.markCompletelyDirty(gridPanel);
+	private void setMinSizeAndResize() {
+		setMinSize();
+		setSize(getMinimumSize());
+	}
+
+	private void setMinSize() {
+		Dimension min = getLayout().minimumLayoutSize(this);
+		// Need to add 18 because minimum layout size is to small for whatever
+		// reason
+		min = new Dimension(min.width, min.height + 18);
+		setMinimumSize(min);
+	}
+
+	private void repack() {
+		if (getSize().equals(getMinimumSize())) {
+			setMinSizeAndResize();
+		} else {
+			setMinSize();
+		}
 	}
 }

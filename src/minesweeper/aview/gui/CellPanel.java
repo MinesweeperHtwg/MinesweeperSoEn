@@ -8,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.BevelBorder;
+import javax.swing.border.Border;
 
 import minesweeper.controller.IMinesweeperController;
 
@@ -15,15 +16,29 @@ public class CellPanel extends JPanel {
 	private final int row;
 	private final int col;
 
+	private final Border clickedBorder;
+
 	private IMinesweeperController controller;
 	private JLabel label;
 
 	private static final long serialVersionUID = 1L;
 
-	public CellPanel(IMinesweeperController controller, int row, int col) {
+	public CellPanel(IMinesweeperController controller, int row, int col, boolean rightEdge, boolean bottomEdge) {
 		this.row = row;
 		this.col = col;
 		this.controller = controller;
+
+		int rightLine = 0;
+		int bottomLine = 0;
+
+		if (rightEdge) {
+			rightLine = 1;
+		}
+		if (bottomEdge) {
+			bottomLine = 1;
+		}
+
+		clickedBorder = BorderFactory.createMatteBorder(1, 1, bottomLine, rightLine, Color.GRAY);
 
 		label = new JLabel();
 		add(label);
@@ -31,8 +46,9 @@ public class CellPanel extends JPanel {
 		// GridBagLayout for centering JLabel
 		setLayout(new GridBagLayout());
 
-		setMinimumSize(new Dimension(16, 16));
 		setPreferredSize(new Dimension(16, 16));
+		setMinimumSize(new Dimension(16, 16));
+
 		setBackground(MinesweeperFrame.BG);
 
 		updateCell();
@@ -53,7 +69,7 @@ public class CellPanel extends JPanel {
 			} else {
 				label.setText(cellString);
 			}
-			setBorder(BorderFactory.createMatteBorder(1, 1, 0, 0, Color.GRAY));
+			setBorder(clickedBorder);
 		}
 	}
 

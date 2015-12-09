@@ -5,12 +5,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.RepaintManager;
 import javax.swing.SwingUtilities;
-import javax.swing.border.CompoundBorder;
-import javax.swing.border.EmptyBorder;
 
 import minesweeper.controller.IMinesweeperController;
 
@@ -33,7 +30,6 @@ public class GridPanel extends JPanel {
 		this.cellListener = new CellListener();
 		repaintMgr = RepaintManager.currentManager(this);
 		rebuildCells();
-		setBorder(new CompoundBorder(new EmptyBorder(6, 0, 6, 0), BorderFactory.createLoweredBevelBorder()));
 		setBackground(MinesweeperFrame.BG);
 	}
 
@@ -76,17 +72,23 @@ public class GridPanel extends JPanel {
 
 		for (int row = 0; row < height; row++) {
 			for (int col = 0; col < width; col++) {
-				CellPanel cellPanel = new CellPanel(controller, row, col);
+				boolean rightEdge = width == col + 1;
+				boolean bottomEdge = height == row + 1;
+
+				CellPanel cellPanel = new CellPanel(controller, row, col, rightEdge, bottomEdge);
 				cellPanel.addMouseListener(cellListener);
 				cellPanels[row][col] = cellPanel;
 				add(cellPanel);
 				repaintMgr.markCompletelyClean(cellPanel);
 			}
 		}
+
+		repaintMgr.markCompletelyDirty(this);
 	}
 
 	public void updateCell(int row, int col) {
-		cellPanels[row][col].updateCell();
+		CellPanel cellPanel = cellPanels[row][col];
+		cellPanel.updateCell();
 	}
 
 	public void updateAllCells() {
@@ -96,5 +98,6 @@ public class GridPanel extends JPanel {
 				repaintMgr.markCompletelyClean(cellPanel);
 			}
 		}
+		repaintMgr.markCompletelyDirty(this);
 	}
 }

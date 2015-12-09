@@ -17,6 +17,8 @@ public class GameStatsPanel extends JPanel {
 		label = new JLabel("Stats Placeholder");
 		add(label);
 		setBorder(BorderFactory.createLoweredBevelBorder());
+
+		setMinimumSize(getPreferredSize());
 	}
 
 	public void updateGameStats() {
