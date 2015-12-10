@@ -21,7 +21,6 @@ public class GameStatsPanel extends JPanel {
 		setBorder(BorderFactory.createLoweredBevelBorder());
 
 		setLayout(new FlowLayout());
-		System.out.println(getMinimumSize());
 	}
 
 	public void updateGameStats() {

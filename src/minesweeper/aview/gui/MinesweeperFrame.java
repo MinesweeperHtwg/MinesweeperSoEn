@@ -3,6 +3,7 @@ package minesweeper.aview.gui;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -21,6 +22,7 @@ import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.MultipleCellsChanged;
 import minesweeper.controller.NoCellChanged;
 import minesweeper.controller.SingleCellChanged;
+import minesweeper.solverplugin.SolverPlugin;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
 
@@ -41,7 +43,7 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 	private MinesweeperMenuBar menubar;
 
 	@Inject
-	public MinesweeperFrame(final IMinesweeperController controller) {
+	public MinesweeperFrame(final IMinesweeperController controller, final Set<SolverPlugin> plugins) {
 		controller.addObserver(this);
 
 		try {
@@ -50,7 +52,7 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 			LOGGER.info("Can't change look and feel", e);
 		}
 
-		menubar = new MinesweeperMenuBar(controller);
+		menubar = new MinesweeperMenuBar(controller, plugins);
 		setJMenuBar(menubar);
 
 		mainPanel = new JPanel();
@@ -107,7 +109,6 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 	}
 
 	private void setMinSizeAndResize() {
-		System.out.println(mainPanel.getInsets());
 		setMinSize();
 		setSize(getMinimumSize());
 	}

@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import minesweeper.controller.DimensionsChanged;
-import minesweeper.controller.IMinesweeperController;
+import minesweeper.controller.IMinesweeperControllerSolveable;
 import minesweeper.controller.MultipleCellsChanged;
 import minesweeper.controller.NoCellChanged;
 import minesweeper.controller.SingleCellChanged;
@@ -16,7 +16,7 @@ import minesweeper.model.IGridFactory.Strategy;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.Observable;
 
-public class MinesweeperController extends Observable implements IMinesweeperController {
+public class MinesweeperController extends Observable implements IMinesweeperControllerSolveable {
 
 	private interface GameState {
 		/**
@@ -271,5 +271,10 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 	@Override
 	public Event getEvent() {
 		return event;
+	}
+
+	@Override
+	public IGrid<ICell> getGrid() {
+		return grid;
 	}
 }

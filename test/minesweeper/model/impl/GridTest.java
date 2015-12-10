@@ -2,19 +2,19 @@ package minesweeper.model.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import minesweeper.model.ICell;
 import minesweeper.model.ICell.State;
+import minesweeper.model.IGrid;
 
 public class GridTest {
-	Grid<ICell> grid;
+	IGrid<ICell> grid;
 	ICell[][] cells;
 
 	@Before
@@ -27,9 +27,6 @@ public class GridTest {
 		grid = new Grid<>(cells, 1);
 	}
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@Test
 	public void testGetCell() {
 		assertEquals(new Cell(0, 0, State.CLOSED, 0, false), grid.getCell(0, 0));
@@ -37,8 +34,20 @@ public class GridTest {
 
 	@Test
 	public void testCheckBounds() {
-		thrown.expect(IllegalArgumentException.class);
-		grid.getCell(0, 2);
+		expectIllegalArg(-1, 0);
+		expectIllegalArg(0, -1);
+		expectIllegalArg(2, 0);
+		expectIllegalArg(0, 2);
+	}
+
+	private void expectIllegalArg(int row, int col) {
+		try {
+			grid.getCell(row, col);
+			// we dont excpect to go here
+			fail();
+		} catch (IllegalArgumentException e) {
+			// what we excpected
+		}
 	}
 
 	@Test
@@ -79,6 +88,8 @@ public class GridTest {
 		assertTrue(cellList.contains(cells[1][0]));
 		assertTrue(cellList.contains(cells[1][1]));
 		assertEquals(3, cellList.size());
+
+		assertEquals(cellList, grid.getAdjCells(new Cell(0, 0)));
 	}
 
 	@Test

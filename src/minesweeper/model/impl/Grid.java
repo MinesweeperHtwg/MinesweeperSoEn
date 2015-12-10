@@ -69,6 +69,11 @@ public class Grid<T extends ICell> implements IGrid<T> {
 	}
 
 	@Override
+	public List<T> getAdjCells(ICell cell) {
+		return getAdjCells(cell.getRow(), cell.getCol());
+	}
+
+	@Override
 	public List<T> getAdjCells(final int row, final int col) {
 		List<T> result = new ArrayList<>(8);
 		for (int[] cord : adjCord) {

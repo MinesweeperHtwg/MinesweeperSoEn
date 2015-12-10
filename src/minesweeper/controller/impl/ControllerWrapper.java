@@ -5,15 +5,17 @@ import org.apache.log4j.Logger;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
-import minesweeper.controller.IMinesweeperController;
+import minesweeper.controller.IMinesweeperControllerSolveable;
+import minesweeper.model.ICell;
+import minesweeper.model.IGrid;
 import minesweeper.model.IGridFactory;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.Observable;
 
 @Singleton
-public class ControllerWrapper extends Observable implements IMinesweeperController {
+public class ControllerWrapper extends Observable implements IMinesweeperControllerSolveable {
 
-	private IMinesweeperController controller;
+	private IMinesweeperControllerSolveable controller;
 
 	private static final Logger LOGGER = Logger.getLogger(ControllerWrapper.class);
 
@@ -99,6 +101,11 @@ public class ControllerWrapper extends Observable implements IMinesweeperControl
 	@Override
 	public Event getEvent() {
 		return controller.getEvent();
+	}
+
+	@Override
+	public IGrid<ICell> getGrid() {
+		return controller.getGrid();
 	}
 
 }

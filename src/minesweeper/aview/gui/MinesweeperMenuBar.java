@@ -3,6 +3,7 @@ package minesweeper.aview.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.Set;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JMenu;
@@ -12,11 +13,13 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 
 import minesweeper.controller.IMinesweeperController;
+import minesweeper.controller.IMinesweeperControllerSolveable;
+import minesweeper.solverplugin.SolverPlugin;
 
 public class MinesweeperMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
 
-	public MinesweeperMenuBar(final IMinesweeperController controller) {
+	public MinesweeperMenuBar(final IMinesweeperController controller, final Set<SolverPlugin> plugins) {
 		JMenu menu;
 		JMenuItem menuItem;
 		JRadioButtonMenuItem rbMenuItem;
@@ -95,13 +98,20 @@ public class MinesweeperMenuBar extends JMenuBar {
 		menu.setMnemonic(KeyEvent.VK_D);
 		add(menu);
 
-		menuItem = new JMenuItem("Placeholder");
-		menuItem.setMnemonic(KeyEvent.VK_R);
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
+		if (plugins.isEmpty() || !(controller instanceof IMinesweeperControllerSolveable)) {
+			menu.setEnabled(false);
+		} else {
+			for (SolverPlugin plugin : plugins) {
+				menuItem = new JMenuItem(plugin.getSolverName());
+				menuItem.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						plugin.solve((IMinesweeperControllerSolveable) controller);
+					}
+				});
+				menu.add(menuItem);
 			}
-		});
-		menu.add(menuItem);
+		}
+
 	}
 }

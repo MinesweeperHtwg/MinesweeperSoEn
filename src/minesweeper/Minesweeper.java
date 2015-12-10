@@ -27,7 +27,9 @@ public class Minesweeper {
 		Injector injector = Guice.createInjector(new MinesweeperModule());
 
 		IMinesweeperController controller = injector.getInstance(IMinesweeperController.class);
-		controller.changeSettings(1, 1, 0);
+		controller.openCell(0, 0);
+		controller.openCell(0, 1);
+		controller.openCell(0, 2);
 
 		TextUI tui = injector.getInstance(TextUI.class);
 
