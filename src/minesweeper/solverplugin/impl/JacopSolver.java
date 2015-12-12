@@ -17,6 +17,7 @@ import org.jacop.search.IndomainMin;
 import org.jacop.search.InputOrderSelect;
 import org.jacop.search.Search;
 import org.jacop.search.SelectChoicePoint;
+import org.jacop.search.SimpleTimeOut;
 import org.jacop.search.SolutionListener;
 
 import com.google.common.collect.ImmutableList;
@@ -46,6 +47,8 @@ public class JacopSolver implements SolverPlugin {
 	private Search<IntVar> label;
 	private SelectChoicePoint<IntVar> select;
 
+	private SimpleTimeOut timeOut;
+
 	@Override
 	public String getSolverName() {
 		return "JacopSolver";
@@ -53,11 +56,23 @@ public class JacopSolver implements SolverPlugin {
 
 	@Override
 	public boolean solve(IMinesweeperControllerSolveable controller) {
-		LOGGER.info("Solving");
+		LOGGER.info("Trying to solve complete board");
+		while (solveOneStep(controller)) {
+			if (hasGameEnded(controller)) {
+				return true;
+			}
+		}
+		// TODO: Return true solve state
+		return false;
+	}
+
+	@Override
+	public boolean solveOneStep(IMinesweeperControllerSolveable controller) {
+		LOGGER.info("Solving one step");
 
 		buildCellCollections(controller);
 
-		LOGGER.info("\nClosedCells:\n" + getCellCordsString(closedCells));
+		LOGGER.debug("\nClosedCells:\n" + getCellCordsString(closedCells));
 
 		setupJacop();
 
@@ -67,22 +82,31 @@ public class JacopSolver implements SolverPlugin {
 		}
 
 		// Perform search
-		boolean solutionFound = label.labeling(store, select);
-
-		if (!solutionFound) {
+		if (!label.labeling(store, select)) {
 			LOGGER.info("No solution found");
 			return false;
 		}
+		if (timeOut.timeOutOccurred) {
+			LOGGER.info("Reached time limit");
+			return false;
+		}
 
-		label.printAllSolutions();
+		LOGGER.debug("\nNumber of solutions: " + solutionListener.solutionsNo());
 
 		double[] varProp = getProbabilities();
 
-		System.out.println(Arrays.toString(varProp));
+		LOGGER.debug("\nProbabilities:\n"
+				+ Arrays.stream(varProp).mapToObj(d -> String.format("%,.3f", d)).collect(Collectors.joining(" ")));
 
-		solveConfidentCells(controller, varProp);
+		boolean foundSolution = solveConfidentCells(controller, varProp);
 
-		return false;
+		return foundSolution;
+
+	}
+
+	private boolean hasGameEnded(IMinesweeperControllerSolveable controller) {
+		String statusLine = controller.getStatusLine();
+		return statusLine.contains("You've won!") || statusLine.contains("Game over");
 	}
 
 	private void buildCellCollections(IMinesweeperControllerSolveable controller) {
@@ -101,10 +125,8 @@ public class JacopSolver implements SolverPlugin {
 
 		List<ICell> cells = grid.getCells();
 
-		cells.stream().filter(c -> c.isOpened()).forEach(cell -> {
-			grid.getAdjCells(cell).stream().filter(adjCell -> adjCell.isClosed())
-					.forEach(adjCell -> edgeMap.put(cell, adjCell));
-		});
+		cells.stream().filter(ICell::isOpened).forEach(cell -> grid.getAdjCells(cell).stream()
+				.filter(adjCell -> adjCell.isClosed()).forEach(adjCell -> edgeMap.put(cell, adjCell)));
 
 		return ImmutableSetMultimap.copyOf(edgeMap);
 	}
@@ -130,6 +152,11 @@ public class JacopSolver implements SolverPlugin {
 
 		label = new DepthFirstSearch<>();
 		label.setPrintInfo(false);
+
+		timeOut = new SimpleTimeOut();
+		label.setTimeOutListener(timeOut);
+		label.setTimeOut(3);
+
 		select = new InputOrderSelect<>(store, varArray, new IndomainMin<IntVar>());
 
 		solutionListener = label.getSolutionListener();

@@ -16,7 +16,6 @@ public class MinesweeperModule extends AbstractModule {
 	@Override
 	protected void configure() {
 		bind(IMinesweeperController.class).to(ControllerWrapper.class);
-		// Names.named("DebugEasy");
 
 		bind(IGridFactory.class).toProvider(DebugSolveGridFactoryProvider.class);
 

@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.IMinesweeperControllerSolveable;
 import minesweeper.solverplugin.SolverPlugin;
+import minesweeper.solverplugin.SolverWorker;
 
 public class MinesweeperMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
@@ -106,7 +107,8 @@ public class MinesweeperMenuBar extends JMenuBar {
 				menuItem.addActionListener(new ActionListener() {
 					@Override
 					public void actionPerformed(ActionEvent e) {
-						plugin.solve((IMinesweeperControllerSolveable) controller);
+						SolverWorker worker = new SolverWorker(plugin, (IMinesweeperControllerSolveable) controller);
+						worker.execute();
 					}
 				});
 				menu.add(menuItem);
