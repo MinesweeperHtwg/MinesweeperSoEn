@@ -2,7 +2,6 @@ package minesweeper.solverplugin.impl;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +34,18 @@ public class JacopSolver implements SolverPlugin {
 
 	private static final Logger LOGGER = Logger.getLogger(JacopSolver.class);
 
+	private ImmutableSetMultimap<ICell, ICell> edgeMap;
+	private ImmutableList<ICell> openCells;
+	private ImmutableList<ICell> closedCells;
+	private int varCount;
+
+	// Jacop fields
+
+	private Store store;
+	private SolutionListener<IntVar> solutionListener;
+	private Search<IntVar> label;
+	private SelectChoicePoint<IntVar> select;
+
 	@Override
 	public String getSolverName() {
 		return "JacopSolver";
@@ -44,45 +55,16 @@ public class JacopSolver implements SolverPlugin {
 	public boolean solve(IMinesweeperControllerSolveable controller) {
 		LOGGER.info("Solving");
 
-		IGrid<ICell> grid = controller.getGrid();
-
-		ImmutableSetMultimap<ICell, ICell> edgeMap = getEdgeMap(grid);
-
-		ImmutableList<ICell> openCells = edgeMap.keySet().asList();
-		ImmutableList<ICell> closedCells = ImmutableSet.copyOf(edgeMap.values()).asList();
+		buildCellCollections(controller);
 
 		LOGGER.info("\nClosedCells:\n" + getCellCordsString(closedCells));
 
-		Store store = new Store();
-
-		ArrayList<IntVar> varList = new ArrayList<>(closedCells.size());
-
-		for (int i = 0; i < closedCells.size(); i++) {
-			varList.add(new BooleanVar(store, Integer.toString(i)));
-		}
-
-		for (ICell cell : openCells) {
-			ArrayList<Integer> weights = new ArrayList<>(Collections.nCopies(closedCells.size(), 0));
-			edgeMap.get(cell).stream().map(closedCells::indexOf).forEach(i -> weights.set(i, 1));
-
-			PrimitiveConstraint ctr = new Linear(store, varList, weights, "=", cell.getMines());
-			store.impose(ctr);
-		}
+		setupJacop();
 
 		if (!store.consistency()) {
 			LOGGER.info("Store incosistent");
 			return false;
 		}
-
-		IntVar[] varArray = varList.toArray(new IntVar[varList.size()]);
-
-		Search<IntVar> label = new DepthFirstSearch<>();
-		label.setPrintInfo(false);
-		SelectChoicePoint<IntVar> select = new InputOrderSelect<>(store, varArray, new IndomainMin<IntVar>());
-
-		SolutionListener<IntVar> solutionListener = label.getSolutionListener();
-		solutionListener.searchAll(true);
-		solutionListener.recordSolutions(true);
 
 		// Perform search
 		boolean solutionFound = label.labeling(store, select);
@@ -92,13 +74,72 @@ public class JacopSolver implements SolverPlugin {
 			return false;
 		}
 
-		System.out.println(varArray[0].dom().value());
-
 		label.printAllSolutions();
 
+		double[] varProp = getProbabilities();
+
+		System.out.println(Arrays.toString(varProp));
+
+		solveConfidentCells(controller, varProp);
+
+		return false;
+	}
+
+	private void buildCellCollections(IMinesweeperControllerSolveable controller) {
+		IGrid<ICell> grid = controller.getGrid();
+
+		edgeMap = getEdgeMap(grid);
+
+		openCells = edgeMap.keySet().asList();
+		closedCells = ImmutableSet.copyOf(edgeMap.values()).asList();
+
+		varCount = closedCells.size();
+	}
+
+	private static ImmutableSetMultimap<ICell, ICell> getEdgeMap(IGrid<ICell> grid) {
+		SetMultimap<ICell, ICell> edgeMap = LinkedHashMultimap.create();
+
+		List<ICell> cells = grid.getCells();
+
+		cells.stream().filter(c -> c.isOpened()).forEach(cell -> {
+			grid.getAdjCells(cell).stream().filter(adjCell -> adjCell.isClosed())
+					.forEach(adjCell -> edgeMap.put(cell, adjCell));
+		});
+
+		return ImmutableSetMultimap.copyOf(edgeMap);
+	}
+
+	private void setupJacop() {
+		store = new Store();
+
+		IntVar[] varArray = new IntVar[closedCells.size()];
+
+		for (int i = 0; i < closedCells.size(); i++) {
+			varArray[i] = new BooleanVar(store, Integer.toString(i));
+		}
+
+		for (ICell cell : openCells) {
+			// initialized with 0
+			int[] weightsArray = new int[closedCells.size()];
+
+			edgeMap.get(cell).stream().map(closedCells::indexOf).forEach(i -> weightsArray[i] = 1);
+
+			PrimitiveConstraint ctr = new Linear(store, varArray, weightsArray, "=", cell.getMines());
+			store.impose(ctr);
+		}
+
+		label = new DepthFirstSearch<>();
+		label.setPrintInfo(false);
+		select = new InputOrderSelect<>(store, varArray, new IndomainMin<IntVar>());
+
+		solutionListener = label.getSolutionListener();
+		solutionListener.searchAll(true);
+		solutionListener.recordSolutions(true);
+	}
+
+	private double[] getProbabilities() {
 		Domain[][] solutions = solutionListener.getSolutions();
 		int solutionsCount = solutionListener.solutionsNo();
-		int varCount = varArray.length;
 
 		double[] varProp = new double[varCount];
 		for (int i = 0; i < varCount; i++) {
@@ -111,9 +152,15 @@ public class JacopSolver implements SolverPlugin {
 			}
 			varProp[i] /= solutionsCount;
 		}
+		return varProp;
+	}
 
-		System.out.println(Arrays.toString(varProp));
-
+	/**
+	 * Findes safe cells and mines. Opens/Flags them. Doesn't take any risks.
+	 * 
+	 * @return if something was found
+	 */
+	private boolean solveConfidentCells(IMinesweeperControllerSolveable controller, double[] varProp) {
 		// Evaluate solution
 		ArrayList<Integer> mineAtIndex = new ArrayList<>();
 		ArrayList<Integer> clearAtIndex = new ArrayList<>();
@@ -127,37 +174,31 @@ public class JacopSolver implements SolverPlugin {
 			}
 		}
 
-		List<ICell> mines = mineAtIndex.stream().map(i -> closedCells.get(i)).collect(Collectors.toList());
-		List<ICell> clears = clearAtIndex.stream().map(i -> closedCells.get(i)).collect(Collectors.toList());
+		List<ICell> mines = mineAtIndex.stream().map(i -> closedCells.get(i)).filter(ICell::isClosedWithoutFlag)
+				.collect(Collectors.toList());
+		List<ICell> clears = clearAtIndex.stream().map(i -> closedCells.get(i)).filter(ICell::isClosedWithoutFlag)
+				.collect(Collectors.toList());
 
-		mines.stream().filter(ICell::isClosedWithoutFlag)
-				.forEach(cell -> controller.toggleFlag(cell.getRow(), cell.getCol()));
-		clears.stream().filter(ICell::isClosedWithoutFlag)
-				.forEach(cell -> controller.openCell(cell.getRow(), cell.getCol()));
+		if (mines.isEmpty() && clears.isEmpty()) {
+			LOGGER.info("\nFound no risk free cell to open or flag");
+			return false;
+		}
 
-		return false;
+		mines.stream().forEach(cell -> controller.toggleFlag(cell.getRow(), cell.getCol()));
+		clears.stream().forEach(cell -> controller.openCell(cell.getRow(), cell.getCol()));
+
+		LOGGER.info("\nFound " + mines.size() + " mine(s) at:\n" + getCellCordsString(mines) + "\n Found "
+				+ clears.size() + " safe cell(s) at:\n" + getCellCordsString(clears));
+		return true;
 	}
 
 	private static String getCellCordsString(List<ICell> cellList) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cellList.size(); i++) {
 			ICell cell = cellList.get(i);
-			sb.append(i).append(": (").append(cell.getRow()).append(", ").append(cell.getCol()).append(")\n");
+			sb.append(i).append(":(").append(cell.getRow()).append(",").append(cell.getCol()).append(") ");
 		}
 		return sb.toString();
-	}
-
-	public static ImmutableSetMultimap<ICell, ICell> getEdgeMap(IGrid<ICell> grid) {
-		SetMultimap<ICell, ICell> edgeMap = LinkedHashMultimap.create();
-
-		List<ICell> cells = grid.getCells();
-
-		cells.stream().filter(c -> c.isOpened()).forEach(cell -> {
-			grid.getAdjCells(cell).stream().filter(adjCell -> adjCell.isClosed())
-					.forEach(adjCell -> edgeMap.put(cell, adjCell));
-		});
-
-		return ImmutableSetMultimap.copyOf(edgeMap);
 	}
 
 }
