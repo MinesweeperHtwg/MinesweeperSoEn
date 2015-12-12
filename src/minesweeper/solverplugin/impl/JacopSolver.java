@@ -189,14 +189,14 @@ public class JacopSolver implements SolverPlugin {
 	 */
 	private boolean solveConfidentCells(IMinesweeperControllerSolveable controller, double[] varProp) {
 		// Evaluate solution
-		ArrayList<Integer> mineAtIndex = new ArrayList<>();
-		ArrayList<Integer> clearAtIndex = new ArrayList<>();
+		List<Integer> mineAtIndex = new ArrayList<>();
+		List<Integer> clearAtIndex = new ArrayList<>();
 		for (int i = 0; i < varCount; i++) {
 			double prop = varProp[i];
-			if (prop == 0.0) {
+			if (Double.compare(prop, 0.0) == 0) {
 				clearAtIndex.add(i);
 			}
-			if (prop == 1.0) {
+			if (Double.compare(prop, 1.0) == 0) {
 				mineAtIndex.add(i);
 			}
 		}
