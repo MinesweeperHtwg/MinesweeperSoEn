@@ -87,7 +87,7 @@ public class JacopSolver implements SolverPlugin {
 			return false;
 		}
 		if (timeOut.timeOutOccurred) {
-			LOGGER.info("Reached time limit");
+			LOGGER.info("Reached time limit at solution " + timeOut.solutionsNo);
 			return false;
 		}
 
