@@ -4,11 +4,6 @@ plugins {
 
 repositories {
     mavenCentral()
-    
-    // Repository for Jacop
-    maven {
-        url "http://maven.cs.lth.se/content/repositories/public/"
-    }
 }
 
 apply plugin: "java"
@@ -39,7 +34,7 @@ dependencies {
     compile 'log4j:log4j:1.2.17'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.google.guava:guava:18.0'
-    compile "org.jacop:jacop:4.3.0"
+    compile files('libs/jacop-4.3.0-withoutScala.jar');
     compile 'com.google.inject.extensions:guice-multibindings:3.0'
     testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.5'
     testCompile "junit:junit:4.11"
