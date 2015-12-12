@@ -34,7 +34,7 @@ public class MinesweeperModule extends AbstractModule {
 	static class DebugSolveGridFactoryProvider implements Provider<IGridFactory> {
 		@Override
 		public IGridFactory get() {
-			return new GridFactory(2, 3).specified(new int[][] { { 1, 0 }, { 1, 2 } });
+			return new GridFactory(2, 6).specified(new int[][] { { 1, 0 }, { 1, 2 }, { 1, 3 }, { 1, 5 } });
 		}
 	}
 

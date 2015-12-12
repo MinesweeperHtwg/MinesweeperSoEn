@@ -28,8 +28,9 @@ public class Minesweeper {
 
 		IMinesweeperController controller = injector.getInstance(IMinesweeperController.class);
 		controller.openCell(0, 0);
-		controller.openCell(0, 1);
 		controller.openCell(0, 2);
+		controller.openCell(0, 4);
+		controller.openCell(1, 1);
 
 		TextUI tui = injector.getInstance(TextUI.class);
 
