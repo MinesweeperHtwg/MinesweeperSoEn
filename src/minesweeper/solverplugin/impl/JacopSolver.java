@@ -98,9 +98,7 @@ public class JacopSolver implements SolverPlugin {
 		LOGGER.debug("\nProbabilities:\n"
 				+ Arrays.stream(varProp).mapToObj(d -> String.format("%,.3f", d)).collect(Collectors.joining(" ")));
 
-		boolean foundSolution = solveConfidentCells(controller, varProp);
-
-		return foundSolution;
+		return solveConfidentCells(controller, varProp);
 
 	}
 
