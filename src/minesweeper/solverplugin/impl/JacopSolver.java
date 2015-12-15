@@ -26,7 +26,7 @@ import com.google.common.collect.ImmutableSetMultimap;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.SetMultimap;
 
-import minesweeper.controller.IMinesweeperControllerSolveable;
+import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.model.ICell;
 import minesweeper.model.IGrid;
 import minesweeper.solverplugin.SolverPlugin;
@@ -55,7 +55,7 @@ public class JacopSolver implements SolverPlugin {
 	}
 
 	@Override
-	public boolean solve(IMinesweeperControllerSolveable controller) {
+	public boolean solve(IMinesweeperControllerSolvable controller) {
 		LOGGER.info("Trying to solve complete board");
 		while (solveOneStep(controller)) {
 			if (hasGameEnded(controller)) {
@@ -67,7 +67,7 @@ public class JacopSolver implements SolverPlugin {
 	}
 
 	@Override
-	public boolean solveOneStep(IMinesweeperControllerSolveable controller) {
+	public boolean solveOneStep(IMinesweeperControllerSolvable controller) {
 		LOGGER.info("Solving one step");
 
 		buildCellCollections(controller);
@@ -102,12 +102,12 @@ public class JacopSolver implements SolverPlugin {
 
 	}
 
-	private boolean hasGameEnded(IMinesweeperControllerSolveable controller) {
+	private boolean hasGameEnded(IMinesweeperControllerSolvable controller) {
 		String statusLine = controller.getStatusLine();
 		return statusLine.contains("You've won!") || statusLine.contains("Game over");
 	}
 
-	private void buildCellCollections(IMinesweeperControllerSolveable controller) {
+	private void buildCellCollections(IMinesweeperControllerSolvable controller) {
 		IGrid<ICell> grid = controller.getGrid();
 
 		edgeMap = getEdgeMap(grid);
@@ -124,7 +124,7 @@ public class JacopSolver implements SolverPlugin {
 		List<ICell> cells = grid.getCells();
 
 		cells.stream().filter(ICell::isOpened).forEach(cell -> grid.getAdjCells(cell).stream()
-				.filter(adjCell -> adjCell.isClosed()).forEach(adjCell -> edgeMap.put(cell, adjCell)));
+				.filter(ICell::isClosed).forEach(adjCell -> edgeMap.put(cell, adjCell)));
 
 		return ImmutableSetMultimap.copyOf(edgeMap);
 	}
@@ -155,7 +155,7 @@ public class JacopSolver implements SolverPlugin {
 		label.setTimeOutListener(timeOut);
 		label.setTimeOut(3);
 
-		select = new InputOrderSelect<>(store, varArray, new IndomainMin<IntVar>());
+		select = new InputOrderSelect<>(store, varArray, new IndomainMin<>());
 
 		solutionListener = label.getSolutionListener();
 		solutionListener.searchAll(true);
@@ -181,11 +181,11 @@ public class JacopSolver implements SolverPlugin {
 	}
 
 	/**
-	 * Findes safe cells and mines. Opens/Flags them. Doesn't take any risks.
+	 * Finds safe cells and mines. Opens/Flags them. Doesn't take any risks.
 	 * 
 	 * @return if something was found
 	 */
-	private boolean solveConfidentCells(IMinesweeperControllerSolveable controller, double[] varProp) {
+	private boolean solveConfidentCells(IMinesweeperControllerSolvable controller, double[] varProp) {
 		// Evaluate solution
 		List<Integer> mineAtIndex = new ArrayList<>();
 		List<Integer> clearAtIndex = new ArrayList<>();

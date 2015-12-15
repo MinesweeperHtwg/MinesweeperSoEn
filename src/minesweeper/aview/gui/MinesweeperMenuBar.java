@@ -13,7 +13,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.SwingUtilities;
 
 import minesweeper.controller.IMinesweeperController;
-import minesweeper.controller.IMinesweeperControllerSolveable;
+import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.solverplugin.SolverPlugin;
 import minesweeper.solverplugin.SolverWorker;
 
@@ -31,12 +31,7 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 		menuItem = new JMenuItem("New");
 		menuItem.setMnemonic(KeyEvent.VK_N);
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.newGame();
-			}
-		});
+		menuItem.addActionListener(e -> controller.newGame());
 		menu.add(menuItem);
 
 		menu.addSeparator();
@@ -45,34 +40,19 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 		rbMenuItem = new JRadioButtonMenuItem("Easy");
 		rbMenuItem.setMnemonic(KeyEvent.VK_1);
-		rbMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.changeSettings(8, 8, 10);
-			}
-		});
+		rbMenuItem.addActionListener(e -> controller.changeSettings(8, 8, 10));
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
 		rbMenuItem = new JRadioButtonMenuItem("Intermediate");
 		rbMenuItem.setMnemonic(KeyEvent.VK_2);
-		rbMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.changeSettings(16, 16, 40);
-			}
-		});
+		rbMenuItem.addActionListener(e -> controller.changeSettings(16, 16, 40));
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
 		rbMenuItem = new JRadioButtonMenuItem("Hard");
 		rbMenuItem.setMnemonic(KeyEvent.VK_3);
-		rbMenuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				controller.changeSettings(16, 30, 99);
-			}
-		});
+		rbMenuItem.addActionListener(e -> controller.changeSettings(16, 30, 99));
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
@@ -87,30 +67,22 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 		menuItem = new JMenuItem("Repack/Resize");
 		menuItem.setMnemonic(KeyEvent.VK_R);
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				((MinesweeperFrame) SwingUtilities.getWindowAncestor(MinesweeperMenuBar.this)).repack();
-			}
-		});
+		menuItem.addActionListener(e -> ((MinesweeperFrame) SwingUtilities.getWindowAncestor(MinesweeperMenuBar.this)).repack());
 		menu.add(menuItem);
 
 		menu = new JMenu("Solve");
 		menu.setMnemonic(KeyEvent.VK_D);
 		add(menu);
 
-		if (plugins.isEmpty() || !(controller instanceof IMinesweeperControllerSolveable)) {
+		if (plugins.isEmpty() || !(controller instanceof IMinesweeperControllerSolvable)) {
 			menu.setEnabled(false);
 		} else {
 			for (SolverPlugin plugin : plugins) {
 				menuItem = new JMenuItem(plugin.getSolverName());
-				menuItem.addActionListener(new ActionListener() {
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						SolverWorker worker = new SolverWorker(plugin, (IMinesweeperControllerSolveable) controller);
-						worker.execute();
-					}
-				});
+				menuItem.addActionListener(e -> {
+                    SolverWorker worker = new SolverWorker(plugin, (IMinesweeperControllerSolvable) controller);
+                    worker.execute();
+                });
 				menu.add(menuItem);
 			}
 		}

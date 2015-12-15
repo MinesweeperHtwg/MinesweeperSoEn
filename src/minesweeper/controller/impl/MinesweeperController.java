@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import minesweeper.controller.DimensionsChanged;
-import minesweeper.controller.IMinesweeperControllerSolveable;
+import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.controller.MultipleCellsChanged;
 import minesweeper.controller.NoCellChanged;
 import minesweeper.controller.SingleCellChanged;
@@ -16,7 +16,7 @@ import minesweeper.model.IGridFactory.Strategy;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.Observable;
 
-public class MinesweeperController extends Observable implements IMinesweeperControllerSolveable {
+public class MinesweeperController extends Observable implements IMinesweeperControllerSolvable {
 
 	private interface GameState {
 		/**
@@ -190,7 +190,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		long flagCount = adjCells.stream().filter(ICell::isFlag).count();
 
 		if (flagCount == cell.getMines()) {
-			List<ICell> cellsToOpen = adjCells.stream().filter(c -> c.isClosedWithoutFlag())
+			List<ICell> cellsToOpen = adjCells.stream().filter(ICell::isClosedWithoutFlag)
 					.collect(Collectors.toList());
 			if (cellsToOpen.isEmpty()) {
 				statusLine = "No cells to open around " + cell.mkString();
@@ -200,7 +200,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 				// open cells multiple times and openFields becomes inconsitent.
 				// Can't call openCell directly because the gameOver lock would
 				// stop us from executing openings
-				cellsToOpen.stream().filter(ICell::isClosedWithoutFlag).forEach(c -> executeOpenCell(c));
+				cellsToOpen.stream().filter(ICell::isClosedWithoutFlag).forEach(this::executeOpenCell);
 
 				// only change statusLine if we haven't lost or won
 				if (gameState instanceof Running) {
