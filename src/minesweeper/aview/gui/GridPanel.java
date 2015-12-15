@@ -16,9 +16,6 @@ import minesweeper.controller.IMinesweeperController;
 public class GridPanel extends JPanel {
 	private IMinesweeperController controller;
 
-	private int height;
-	private int width;
-
 	private CellPanel[][] cellPanels;
 
 	private final MouseListener cellListener;
@@ -68,8 +65,8 @@ public class GridPanel extends JPanel {
 	public void rebuildCells() {
 		removeAll();
 
-		height = controller.getHeight();
-		width = controller.getWidth();
+		int height = controller.getHeight();
+		int width = controller.getWidth();
 
 		setLayout(new GridLayout(height, width));
 

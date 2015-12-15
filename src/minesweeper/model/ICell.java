@@ -2,7 +2,7 @@ package minesweeper.model;
 
 public interface ICell {
 
-	public enum State {
+	enum State {
 		OPENED, CLOSED, FLAG
 	}
 

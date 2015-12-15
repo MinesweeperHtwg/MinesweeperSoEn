@@ -40,8 +40,6 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 
 	private static final long serialVersionUID = 1L;
 
-	private MinesweeperMenuBar menubar;
-
 	@Inject
 	public MinesweeperFrame(final IMinesweeperController controller, final Set<SolverPlugin> plugins) {
 		controller.addObserver(this);
@@ -52,8 +50,8 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 			LOGGER.info("Can't change look and feel", e);
 		}
 
-		menubar = new MinesweeperMenuBar(controller, plugins);
-		setJMenuBar(menubar);
+		MinesweeperMenuBar menuBar = new MinesweeperMenuBar(controller, plugins);
+		setJMenuBar(menuBar);
 
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
@@ -78,12 +76,7 @@ public class MinesweeperFrame extends JFrame implements IObserver {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setResizable(true);
 
-		SwingUtilities.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				setMinSizeAndResize();
-			}
-		});
+		SwingUtilities.invokeLater(this::setMinSizeAndResize);
 	}
 
 	@Override

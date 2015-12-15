@@ -2,7 +2,7 @@ package minesweeper.model;
 
 public interface IGridFactory {
 
-	public enum Strategy {
+	enum Strategy {
 		RANDOM, RANDOMCLEAR, SPECIFIED, NOMINES
 	}
 
