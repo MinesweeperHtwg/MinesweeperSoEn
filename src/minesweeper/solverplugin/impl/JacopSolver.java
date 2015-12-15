@@ -123,8 +123,12 @@ public class JacopSolver implements SolverPlugin {
 
 		List<ICell> cells = grid.getCells();
 
-		cells.stream().filter(ICell::isOpened).forEach(cell -> grid.getAdjCells(cell).stream()
-				.filter(ICell::isClosed).forEach(adjCell -> edgeMap.put(cell, adjCell)));
+		cells.stream()
+		     .filter(ICell::isOpened)
+		     .forEach(cell -> grid.getAdjCells(cell)
+		                          .stream()
+		                          .filter(ICell::isClosed)
+		                          .forEach(adjCell -> edgeMap.put(cell, adjCell)));
 
 		return ImmutableSetMultimap.copyOf(edgeMap);
 	}
@@ -182,7 +186,7 @@ public class JacopSolver implements SolverPlugin {
 
 	/**
 	 * Finds safe cells and mines. Opens/Flags them. Doesn't take any risks.
-	 * 
+	 *
 	 * @return if something was found
 	 */
 	private boolean solveConfidentCells(IMinesweeperControllerSolvable controller, double[] varProp) {
@@ -199,10 +203,12 @@ public class JacopSolver implements SolverPlugin {
 			}
 		}
 
-		List<ICell> mines = mineAtIndex.stream().map(i -> closedCells.get(i)).filter(ICell::isClosedWithoutFlag)
-				.collect(Collectors.toList());
-		List<ICell> clears = clearAtIndex.stream().map(i -> closedCells.get(i)).filter(ICell::isClosedWithoutFlag)
-				.collect(Collectors.toList());
+		List<ICell> mines = mineAtIndex.stream()
+		                               .map(i -> closedCells.get(i)).filter(ICell::isClosedWithoutFlag)
+		                               .collect(Collectors.toList());
+		List<ICell> clears = clearAtIndex.stream()
+		                                 .map(i -> closedCells.get(i)).filter(ICell::isClosedWithoutFlag)
+		                                 .collect(Collectors.toList());
 
 		if (mines.isEmpty() && clears.isEmpty()) {
 			LOGGER.info("\nFound no risk free cell to open or flag");
