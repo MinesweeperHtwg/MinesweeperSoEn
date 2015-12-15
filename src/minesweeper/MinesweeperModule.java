@@ -17,24 +17,11 @@ public class MinesweeperModule extends AbstractModule {
 	protected void configure() {
 		bind(IMinesweeperController.class).to(ControllerWrapper.class);
 
-		bind(IGridFactory.class).toProvider(DebugSolveGridFactoryProvider.class);
+		bind(IGridFactory.class).toProvider(GridFactoryProviders.DebugSolveGridFactoryProvider.class);
 
 		Multibinder<SolverPlugin> plugins = Multibinder.newSetBinder(binder(), SolverPlugin.class);
 		plugins.addBinding().to(JacopSolver.class);
 	}
 
-	static class DebugEasyGridFactoryProvider implements Provider<IGridFactory> {
-		@Override
-		public IGridFactory get() {
-			return new GridFactory(10, 20).mines(10);
-		}
-	}
-
-	static class DebugSolveGridFactoryProvider implements Provider<IGridFactory> {
-		@Override
-		public IGridFactory get() {
-			return new GridFactory(2, 6).specified(new int[][] { { 1, 0 }, { 1, 2 }, { 1, 3 }, { 1, 5 } });
-		}
-	}
 
 }

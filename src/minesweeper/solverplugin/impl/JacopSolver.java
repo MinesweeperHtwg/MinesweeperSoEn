@@ -91,7 +91,7 @@ public class JacopSolver implements SolverPlugin {
 			return false;
 		}
 
-		LOGGER.debug("\nNumber of solutions: " + solutionListener.solutionsNo());
+		LOGGER.debug("\nSearch Stats:\n" + label.toString());
 
 		double[] varProp = getProbabilities();
 

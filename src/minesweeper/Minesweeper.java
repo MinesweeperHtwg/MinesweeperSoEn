@@ -35,13 +35,10 @@ public class Minesweeper {
 		TextUI tui = injector.getInstance(TextUI.class);
 
 		try {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
-					gui.setVisible(true);
-				}
-			});
+			SwingUtilities.invokeAndWait(() -> {
+                MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
+                gui.setVisible(true);
+            });
 		} catch (Exception e) {
 			LOGGER.error("GUI initialization error", e);
 		}
