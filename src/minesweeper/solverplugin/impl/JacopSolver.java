@@ -28,6 +28,7 @@ public class JacopSolver implements SolverPlugin {
 
 	private final IMinesweeperControllerSolvable controller;
 
+	// TODO: Implement guessing algorithm
 	private boolean guessing;
 
 	private ImmutableSetMultimap<ICell, ICell> edgeMap;
@@ -153,6 +154,7 @@ public class JacopSolver implements SolverPlugin {
 		return ImmutableSetMultimap.copyOf(edgeMap);
 	}
 
+	// TODO: implement optimization to split up the linear constraint system to multiple independent systems
 	private void setupJacop() {
 		store = new Store();
 
