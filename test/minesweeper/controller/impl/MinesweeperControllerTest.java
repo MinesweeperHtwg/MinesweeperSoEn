@@ -7,11 +7,11 @@ import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.Test;
 
-import minesweeper.controller.DimensionsChanged;
+import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.IMinesweeperController;
-import minesweeper.controller.MultipleCellsChanged;
-import minesweeper.controller.NoCellChanged;
-import minesweeper.controller.SingleCellChanged;
+import minesweeper.controller.events.MultipleCellsChanged;
+import minesweeper.controller.events.NoCellChanged;
+import minesweeper.controller.events.SingleCellChanged;
 import minesweeper.model.impl.GridFactory;
 import minesweeper.util.observer.Event;
 

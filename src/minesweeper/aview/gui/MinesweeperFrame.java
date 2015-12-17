@@ -17,11 +17,11 @@ import org.apache.log4j.Logger;
 
 import com.google.inject.Inject;
 
-import minesweeper.controller.DimensionsChanged;
+import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.IMinesweeperController;
-import minesweeper.controller.MultipleCellsChanged;
-import minesweeper.controller.NoCellChanged;
-import minesweeper.controller.SingleCellChanged;
+import minesweeper.controller.events.MultipleCellsChanged;
+import minesweeper.controller.events.NoCellChanged;
+import minesweeper.controller.events.SingleCellChanged;
 import minesweeper.solverplugin.SolverPlugin;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;

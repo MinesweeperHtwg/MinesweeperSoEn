@@ -3,11 +3,11 @@ package minesweeper.controller.impl;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import minesweeper.controller.DimensionsChanged;
+import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.IMinesweeperControllerSolvable;
-import minesweeper.controller.MultipleCellsChanged;
-import minesweeper.controller.NoCellChanged;
-import minesweeper.controller.SingleCellChanged;
+import minesweeper.controller.events.MultipleCellsChanged;
+import minesweeper.controller.events.NoCellChanged;
+import minesweeper.controller.events.SingleCellChanged;
 import minesweeper.model.ICell;
 import minesweeper.model.ICell.State;
 import minesweeper.model.IGrid;
