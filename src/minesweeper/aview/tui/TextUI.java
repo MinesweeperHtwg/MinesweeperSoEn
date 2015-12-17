@@ -19,6 +19,8 @@ public class TextUI implements IObserver {
 
 	private IMinesweeperController controller;
 
+	private boolean printGrid = true;
+
 	@Inject
 	public TextUI(IMinesweeperController controller) {
 		this.controller = controller;
@@ -79,14 +81,28 @@ public class TextUI implements IObserver {
 		}
 	}
 
+	public void setGridPrint(boolean printGrid) {
+		this.printGrid = printGrid;
+	}
+
 	@Override
 	public void update(Event e) {
 		printTUI();
 	}
 
 	private void printTUI() {
-		LOGGER.info(NEWLINE + controller.getGameStats() + NEWLINE + controller.getGridString() + NEWLINE
-				+ controller.getStatusLine() + NEWLINE + COMMANDS);
+		StringBuilder sb = new StringBuilder();
+		sb.append(NEWLINE);
+		sb.append(controller.getGameStats());
+		if (printGrid) {
+			sb.append(NEWLINE);
+			sb.append(controller.getGridString());
+		}
+		sb.append(NEWLINE);
+		sb.append(controller.getStatusLine());
+		sb.append(NEWLINE);
+		sb.append(COMMANDS);
+		LOGGER.info(sb.toString());
 	}
 
 	private void illegalCommand(String message) {
