@@ -35,18 +35,20 @@ public class JacopSolver implements SolverPlugin {
 
 	private static final Logger LOGGER = Logger.getLogger(JacopSolver.class);
 
+	private boolean guessing;
+
 	private ImmutableSetMultimap<ICell, ICell> edgeMap;
 	private ImmutableList<ICell> openCells;
 	private ImmutableList<ICell> closedCells;
+
 	private int varCount;
 
 	// Jacop fields
-
 	private Store store;
 	private SolutionListener<IntVar> solutionListener;
 	private Search<IntVar> label;
-	private SelectChoicePoint<IntVar> select;
 
+	private SelectChoicePoint<IntVar> select;
 	private SimpleTimeOut timeOut;
 
 	@Override
@@ -62,13 +64,13 @@ public class JacopSolver implements SolverPlugin {
 				return true;
 			}
 		}
-		// TODO: Return true solve state
+		// TODO: Return real solve state
 		return false;
 	}
 
 	@Override
 	public boolean solveOneStep(IMinesweeperControllerSolvable controller) {
-		LOGGER.info("Solving one step");
+		LOGGER.info("\nSolving one step");
 
 		buildCellCollections(controller);
 
@@ -100,6 +102,11 @@ public class JacopSolver implements SolverPlugin {
 
 		return solveConfidentCells(controller, varProp);
 
+	}
+
+	@Override
+	public void setGuessing(boolean guessing) {
+		this.guessing = guessing;
 	}
 
 	private boolean hasGameEnded(IMinesweeperControllerSolvable controller) {

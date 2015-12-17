@@ -21,4 +21,10 @@ public interface SolverPlugin {
 	 * @return if the solver is able to continue
 	 */
 	boolean solveOneStep(IMinesweeperControllerSolvable controller);
+
+	/**
+	 * Set if the solver should guess if it is stuck
+	 * @param guessing if the solver should guess
+	 */
+	void setGuessing(boolean guessing);
 }
