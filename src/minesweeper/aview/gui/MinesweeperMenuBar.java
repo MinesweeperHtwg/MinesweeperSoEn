@@ -1,21 +1,17 @@
 package minesweeper.aview.gui;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.util.Set;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.IMinesweeperControllerSolvable;
+import minesweeper.solverplugin.CompleteSolver;
+import minesweeper.solverplugin.SingleStepSolver;
 import minesweeper.solverplugin.SolverPlugin;
-import minesweeper.solverplugin.SolverWorker;
+import minesweeper.solverplugin.AbstractSolverWorker;
 
 public class MinesweeperMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
@@ -77,15 +73,30 @@ public class MinesweeperMenuBar extends JMenuBar {
 		if (plugins.isEmpty() || !(controller instanceof IMinesweeperControllerSolvable)) {
 			menu.setEnabled(false);
 		} else {
+			IMinesweeperControllerSolvable solvableController = (IMinesweeperControllerSolvable) controller;
 			for (SolverPlugin plugin : plugins) {
-				menuItem = new JMenuItem(plugin.getSolverName());
-				menuItem.addActionListener(e -> {
-                    SolverWorker worker = new SolverWorker(plugin, (IMinesweeperControllerSolvable) controller);
-                    worker.execute();
-                });
-				menu.add(menuItem);
+				JMenu subMenu = new JMenu(plugin.getSolverName());
+				menu.add(subMenu);
+
+				JCheckBoxMenuItem subMenuCheckBox = new JCheckBoxMenuItem("Guessing");
+				boolean defaultGuessing = false;
+				subMenuCheckBox.setState(defaultGuessing);
+				plugin.setGuessing(defaultGuessing);
+				subMenuCheckBox.addItemListener(e -> plugin.setGuessing(e.getStateChange() == ItemEvent.SELECTED));
+				subMenu.add(subMenuCheckBox);
+
+				JMenuItem subMenuItem;
+
+				subMenuItem = new JMenuItem("Complete solve");
+				subMenuItem.addActionListener(e ->
+						new CompleteSolver(plugin, solvableController).execute());
+				subMenu.add(subMenuItem);
+
+				subMenuItem = new JMenuItem("Single step solve");
+				subMenuItem.addActionListener(e ->
+						new SingleStepSolver(plugin, solvableController).execute());
+				subMenu.add(subMenuItem);
 			}
 		}
-
 	}
 }
