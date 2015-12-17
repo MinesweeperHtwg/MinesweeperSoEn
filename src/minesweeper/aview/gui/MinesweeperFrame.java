@@ -1,30 +1,20 @@
 package minesweeper.aview.gui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.util.Set;
-
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.WindowConstants;
-import javax.swing.border.CompoundBorder;
-
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
-
-import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.IMinesweeperController;
+import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.events.MultipleCellsChanged;
 import minesweeper.controller.events.NoCellChanged;
 import minesweeper.controller.events.SingleCellChanged;
 import minesweeper.solverplugin.SolverPlugin;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
+import org.apache.log4j.Logger;
+
+import javax.swing.*;
+import javax.swing.border.CompoundBorder;
+import java.awt.*;
+import java.util.Set;
 
 public class MinesweeperFrame extends JFrame implements IObserver {
 	private static final Logger LOGGER = Logger.getLogger(MinesweeperFrame.class);

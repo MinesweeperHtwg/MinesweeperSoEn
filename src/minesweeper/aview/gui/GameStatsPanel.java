@@ -1,12 +1,9 @@
 package minesweeper.aview.gui;
 
-import java.awt.FlowLayout;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import minesweeper.controller.IMinesweeperController;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class GameStatsPanel extends JPanel {
 	private IMinesweeperController controller;

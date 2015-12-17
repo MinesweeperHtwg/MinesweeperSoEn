@@ -1,5 +1,8 @@
 package minesweeper.model.impl;
 
+import minesweeper.model.ICell;
+import minesweeper.model.IGrid;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -8,9 +11,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import minesweeper.model.ICell;
-import minesweeper.model.IGrid;
-
 public class Grid<T extends ICell> implements IGrid<T> {
 	private T[][] cells;
 	private final int mines;
@@ -18,8 +18,8 @@ public class Grid<T extends ICell> implements IGrid<T> {
 	private final int width;
 	private final Instant created;
 
-	private static final int[][] adjCord = { { -1, -1 }, { -1, 0 }, { -1, 1 }, { 0, -1 }, { 0, 1 }, { 1, -1 }, { 1, 0 },
-			{ 1, 1 } };
+	private static final int[][] adjCord = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0},
+			{1, 1}};
 
 	protected Grid(T[][] cells, int mines) {
 		this.cells = cells;
@@ -89,7 +89,7 @@ public class Grid<T extends ICell> implements IGrid<T> {
 	@Override
 	public String toString() {
 		return Arrays.stream(cells).map(rows -> Arrays.stream(rows).map(T::toString).collect(Collectors.joining("|")))
-				.collect(Collectors.joining("\n"));
+		             .collect(Collectors.joining("\n"));
 	}
 
 	private boolean checkBounds(int row, int col) {

@@ -1,14 +1,12 @@
 package minesweeper.aview.tui;
 
-import static java.lang.Integer.parseInt;
-
-import org.apache.log4j.Logger;
-
 import com.google.inject.Inject;
-
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
+import org.apache.log4j.Logger;
+
+import static java.lang.Integer.parseInt;
 
 public class TextUI implements IObserver {
 	private static final String COMMANDS = "Commands: q|quit; n|new|newGame; s|set HEIGHT WIDTH MINES; o|open ROW COL; a|around ROW COL; f|flag ROW COL";
@@ -31,18 +29,18 @@ public class TextUI implements IObserver {
 	public boolean processLine(String line) {
 		boolean cont = true;
 		switch (line) {
-		case "q":
-		case "quit":
-			cont = false;
-			break;
-		case "n":
-		case "new":
-		case "newGame":
-			controller.newGame();
-			break;
-		default:
-			processCordLine(line);
-			break;
+			case "q":
+			case "quit":
+				cont = false;
+				break;
+			case "n":
+			case "new":
+			case "newGame":
+				controller.newGame();
+				break;
+			default:
+				processCordLine(line);
+				break;
 		}
 		return cont;
 	}

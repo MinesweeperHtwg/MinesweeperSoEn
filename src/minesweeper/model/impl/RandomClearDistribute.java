@@ -1,11 +1,11 @@
 package minesweeper.model.impl;
 
-import java.util.Collections;
-import java.util.List;
-
 import minesweeper.model.ICellMutable;
 import minesweeper.model.IGrid;
 import minesweeper.model.IMineDistributeStrategy;
+
+import java.util.Collections;
+import java.util.List;
 
 public class RandomClearDistribute implements IMineDistributeStrategy {
 	private int mines;

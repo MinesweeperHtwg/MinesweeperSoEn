@@ -8,7 +8,7 @@ public interface SolverPlugin {
 
 	/**
 	 * Solve a board as far as possible
-	 * 
+	 *
 	 * @param controller the controller of the board to solve
 	 * @return if the board was comletly solved
 	 */
@@ -16,7 +16,7 @@ public interface SolverPlugin {
 
 	/**
 	 * Solve one step of a board
-	 * 
+	 *
 	 * @param controller the controller of the board to solve
 	 * @return if the solver is able to continue
 	 */
@@ -24,6 +24,7 @@ public interface SolverPlugin {
 
 	/**
 	 * Set if the solver should guess if it is stuck
+	 *
 	 * @param guessing if the solver should guess
 	 */
 	void setGuessing(boolean guessing);

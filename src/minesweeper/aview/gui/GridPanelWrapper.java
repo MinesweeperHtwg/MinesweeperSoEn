@@ -1,13 +1,11 @@
 package minesweeper.aview.gui;
 
-import java.awt.GridBagLayout;
+import minesweeper.controller.IMinesweeperController;
 
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
-
-import minesweeper.controller.IMinesweeperController;
+import java.awt.*;
 
 public class GridPanelWrapper extends JPanel {
 	private static final long serialVersionUID = 1L;

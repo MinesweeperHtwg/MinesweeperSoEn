@@ -1,17 +1,15 @@
 package minesweeper.aview.gui;
 
-import java.awt.event.ItemEvent;
-import java.awt.event.KeyEvent;
-import java.util.Set;
-
-import javax.swing.*;
-
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.solverplugin.CompleteSolver;
 import minesweeper.solverplugin.SingleStepSolver;
 import minesweeper.solverplugin.SolverPlugin;
-import minesweeper.solverplugin.AbstractSolverWorker;
+
+import javax.swing.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
+import java.util.Set;
 
 public class MinesweeperMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;

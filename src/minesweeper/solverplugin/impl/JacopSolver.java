@@ -1,10 +1,10 @@
 package minesweeper.solverplugin.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
+import com.google.common.collect.*;
+import minesweeper.controller.IMinesweeperControllerSolvable;
+import minesweeper.model.ICell;
+import minesweeper.model.IGrid;
+import minesweeper.solverplugin.SolverPlugin;
 import org.apache.log4j.Logger;
 import org.jacop.constraints.Linear;
 import org.jacop.constraints.PrimitiveConstraint;
@@ -12,24 +12,12 @@ import org.jacop.core.BooleanVar;
 import org.jacop.core.Domain;
 import org.jacop.core.IntVar;
 import org.jacop.core.Store;
-import org.jacop.search.DepthFirstSearch;
-import org.jacop.search.IndomainMin;
-import org.jacop.search.InputOrderSelect;
-import org.jacop.search.Search;
-import org.jacop.search.SelectChoicePoint;
-import org.jacop.search.SimpleTimeOut;
-import org.jacop.search.SolutionListener;
+import org.jacop.search.*;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.ImmutableSetMultimap;
-import com.google.common.collect.LinkedHashMultimap;
-import com.google.common.collect.SetMultimap;
-
-import minesweeper.controller.IMinesweeperControllerSolvable;
-import minesweeper.model.ICell;
-import minesweeper.model.IGrid;
-import minesweeper.solverplugin.SolverPlugin;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class JacopSolver implements SolverPlugin {
 

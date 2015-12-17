@@ -8,7 +8,7 @@ public interface IGridFactory {
 
 	/**
 	 * Returns a generated grid
-	 * 
+	 *
 	 * @return a generated grid
 	 */
 	IGrid<ICell> getGrid();

@@ -1,13 +1,9 @@
 package minesweeper;
 
 import com.google.inject.AbstractModule;
-import com.google.inject.Provider;
 import com.google.inject.multibindings.Multibinder;
-
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.impl.ControllerWrapper;
-import minesweeper.model.IGridFactory;
-import minesweeper.model.impl.GridFactory;
 import minesweeper.solverplugin.SolverPlugin;
 import minesweeper.solverplugin.impl.JacopSolver;
 

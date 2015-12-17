@@ -1,14 +1,10 @@
 package minesweeper.model.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
+import minesweeper.model.*;
 
 import java.util.List;
 
-import minesweeper.model.ICell;
-import minesweeper.model.ICellMutable;
-import minesweeper.model.IGrid;
-import minesweeper.model.IGridFactory;
-import minesweeper.model.IMineDistributeStrategy;
+import static com.google.common.base.Preconditions.checkArgument;
 
 public class GridFactory implements IGridFactory {
 	// Only one instance of NoMinesDistribute is needed
@@ -32,11 +28,9 @@ public class GridFactory implements IGridFactory {
 	/**
 	 * Generates new GridFactory, initialized with a specified gridsize and
 	 * noMines()
-	 * 
-	 * @param height
-	 *            the height of the generated grid
-	 * @param width
-	 *            the with of the generated grid
+	 *
+	 * @param height the height of the generated grid
+	 * @param width  the with of the generated grid
 	 */
 	public GridFactory(int height, int width) {
 		size(height, width);

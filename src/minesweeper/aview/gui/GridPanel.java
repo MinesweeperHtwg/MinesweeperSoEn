@@ -1,17 +1,12 @@
 package minesweeper.aview.gui;
 
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import minesweeper.controller.IMinesweeperController;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-
-import javax.swing.JPanel;
-import javax.swing.RepaintManager;
-import javax.swing.SwingUtilities;
-
-import minesweeper.controller.IMinesweeperController;
 
 public class GridPanel extends JPanel {
 	private IMinesweeperController controller;

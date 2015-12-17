@@ -4,7 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import minesweeper.model.IGridFactory;
 
-public class GridFactoryModule extends AbstractModule{
+public class GridFactoryModule extends AbstractModule {
 	private Provider<IGridFactory> provider;
 
 

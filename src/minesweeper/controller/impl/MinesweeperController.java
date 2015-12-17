@@ -1,10 +1,7 @@
 package minesweeper.controller.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.IMinesweeperControllerSolvable;
+import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.events.MultipleCellsChanged;
 import minesweeper.controller.events.NoCellChanged;
 import minesweeper.controller.events.SingleCellChanged;
@@ -16,6 +13,9 @@ import minesweeper.model.IGridFactory.Strategy;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.Observable;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class MinesweeperController extends Observable implements IMinesweeperControllerSolvable {
 
 	private interface GameState {
@@ -23,7 +23,7 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		 * Checks the game status. If game has ended, sets statusLine, event and
 		 * returns true. If game is still running, resets event and returns
 		 * false.
-		 * 
+		 *
 		 * @return if the game has ended.
 		 */
 		boolean checkStatus();
@@ -190,8 +190,9 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 		long flagCount = adjCells.stream().filter(ICell::isFlag).count();
 
 		if (flagCount == cell.getMines()) {
-			List<ICell> cellsToOpen = adjCells.stream().filter(ICell::isClosedWithoutFlag)
-					.collect(Collectors.toList());
+			List<ICell> cellsToOpen = adjCells.stream()
+			                                  .filter(ICell::isClosedWithoutFlag)
+			                                  .collect(Collectors.toList());
 			if (cellsToOpen.isEmpty()) {
 				statusLine = "No cells to open around " + cell.mkString();
 				event = new NoCellChanged();
@@ -200,7 +201,9 @@ public class MinesweeperController extends Observable implements IMinesweeperCon
 				// open cells multiple times and openFields becomes inconsitent.
 				// Can't call openCell directly because the gameOver lock would
 				// stop us from executing openings
-				cellsToOpen.stream().filter(ICell::isClosedWithoutFlag).forEach(this::executeOpenCell);
+				cellsToOpen.stream()
+				           .filter(ICell::isClosedWithoutFlag)
+				           .forEach(this::executeOpenCell);
 
 				// only change statusLine if we haven't lost or won
 				if (gameState instanceof Running) {

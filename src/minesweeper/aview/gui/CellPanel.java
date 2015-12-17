@@ -1,16 +1,11 @@
 package minesweeper.aview.gui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
+import minesweeper.controller.IMinesweeperController;
 
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
-
-import minesweeper.controller.IMinesweeperController;
+import java.awt.*;
 
 public class CellPanel extends JPanel {
 	private final int row;

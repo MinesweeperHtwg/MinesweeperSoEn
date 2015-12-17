@@ -1,14 +1,10 @@
 package minesweeper.aview.gui;
 
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-import javax.swing.border.EmptyBorder;
-
 import minesweeper.controller.IMinesweeperController;
+
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
 
 class StatusPanel extends JPanel {
 	private JTextArea statusLabel;

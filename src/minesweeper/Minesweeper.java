@@ -1,18 +1,15 @@
 package minesweeper;
 
-import java.util.Scanner;
-
-import javax.swing.SwingUtilities;
-
-import org.apache.log4j.Logger;
-import org.apache.log4j.PropertyConfigurator;
-
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-
 import minesweeper.aview.gui.MinesweeperFrame;
 import minesweeper.aview.tui.TextUI;
 import minesweeper.controller.IMinesweeperController;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+
+import javax.swing.*;
+import java.util.Scanner;
 
 public class Minesweeper {
 	private static final Logger LOGGER = Logger.getLogger(Minesweeper.class);
@@ -37,9 +34,9 @@ public class Minesweeper {
 
 		try {
 			SwingUtilities.invokeAndWait(() -> {
-                MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
-                gui.setVisible(true);
-            });
+				MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
+				gui.setVisible(true);
+			});
 		} catch (Exception e) {
 			LOGGER.error("GUI initialization error", e);
 		}

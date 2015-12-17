@@ -1,8 +1,8 @@
 package minesweeper.solverplugin;
 
-import javax.swing.SwingWorker;
-
 import minesweeper.controller.IMinesweeperControllerSolvable;
+
+import javax.swing.*;
 
 public abstract class AbstractSolverWorker extends SwingWorker<Boolean, Void> {
 

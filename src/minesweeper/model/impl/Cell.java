@@ -1,11 +1,10 @@
 package minesweeper.model.impl;
 
-import static com.google.common.base.Preconditions.checkArgument;
-
+import minesweeper.model.ICellMutable;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import minesweeper.model.ICellMutable;
+import static com.google.common.base.Preconditions.checkArgument;
 
 public final class Cell implements ICellMutable {
 	private final int col;
@@ -96,15 +95,15 @@ public final class Cell implements ICellMutable {
 	@Override
 	public String toString() {
 		switch (state) {
-		case CLOSED:
-			return " ";
-		case FLAG:
-			return "F";
-		default:
-			if (isMine) {
-				return "M";
-			}
-			return String.valueOf(mines);
+			case CLOSED:
+				return " ";
+			case FLAG:
+				return "F";
+			default:
+				if (isMine) {
+					return "M";
+				}
+				return String.valueOf(mines);
 		}
 	}
 
@@ -126,7 +125,7 @@ public final class Cell implements ICellMutable {
 		}
 		Cell rhs = (Cell) obj;
 		return new EqualsBuilder().append(col, rhs.col).append(row, rhs.row).append(state, rhs.state)
-				.append(mines, rhs.mines).append(isMine, rhs.isMine).isEquals();
+		                          .append(mines, rhs.mines).append(isMine, rhs.isMine).isEquals();
 	}
 
 }
