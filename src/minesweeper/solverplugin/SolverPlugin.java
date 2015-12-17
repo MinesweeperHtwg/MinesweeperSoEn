@@ -1,7 +1,5 @@
 package minesweeper.solverplugin;
 
-import minesweeper.controller.IMinesweeperControllerSolvable;
-
 public interface SolverPlugin {
 
 	String getSolverName();
@@ -12,7 +10,7 @@ public interface SolverPlugin {
 	 * @param controller the controller of the board to solve
 	 * @return if the board was comletly solved
 	 */
-	boolean solve(IMinesweeperControllerSolvable controller);
+	boolean solve();
 
 	/**
 	 * Solve one step of a board
@@ -20,7 +18,7 @@ public interface SolverPlugin {
 	 * @param controller the controller of the board to solve
 	 * @return if the solver is able to continue
 	 */
-	boolean solveOneStep(IMinesweeperControllerSolvable controller);
+	boolean solveOneStep();
 
 	/**
 	 * Set if the solver should guess if it is stuck

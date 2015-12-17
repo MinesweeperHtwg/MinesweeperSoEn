@@ -1,6 +1,8 @@
 package minesweeper.solverplugin.impl;
 
 import com.google.common.collect.*;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.model.ICell;
 import minesweeper.model.IGrid;
@@ -19,9 +21,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Singleton
 public class JacopSolver implements SolverPlugin {
 
 	private static final Logger LOGGER = Logger.getLogger(JacopSolver.class);
+
+	private final IMinesweeperControllerSolvable controller;
 
 	private boolean guessing;
 
@@ -39,16 +44,21 @@ public class JacopSolver implements SolverPlugin {
 	private SelectChoicePoint<IntVar> select;
 	private SimpleTimeOut timeOut;
 
+	@Inject
+	public JacopSolver(IMinesweeperControllerSolvable controller) {
+		this.controller = controller;
+	}
+
 	@Override
 	public String getSolverName() {
 		return "JacopSolver";
 	}
 
 	@Override
-	public boolean solve(IMinesweeperControllerSolvable controller) {
+	public boolean solve() {
 		LOGGER.info("Trying to solve complete board");
-		while (solveOneStep(controller)) {
-			if (hasGameEnded(controller)) {
+		while (solveOneStep()) {
+			if (hasGameEnded()) {
 				return true;
 			}
 		}
@@ -57,10 +67,12 @@ public class JacopSolver implements SolverPlugin {
 	}
 
 	@Override
-	public boolean solveOneStep(IMinesweeperControllerSolvable controller) {
+	public boolean solveOneStep() {
 		LOGGER.info("\nSolving one step");
 
-		buildCellCollections(controller);
+		clearFields();
+
+		buildCellCollections();
 
 		LOGGER.debug("\nClosedCells:\n" + getCellCordsString(closedCells));
 
@@ -88,8 +100,20 @@ public class JacopSolver implements SolverPlugin {
 		LOGGER.debug("\nProbabilities:\n"
 				+ Arrays.stream(varProp).mapToObj(d -> String.format("%,.3f", d)).collect(Collectors.joining(" ")));
 
-		return solveConfidentCells(controller, varProp);
+		return solveConfidentCells(varProp);
 
+	}
+
+	private void clearFields() {
+		edgeMap = null;
+		openCells = null;
+		closedCells = null;
+		varCount = 0;
+		store = null;
+		solutionListener = null;
+		label = null;
+		select = null;
+		timeOut = null;
 	}
 
 	@Override
@@ -97,12 +121,12 @@ public class JacopSolver implements SolverPlugin {
 		this.guessing = guessing;
 	}
 
-	private boolean hasGameEnded(IMinesweeperControllerSolvable controller) {
+	private boolean hasGameEnded() {
 		String statusLine = controller.getStatusLine();
 		return statusLine.contains("You've won!") || statusLine.contains("Game over");
 	}
 
-	private void buildCellCollections(IMinesweeperControllerSolvable controller) {
+	private void buildCellCollections() {
 		IGrid<ICell> grid = controller.getGrid();
 
 		edgeMap = getEdgeMap(grid);
@@ -184,7 +208,7 @@ public class JacopSolver implements SolverPlugin {
 	 *
 	 * @return if something was found
 	 */
-	private boolean solveConfidentCells(IMinesweeperControllerSolvable controller, double[] varProp) {
+	private boolean solveConfidentCells(double[] varProp) {
 		// Evaluate solution
 		List<Integer> mineAtIndex = new ArrayList<>();
 		List<Integer> clearAtIndex = new ArrayList<>();
