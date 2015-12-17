@@ -1,4 +1,6 @@
-package minesweeper.solverplugin;
+package minesweeper.solverplugin.workers;
+
+import minesweeper.solverplugin.SolverPlugin;
 
 import javax.swing.*;
 

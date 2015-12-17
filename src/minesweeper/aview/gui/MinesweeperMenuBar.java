@@ -1,9 +1,9 @@
 package minesweeper.aview.gui;
 
 import minesweeper.controller.IMinesweeperController;
-import minesweeper.solverplugin.CompleteSolver;
-import minesweeper.solverplugin.SingleStepSolver;
 import minesweeper.solverplugin.SolverPlugin;
+import minesweeper.solverplugin.workers.CompleteSolverWorker;
+import minesweeper.solverplugin.workers.SingleStepSolverWorker;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -85,12 +85,12 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 				subMenuItem = new JMenuItem("Complete solve");
 				subMenuItem.addActionListener(e ->
-						new CompleteSolver(plugin).execute());
+						new CompleteSolverWorker(plugin).execute());
 				subMenu.add(subMenuItem);
 
 				subMenuItem = new JMenuItem("Single step solve");
 				subMenuItem.addActionListener(e ->
-						new SingleStepSolver(plugin).execute());
+						new SingleStepSolverWorker(plugin).execute());
 				subMenu.add(subMenuItem);
 			}
 		}

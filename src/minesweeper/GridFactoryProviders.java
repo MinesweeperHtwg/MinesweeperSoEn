@@ -5,6 +5,10 @@ import minesweeper.model.IGridFactory;
 import minesweeper.model.impl.GridFactory;
 
 public class GridFactoryProviders {
+	private GridFactoryProviders() {
+		//no instance
+	}
+
 	public static final DebugEasyGridFactoryProvider debugEasy = new DebugEasyGridFactoryProvider();
 
 	static class DebugEasyGridFactoryProvider implements Provider<IGridFactory> {
