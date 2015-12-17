@@ -79,17 +79,18 @@ public class JacopSolver implements SolverPlugin {
 		setupJacop();
 
 		if (!store.consistency()) {
-			LOGGER.info("Store incosistent");
+			LOGGER.error("Store incosistent");
 			return false;
 		}
 
 		// Perform search
 		if (!label.labeling(store, select)) {
-			LOGGER.info("No solution found");
+			LOGGER.error("No solution found");
 			return false;
 		}
+
 		if (timeOut.timeOutOccurred) {
-			LOGGER.info("Reached time limit at solution " + timeOut.solutionsNo);
+			LOGGER.error("Reached time limit at solution " + timeOut.solutionsNo);
 			return false;
 		}
 

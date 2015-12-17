@@ -1,6 +1,7 @@
 package minesweeper.aview.tui;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.util.observer.Event;
 import minesweeper.util.observer.IObserver;
@@ -8,6 +9,7 @@ import org.apache.log4j.Logger;
 
 import static java.lang.Integer.parseInt;
 
+@Singleton
 public class TextUI implements IObserver {
 	private static final String COMMANDS = "Commands: q|quit; n|new|newGame; s|set HEIGHT WIDTH MINES; o|open ROW COL; a|around ROW COL; f|flag ROW COL";
 
@@ -18,6 +20,7 @@ public class TextUI implements IObserver {
 	private IMinesweeperController controller;
 
 	private boolean printGrid = true;
+	private boolean printCommands = true;
 
 	@Inject
 	public TextUI(IMinesweeperController controller) {
@@ -79,8 +82,12 @@ public class TextUI implements IObserver {
 		}
 	}
 
-	public void setGridPrint(boolean printGrid) {
+	public void setPrintGrid(boolean printGrid) {
 		this.printGrid = printGrid;
+	}
+
+	public void setPrintCommands(boolean printCommands) {
+		this.printCommands = printCommands;
 	}
 
 	@Override
@@ -98,8 +105,10 @@ public class TextUI implements IObserver {
 		}
 		sb.append(NEWLINE);
 		sb.append(controller.getStatusLine());
-		sb.append(NEWLINE);
-		sb.append(COMMANDS);
+		if (printCommands) {
+			sb.append(NEWLINE);
+			sb.append(COMMANDS);
+		}
 		LOGGER.info(sb.toString());
 	}
 

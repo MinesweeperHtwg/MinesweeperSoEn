@@ -1,6 +1,7 @@
 package minesweeper.aview.gui;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.events.DimensionsChanged;
 import minesweeper.controller.events.MultipleCellsChanged;
@@ -16,6 +17,7 @@ import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.util.Set;
 
+@Singleton
 public class MinesweeperFrame extends JFrame implements IObserver {
 	private static final Logger LOGGER = Logger.getLogger(MinesweeperFrame.class);
 

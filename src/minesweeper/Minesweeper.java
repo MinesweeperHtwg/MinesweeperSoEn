@@ -2,9 +2,11 @@ package minesweeper;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Provider;
 import minesweeper.aview.gui.MinesweeperFrame;
 import minesweeper.aview.tui.TextUI;
 import minesweeper.controller.IMinesweeperController;
+import minesweeper.model.IGridFactory;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -21,16 +23,13 @@ public class Minesweeper {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		GridFactoryModule gridFactoryModule = new GridFactoryModule();
-		gridFactoryModule.setProvider(GridFactoryProviders.debugSolve);
-
-		Injector injector = Guice.createInjector(new MinesweeperModule(), gridFactoryModule);
+		Injector injector = getInjector(GridFactoryProviders.testSolve);
 
 		IMinesweeperController controller = injector.getInstance(IMinesweeperController.class);
-		controller.openCell(0, 0);
-		controller.openCell(0, 3);
 
 		TextUI tui = injector.getInstance(TextUI.class);
+		tui.setPrintGrid(false);
+		tui.setPrintCommands(false);
 
 		try {
 			SwingUtilities.invokeAndWait(() -> {
@@ -48,7 +47,14 @@ public class Minesweeper {
 		}
 		scanner.close();
 
-		// kill gui
-		System.exit(0);
+		// same instance because gui is a singleton
+		MinesweeperFrame gui = injector.getInstance(MinesweeperFrame.class);
+		gui.dispose();
+	}
+
+	public static Injector getInjector(Provider<IGridFactory> provider) {
+		GridFactoryModule gridFactoryModule = new GridFactoryModule();
+		gridFactoryModule.setProvider(provider);
+		return Guice.createInjector(new MinesweeperModule(), gridFactoryModule);
 	}
 }

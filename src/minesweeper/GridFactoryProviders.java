@@ -22,4 +22,13 @@ public class GridFactoryProviders {
 			return new GridFactory(2, 6).specified(new int[][]{{1, 0}, {1, 2}, {1, 3}, {1, 5}});
 		}
 	}
+
+	public static final TestSolveGridFactoryProvider testSolve = new TestSolveGridFactoryProvider();
+
+	static class TestSolveGridFactoryProvider implements Provider<IGridFactory> {
+		@Override
+		public IGridFactory get() {
+			return new GridFactory(3, 6).specified(new int[][]{{1, 1}, {0, 5}, {2, 5}});
+		}
+	}
 }

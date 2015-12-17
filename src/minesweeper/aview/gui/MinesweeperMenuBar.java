@@ -1,7 +1,6 @@
 package minesweeper.aview.gui;
 
 import minesweeper.controller.IMinesweeperController;
-import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.solverplugin.CompleteSolver;
 import minesweeper.solverplugin.SingleStepSolver;
 import minesweeper.solverplugin.SolverPlugin;
@@ -68,10 +67,9 @@ public class MinesweeperMenuBar extends JMenuBar {
 		menu.setMnemonic(KeyEvent.VK_D);
 		add(menu);
 
-		if (plugins.isEmpty() || !(controller instanceof IMinesweeperControllerSolvable)) {
+		if (plugins.isEmpty()) {
 			menu.setEnabled(false);
 		} else {
-			IMinesweeperControllerSolvable solvableController = (IMinesweeperControllerSolvable) controller;
 			for (SolverPlugin plugin : plugins) {
 				JMenu subMenu = new JMenu(plugin.getSolverName());
 				menu.add(subMenu);
@@ -87,12 +85,12 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 				subMenuItem = new JMenuItem("Complete solve");
 				subMenuItem.addActionListener(e ->
-						new CompleteSolver(plugin, solvableController).execute());
+						new CompleteSolver(plugin).execute());
 				subMenu.add(subMenuItem);
 
 				subMenuItem = new JMenuItem("Single step solve");
 				subMenuItem.addActionListener(e ->
-						new SingleStepSolver(plugin, solvableController).execute());
+						new SingleStepSolver(plugin).execute());
 				subMenu.add(subMenuItem);
 			}
 		}
