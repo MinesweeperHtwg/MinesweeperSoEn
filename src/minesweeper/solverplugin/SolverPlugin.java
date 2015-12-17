@@ -7,7 +7,6 @@ public interface SolverPlugin {
 	/**
 	 * Solve a board as far as possible
 	 *
-	 * @param controller the controller of the board to solve
 	 * @return if the board was comletly solved
 	 */
 	boolean solve();
@@ -15,7 +14,6 @@ public interface SolverPlugin {
 	/**
 	 * Solve one step of a board
 	 *
-	 * @param controller the controller of the board to solve
 	 * @return if the solver is able to continue
 	 */
 	boolean solveOneStep();
