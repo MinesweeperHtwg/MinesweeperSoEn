@@ -24,13 +24,14 @@ public class Minesweeper {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		Injector injector = Guice.createInjector(new MinesweeperModule());
+		GridFactoryModule gridFactoryModule = new GridFactoryModule();
+		gridFactoryModule.setProvider(GridFactoryProviders.debugSolve);
+
+		Injector injector = Guice.createInjector(new MinesweeperModule(), gridFactoryModule);
 
 		IMinesweeperController controller = injector.getInstance(IMinesweeperController.class);
 		controller.openCell(0, 0);
-		controller.openCell(0, 2);
-		controller.openCell(0, 4);
-		controller.openCell(1, 1);
+		controller.openCell(0, 3);
 
 		TextUI tui = injector.getInstance(TextUI.class);
 

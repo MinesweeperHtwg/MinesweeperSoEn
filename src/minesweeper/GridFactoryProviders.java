@@ -5,6 +5,7 @@ import minesweeper.model.IGridFactory;
 import minesweeper.model.impl.GridFactory;
 
 public class GridFactoryProviders {
+	public static final DebugEasyGridFactoryProvider debugEasy = new DebugEasyGridFactoryProvider();
 
 	static class DebugEasyGridFactoryProvider implements Provider<IGridFactory> {
 		@Override
@@ -13,6 +14,7 @@ public class GridFactoryProviders {
 		}
 	}
 
+	public static final DebugSolveGridFactoryProvider debugSolve = new DebugSolveGridFactoryProvider();
 	static class DebugSolveGridFactoryProvider implements Provider<IGridFactory> {
 		@Override
 		public IGridFactory get() {

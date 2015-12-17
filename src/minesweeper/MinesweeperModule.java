@@ -17,8 +17,6 @@ public class MinesweeperModule extends AbstractModule {
 	protected void configure() {
 		bind(IMinesweeperController.class).to(ControllerWrapper.class);
 
-		bind(IGridFactory.class).toProvider(GridFactoryProviders.DebugSolveGridFactoryProvider.class);
-
 		Multibinder<SolverPlugin> plugins = Multibinder.newSetBinder(binder(), SolverPlugin.class);
 		plugins.addBinding().to(JacopSolver.class);
 	}
