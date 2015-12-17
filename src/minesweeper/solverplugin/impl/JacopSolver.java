@@ -152,7 +152,7 @@ public class JacopSolver implements SolverPlugin {
 
 		timeOut = new SimpleTimeOut();
 		label.setTimeOutListener(timeOut);
-		label.setTimeOut(3);
+		label.setTimeOut(10);
 
 		select = new InputOrderSelect<>(store, varArray, new IndomainMin<>());
 

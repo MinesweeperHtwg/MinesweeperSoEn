@@ -47,5 +47,8 @@ public class Minesweeper {
 			cont = tui.processLine(scanner.nextLine());
 		}
 		scanner.close();
+
+		// kill gui
+		System.exit(0);
 	}
 }
