@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Singleton
 public class JacopSolver implements SolverPlugin {
 
-	private static final Logger logger = Logger.getLogger(JacopSolver.class);
+	private static final Logger LOG = Logger.getLogger(JacopSolver.class);
 
 	private final IMinesweeperControllerSolvable controller;
 
@@ -36,57 +36,6 @@ public class JacopSolver implements SolverPlugin {
 	@Inject
 	public JacopSolver(IMinesweeperControllerSolvable controller) {
 		this.controller = controller;
-	}
-
-	@Override
-	public String getSolverName() {
-		return "JacopSolver";
-	}
-
-	@Override
-	public boolean solve() {
-		logger.info("Trying to solve complete board");
-		while (solveOneStep()) {
-			if (hasGameEnded(controller)) {
-				return true;
-			}
-		}
-		// TODO: Return real solve state
-		return false;
-	}
-
-	@Override
-	public boolean solveOneStep() {
-		logger.info("\nSolving one step");
-
-		ImmutableSetMultimap<ICell, ICell> completeEdgeMap = getEdgeMap(controller);
-		ImmutableList<ICell> completeClosedCells = getClosedCells(completeEdgeMap);
-		ImmutableList<ICell> completeOpenCells = getOpenCells(completeEdgeMap);
-
-		List<ImmutableSetMultimap<ICell, ICell>> splitEdgeMaps = getSplitEdgeMaps(completeEdgeMap, completeClosedCells, completeOpenCells);
-		List<ImmutableList<ICell>> splitClosedCells = splitEdgeMaps.stream().map(edgeMap -> getClosedCells(edgeMap)).collect(Collectors.toList());
-		List<ImmutableList<ICell>> splitOpenCells = splitEdgeMaps.stream().map(edgeMap -> getOpenCells(edgeMap)).collect(Collectors.toList());
-
-		logger.debug("\nNumber of independent systems: " + splitEdgeMaps.size());
-
-		List<ICell> minesToFlag = new ArrayList<>();
-		List<ICell> clearsToOpen = new ArrayList<>();
-
-		for (int i = 0; i < splitEdgeMaps.size(); i++) {
-			ImmutableSetMultimap<ICell, ICell> edgeMap = splitEdgeMaps.get(i);
-			ImmutableList<ICell> closedCells = splitClosedCells.get(i);
-			ImmutableList<ICell> openCells = splitOpenCells.get(i);
-
-			double[] varProp = runJacop(edgeMap, closedCells, openCells);
-
-			logger.debug("\nProbabilities:\n"
-					+ Arrays.stream(varProp).mapToObj(d -> String.format("%,.3f", d)).collect(Collectors.joining(" ")));
-
-			addConfidentCells(varProp, closedCells, minesToFlag, clearsToOpen);
-		}
-
-		return openAndFlagCells(controller, minesToFlag, clearsToOpen);
-
 	}
 
 	private static List<ImmutableSetMultimap<ICell, ICell>> getSplitEdgeMaps(ImmutableSetMultimap<ICell, ICell> edgeMap, ImmutableList<ICell> closedCells, ImmutableList<ICell> openCells) {
@@ -112,28 +61,14 @@ public class JacopSolver implements SolverPlugin {
 			splitEdgeMaps.add(builder.build());
 		}
 
-		logger.debug(splitEdgeMaps);
+		LOG.debug(splitEdgeMaps);
 
 		return splitEdgeMaps;
-	}
-
-
-	@Override
-	public void setGuessing(boolean guessing) {
-		this.guessing = guessing;
 	}
 
 	private static boolean hasGameEnded(IMinesweeperControllerSolvable controller) {
 		String statusLine = controller.getStatusLine();
 		return statusLine.contains("You've won!") || statusLine.contains("Game over");
-	}
-
-	private ImmutableList<ICell> getClosedCells(ImmutableSetMultimap<ICell, ICell> edgeMap) {
-		return ImmutableSet.copyOf(edgeMap.values()).asList();
-	}
-
-	private ImmutableList<ICell> getOpenCells(ImmutableSetMultimap<ICell, ICell> edgeMap) {
-		return edgeMap.keySet().asList();
 	}
 
 	private static ImmutableSetMultimap<ICell, ICell> getEdgeMap(IMinesweeperControllerSolvable controller) {
@@ -156,9 +91,9 @@ public class JacopSolver implements SolverPlugin {
 	/**
 	 * Run jacop
 	 *
-	 * @return null if an error has occurred, otherwise the probabilities of closedCells
+	 * @return the probabilities of closedCells
 	 */
-	private static double[] runJacop(ImmutableSetMultimap<ICell, ICell> edgeMap, ImmutableList<ICell> closedCells, ImmutableList<ICell> openCells) {
+	private static double[] runJacop(ImmutableSetMultimap<ICell, ICell> edgeMap, ImmutableList<ICell> closedCells, ImmutableList<ICell> openCells) throws SolveException {
 		Store store = new Store();
 
 		IntVar[] varArray = new IntVar[closedCells.size()];
@@ -191,22 +126,19 @@ public class JacopSolver implements SolverPlugin {
 		solutionListener.recordSolutions(true);
 
 		if (!store.consistency()) {
-			logger.error("Store inconsistent");
-			return null;
+			throw new SolveException("Store inconsistent");
 		}
 
 		// Perform search
 		if (!label.labeling(store, select)) {
-			logger.error("No solution found");
-			return null;
+			throw new SolveException("No solution found");
 		}
 
 		if (timeOut.timeOutOccurred) {
-			logger.error("Reached time limit at solution " + timeOut.solutionsNo);
-			return null;
+			throw new SolveException("Reached time limit at solution " + timeOut.solutionsNo);
 		}
 
-		logger.debug("\nSearch Stats:\n" + label.toString());
+		LOG.debug("\nSearch Stats:\n" + label.toString());
 
 		return getProbabilities(solutionListener);
 	}
@@ -262,14 +194,14 @@ public class JacopSolver implements SolverPlugin {
 	 */
 	private static boolean openAndFlagCells(IMinesweeperControllerSolvable controller, List<ICell> minesToFlag, List<ICell> clearsToOpen) {
 		if (minesToFlag.isEmpty() && clearsToOpen.isEmpty()) {
-			logger.info("\nFound no risk free cell to open or flag");
+			LOG.info("\nFound no risk free cell to open or flag");
 			return false;
 		}
 
 		minesToFlag.stream().forEach(cell -> controller.toggleFlag(cell.getRow(), cell.getCol()));
 		clearsToOpen.stream().forEach(cell -> controller.openCell(cell.getRow(), cell.getCol()));
 
-		logger.info("\nFound " + minesToFlag.size() + " mine(s) at:\n" + getCellCordsString(minesToFlag) + "\n Found "
+		LOG.info("\nFound " + minesToFlag.size() + " mine(s) at:\n" + getCellCordsString(minesToFlag) + "\n Found "
 				+ clearsToOpen.size() + " safe cell(s) at:\n" + getCellCordsString(clearsToOpen));
 		return true;
 	}
@@ -281,6 +213,82 @@ public class JacopSolver implements SolverPlugin {
 			sb.append(i).append(":(").append(cell.getRow()).append(",").append(cell.getCol()).append(") ");
 		}
 		return sb.toString();
+	}
+
+	private static ImmutableList<ICell> getClosedCells(ImmutableSetMultimap<ICell, ICell> edgeMap) {
+		return ImmutableSet.copyOf(edgeMap.values()).asList();
+	}
+
+	private static ImmutableList<ICell> getOpenCells(ImmutableSetMultimap<ICell, ICell> edgeMap) {
+		return edgeMap.keySet().asList();
+	}
+
+	@Override
+	public String getSolverName() {
+		return "JacopSolver";
+	}
+
+	@Override
+	public boolean solve() {
+		LOG.info("Trying to solve complete board");
+		while (solveOneStep()) {
+			if (hasGameEnded(controller)) {
+				return true;
+			}
+		}
+		// TODO: Return real solve state
+		return false;
+	}
+
+	@Override
+	public boolean solveOneStep() {
+		LOG.info("\nSolving one step");
+
+		ImmutableSetMultimap<ICell, ICell> completeEdgeMap = getEdgeMap(controller);
+		ImmutableList<ICell> completeClosedCells = getClosedCells(completeEdgeMap);
+		ImmutableList<ICell> completeOpenCells = getOpenCells(completeEdgeMap);
+
+		List<ImmutableSetMultimap<ICell, ICell>> splitEdgeMaps = getSplitEdgeMaps(completeEdgeMap, completeClosedCells, completeOpenCells);
+		List<ImmutableList<ICell>> splitClosedCells = splitEdgeMaps.stream().map(edgeMap -> getClosedCells(edgeMap)).collect(Collectors.toList());
+		List<ImmutableList<ICell>> splitOpenCells = splitEdgeMaps.stream().map(edgeMap -> getOpenCells(edgeMap)).collect(Collectors.toList());
+
+		LOG.debug("\nNumber of independent systems: " + splitEdgeMaps.size());
+
+		List<ICell> minesToFlag = new ArrayList<>();
+		List<ICell> clearsToOpen = new ArrayList<>();
+
+		for (int i = 0; i < splitEdgeMaps.size(); i++) {
+			ImmutableSetMultimap<ICell, ICell> edgeMap = splitEdgeMaps.get(i);
+			ImmutableList<ICell> closedCells = splitClosedCells.get(i);
+			ImmutableList<ICell> openCells = splitOpenCells.get(i);
+
+			double[] varProp;
+			try {
+				varProp = runJacop(edgeMap, closedCells, openCells);
+			} catch (SolveException e) {
+				LOG.error("SolveException while solving system " + i, e);
+				return false;
+			}
+
+			LOG.debug("\nProbabilities:\n"
+					+ Arrays.stream(varProp).mapToObj(d -> String.format("%,.3f", d)).collect(Collectors.joining(" ")));
+
+			addConfidentCells(varProp, closedCells, minesToFlag, clearsToOpen);
+		}
+
+		return openAndFlagCells(controller, minesToFlag, clearsToOpen);
+
+	}
+
+	@Override
+	public void setGuessing(boolean guessing) {
+		this.guessing = guessing;
+	}
+
+	public static class SolveException extends Exception {
+		public SolveException(String message) {
+			super(message);
+		}
 	}
 
 }
