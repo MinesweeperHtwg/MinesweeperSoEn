@@ -6,7 +6,7 @@ import minesweeper.controller.IMinesweeperController;
 import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.controller.impl.ControllerWrapper;
 import minesweeper.solverplugin.SolverPlugin;
-import minesweeper.solverplugin.impl.JacopSolver;
+import minesweeper.solverplugin.impl.jacop.JacopSolver;
 
 public class MinesweeperModule extends AbstractModule {
 

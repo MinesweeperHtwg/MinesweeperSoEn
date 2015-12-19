@@ -4,6 +4,7 @@ import com.google.inject.Injector;
 import minesweeper.GridFactoryProviders;
 import minesweeper.Minesweeper;
 import minesweeper.controller.IMinesweeperControllerSolvable;
+import minesweeper.solverplugin.impl.jacop.JacopSolver;
 import org.apache.log4j.PropertyConfigurator;
 import org.junit.Before;
 import org.junit.BeforeClass;

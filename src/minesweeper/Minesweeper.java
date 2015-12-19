@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Provider;
 import minesweeper.aview.gui.MinesweeperFrame;
 import minesweeper.aview.tui.TextUI;
+import minesweeper.controller.IMinesweeperController;
 import minesweeper.model.IGridFactory;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
@@ -23,6 +24,12 @@ public class Minesweeper {
 		PropertyConfigurator.configure("log4j.properties");
 
 		Injector injector = getInjector(GridFactoryProviders.testSolve);
+
+		IMinesweeperController controller = injector.getInstance(IMinesweeperController.class);
+		controller.openCell(0, 0);
+		controller.openCell(0, 1);
+		controller.openCell(1, 0);
+		controller.openCell(1, 4);
 
 		TextUI tui = injector.getInstance(TextUI.class);
 		tui.setPrintGrid(false);

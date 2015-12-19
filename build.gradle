@@ -29,22 +29,26 @@ eclipse {
   }
 }
 
+//noinspection GroovyAssignabilityCheck
 dependencies {
     compile group: 'com.google.inject', name: 'guice', version: '4.0'
     compile 'log4j:log4j:1.2.17'
     compile 'org.apache.commons:commons-lang3:3.4'
     compile 'com.google.guava:guava:18.0'
     compile files('libs/jacop-4.3.0-withoutScala.jar');
+    compile "org.jgrapht:jgrapht-core:0.9.1"
     compile 'com.google.inject.extensions:guice-multibindings:4.0'
     testCompile 'nl.jqno.equalsverifier:equalsverifier:1.7.5'
     testCompile "junit:junit:4.11"
 }
 
+//noinspection GroovyAssignabilityCheck
 sourceSets {
     main.java.srcDir "src"
     test.java.srcDir "test"
 }
 
+//noinspection GroovyAssignabilityCheck
 jar {
     manifest.attributes "Main-Class":"minesweeper.Minesweeper"
 }
