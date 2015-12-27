@@ -52,6 +52,11 @@ public class MinesweeperMenuBar extends JMenuBar {
 		// TODO: Add selection window for custom board
 		rbMenuItem = new JRadioButtonMenuItem("Custom...");
 		rbMenuItem.setMnemonic(KeyEvent.VK_4);
+		rbMenuItem.addActionListener(e1 -> {
+			JOptionPane optionPane = new JOptionPane(new CustomBoardDialogPanel(), JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
+			JDialog dialog = optionPane.createDialog(this, "Custom Board");
+			dialog.setVisible(true);
+		});
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
