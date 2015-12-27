@@ -99,7 +99,11 @@ public class JacopSolver implements SolverPlugin {
 		IntVar[] varArray = new IntVar[closedCells.size()];
 
 		for (int i = 0; i < closedCells.size(); i++) {
-			varArray[i] = new BooleanVar(store, Integer.toString(i));
+			if (closedCells.get(i).isFlag()) {
+				varArray[i] = new IntVar(store, Integer.toString(i), 1, 1);
+			} else {
+				varArray[i] = new BooleanVar(store, Integer.toString(i));
+			}
 		}
 
 		for (ICell cell : openCells) {
@@ -143,38 +147,38 @@ public class JacopSolver implements SolverPlugin {
 		return getProbabilities(solutionListener);
 	}
 
-	private static double[] getProbabilities(SolutionListener<IntVar> solutionListener) {
+	private static double[] getProbabilities(SolutionListener<IntVar> solutionListener) throws SolveException {
 		Domain[][] solutions = solutionListener.getSolutions();
 		int varCount = solutionListener.getVariables().length;
 		int solutionsCount = solutionListener.solutionsNo();
 
-		double[] varProp = new double[varCount];
+		double[] varProb = new double[varCount];
 		for (int i = 0; i < varCount; i++) {
 			for (int j = 0; j < solutionsCount; j++) {
 				Domain d = solutions[j][i];
 				if (!d.singleton() || !d.isNumeric()) {
-					throw new IllegalStateException("Solution " + j + "at Domain " + i + " illegal");
+					throw new SolveException("Solution " + j + "at Domain " + i + " illegal");
 				}
-				varProp[i] += d.valueEnumeration().nextElement();
+				varProb[i] += d.valueEnumeration().nextElement();
 			}
-			varProp[i] /= solutionsCount;
+			varProb[i] /= solutionsCount;
 		}
-		return varProp;
+		return varProb;
 	}
 
 	/**
 	 * Finds confident cells and adds them to the lists.
 	 */
-	private static void addConfidentCells(double[] varProp, ImmutableList<ICell> closedCells, List<ICell> minesToFlag, List<ICell> clearsToOpen) {
+	private static void addConfidentCells(double[] varProb, ImmutableList<ICell> closedCells, List<ICell> minesToFlag, List<ICell> clearsToOpen) {
 		// Evaluate solution
 		List<Integer> mineAtIndex = new ArrayList<>();
 		List<Integer> clearAtIndex = new ArrayList<>();
-		for (int i = 0; i < varProp.length; i++) {
-			double prop = varProp[i];
-			if (Double.compare(prop, 0.0) == 0) {
+		for (int i = 0; i < varProb.length; i++) {
+			double prob = varProb[i];
+			if (Double.compare(prob, 0.0) == 0) {
 				clearAtIndex.add(i);
 			}
-			if (Double.compare(prop, 1.0) == 0) {
+			if (Double.compare(prob, 1.0) == 0) {
 				mineAtIndex.add(i);
 			}
 		}
@@ -198,8 +202,10 @@ public class JacopSolver implements SolverPlugin {
 			return false;
 		}
 
-		minesToFlag.stream().forEach(cell -> controller.toggleFlag(cell.getRow(), cell.getCol()));
-		clearsToOpen.stream().forEach(cell -> controller.openCell(cell.getRow(), cell.getCol()));
+		minesToFlag.stream()
+		           .forEach(cell -> controller.toggleFlag(cell.getRow(), cell.getCol()));
+		clearsToOpen.stream()
+		            .forEach(cell -> controller.openCell(cell.getRow(), cell.getCol()));
 
 		LOG.info("\nFound " + minesToFlag.size() + " mine(s) at:\n" + getCellCordsString(minesToFlag) + "\n Found "
 				+ clearsToOpen.size() + " safe cell(s) at:\n" + getCellCordsString(clearsToOpen));
@@ -249,35 +255,93 @@ public class JacopSolver implements SolverPlugin {
 		ImmutableList<ICell> completeOpenCells = getOpenCells(completeEdgeMap);
 
 		List<ImmutableSetMultimap<ICell, ICell>> splitEdgeMaps = getSplitEdgeMaps(completeEdgeMap, completeClosedCells, completeOpenCells);
-		List<ImmutableList<ICell>> splitClosedCells = splitEdgeMaps.stream().map(edgeMap -> getClosedCells(edgeMap)).collect(Collectors.toList());
-		List<ImmutableList<ICell>> splitOpenCells = splitEdgeMaps.stream().map(edgeMap -> getOpenCells(edgeMap)).collect(Collectors.toList());
+		List<ImmutableList<ICell>> splitClosedCells = splitEdgeMaps.stream()
+		                                                           .map(JacopSolver::getClosedCells)
+		                                                           .collect(Collectors.toList());
+		List<ImmutableList<ICell>> splitOpenCells = splitEdgeMaps.stream()
+		                                                         .map(JacopSolver::getOpenCells)
+		                                                         .collect(Collectors.toList());
 
 		LOG.debug("\nNumber of independent systems: " + splitEdgeMaps.size());
 
 		List<ICell> minesToFlag = new ArrayList<>();
 		List<ICell> clearsToOpen = new ArrayList<>();
+		Map<ICell, Double> cellProb = new HashMap<>();
 
 		for (int i = 0; i < splitEdgeMaps.size(); i++) {
 			ImmutableSetMultimap<ICell, ICell> edgeMap = splitEdgeMaps.get(i);
 			ImmutableList<ICell> closedCells = splitClosedCells.get(i);
 			ImmutableList<ICell> openCells = splitOpenCells.get(i);
 
-			double[] varProp;
+			double[] varProb;
 			try {
-				varProp = runJacop(edgeMap, closedCells, openCells);
+				varProb = runJacop(edgeMap, closedCells, openCells);
 			} catch (SolveException e) {
 				LOG.error("SolveException while solving system " + i, e);
 				return false;
 			}
 
 			LOG.debug("\nProbabilities:\n"
-					+ Arrays.stream(varProp).mapToObj(d -> String.format("%,.3f", d)).collect(Collectors.joining(" ")));
+					+ Arrays.stream(varProb).mapToObj(d -> String.format("%,.3f", d)).collect(Collectors.joining(" ")));
 
-			addConfidentCells(varProp, closedCells, minesToFlag, clearsToOpen);
+			addConfidentCells(varProb, closedCells, minesToFlag, clearsToOpen);
+
+			addCellProbabilities(cellProb, closedCells, varProb);
 		}
 
-		return openAndFlagCells(controller, minesToFlag, clearsToOpen);
+		if (openAndFlagCells(controller, minesToFlag, clearsToOpen))
+			return true;
 
+		if (guessing) {
+			openOrFlagSafestCell(cellProb);
+			return true;
+		} else {
+			return false;
+		}
+
+	}
+
+	private void openOrFlagSafestCell(Map<ICell, Double> cellProb) {
+		if (cellProb.isEmpty())
+			return;
+
+		DoubleSummaryStatistics stats = cellProb.values().stream().collect(Collectors.summarizingDouble(Double::doubleValue));
+		double min = stats.getMin();
+		double max = stats.getMax();
+
+		boolean open = false;
+
+		if (min <= 1 - max) {
+			open = true;
+		}
+
+		for (Map.Entry<ICell, Double> entry : cellProb.entrySet()) {
+			Double value = entry.getValue();
+
+			ICell cell = entry.getKey();
+			if (open) {
+				if (Double.compare(value, min) == 0) {
+					LOG.info("Guessing that " + cell.mkString() + " is clear with a confidence of " + String.format("%.2f", 1 - min));
+					controller.openCell(cell.getRow(), cell.getCol());
+					return;
+				}
+			} else {
+				if (Double.compare(value, max) == 0) {
+					LOG.info("Guessing that " + cell.mkString() + " is a flag with a confidence of " + String.format("%.2f", max));
+					controller.toggleFlag(cell.getRow(), cell.getCol());
+					return;
+				}
+			}
+		}
+		throw new IllegalStateException("Error while guessing, could not find cell");
+	}
+
+	private static void addCellProbabilities(Map<ICell, Double> cellProb, List<ICell> closedCells, double[] varProb) {
+		for (int i = 0; i < varProb.length; i++) {
+			ICell cell = closedCells.get(i);
+			if (cell.isClosedWithoutFlag())
+				cellProb.put(cell, varProb[i]);
+		}
 	}
 
 	@Override

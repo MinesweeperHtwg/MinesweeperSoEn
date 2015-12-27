@@ -26,8 +26,18 @@ public interface ICell {
 
 	void setState(State state);
 
+	/**
+	 * Returns a long representation of this cell, e.g. "(1,0)=F"
+	 *
+	 * @return a long representation of this cell
+	 */
 	String mkString();
 
+	/**
+	 * Returns a short representation of this cell, e.g. "F" for a flag
+	 *
+	 * @return a short representation of this cell
+	 */
 	@Override
 	String toString();
 
