@@ -6,12 +6,14 @@ import minesweeper.solverplugin.workers.CompleteSolverWorker;
 import minesweeper.solverplugin.workers.SingleStepSolverWorker;
 
 import javax.swing.*;
+import java.awt.event.InputEvent;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyEvent;
 import java.util.Set;
 
 public class MinesweeperMenuBar extends JMenuBar {
 	private static final long serialVersionUID = 1L;
+	private static final boolean DEFAULT_GUESSING = false;
 
 	public MinesweeperMenuBar(final IMinesweeperController controller, final Set<SolverPlugin> plugins) {
 		JMenu menu;
@@ -24,6 +26,7 @@ public class MinesweeperMenuBar extends JMenuBar {
 
 		menuItem = new JMenuItem("New");
 		menuItem.setMnemonic(KeyEvent.VK_N);
+		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, InputEvent.CTRL_DOWN_MASK));
 		menuItem.addActionListener(e -> controller.newGame());
 		menu.add(menuItem);
 
@@ -53,9 +56,11 @@ public class MinesweeperMenuBar extends JMenuBar {
 		rbMenuItem = new JRadioButtonMenuItem("Custom...");
 		rbMenuItem.setMnemonic(KeyEvent.VK_4);
 		rbMenuItem.addActionListener(e1 -> {
-			JOptionPane optionPane = new JOptionPane(new CustomBoardDialogPanel(), JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-			JDialog dialog = optionPane.createDialog(this, "Custom Board");
-			dialog.setVisible(true);
+			CustomBoardDialogPanel dialogPanel = new CustomBoardDialogPanel();
+			int option = JOptionPane.showOptionDialog(this, dialogPanel, "Custom Board", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+			if (option == JOptionPane.OK_OPTION) {
+				controller.changeSettings(dialogPanel.getSelectedHeight(), dialogPanel.getSelectedWidth(), dialogPanel.getSelectedMines());
+			}
 		});
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
@@ -81,9 +86,8 @@ public class MinesweeperMenuBar extends JMenuBar {
 				menu.add(subMenu);
 
 				JCheckBoxMenuItem subMenuCheckBox = new JCheckBoxMenuItem("Guessing");
-				boolean defaultGuessing = false;
-				subMenuCheckBox.setState(defaultGuessing);
-				plugin.setGuessing(defaultGuessing);
+				subMenuCheckBox.setState(DEFAULT_GUESSING);
+				plugin.setGuessing(DEFAULT_GUESSING);
 				subMenuCheckBox.addItemListener(e -> plugin.setGuessing(e.getStateChange() == ItemEvent.SELECTED));
 				subMenu.add(subMenuCheckBox);
 
