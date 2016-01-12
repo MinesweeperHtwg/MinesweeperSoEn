@@ -30,7 +30,6 @@ public class JacopSolver implements SolverPlugin {
 
 	private final IMinesweeperControllerSolvable controller;
 
-	// TODO: Implement guessing algorithm
 	private boolean guessing;
 
 	@Inject
@@ -242,7 +241,6 @@ public class JacopSolver implements SolverPlugin {
 				return true;
 			}
 		}
-		// TODO: Return real solve state
 		return false;
 	}
 
