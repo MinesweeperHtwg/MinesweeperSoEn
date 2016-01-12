@@ -2,7 +2,7 @@ package minesweeper.solverplugin.impl;
 
 import com.google.inject.Injector;
 import minesweeper.GridFactoryProviders;
-import minesweeper.Minesweeper;
+import minesweeper.MinesweeperModule;
 import minesweeper.controller.IMinesweeperControllerSolvable;
 import minesweeper.solverplugin.impl.jacop.JacopSolver;
 import org.apache.log4j.PropertyConfigurator;
@@ -23,7 +23,7 @@ public class JacopSolverTest {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		Injector injector = Minesweeper.getInjector(GridFactoryProviders.testSolve);
+		Injector injector = MinesweeperModule.getInjector(GridFactoryProviders.testSolve);
 		controller = injector.getInstance(IMinesweeperControllerSolvable.class);
 		jacopSolver = injector.getInstance(JacopSolver.class);
 	}

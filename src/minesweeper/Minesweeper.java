@@ -1,12 +1,9 @@
 package minesweeper;
 
-import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Provider;
 import minesweeper.aview.gui.MinesweeperFrame;
 import minesweeper.aview.tui.TextUI;
 import minesweeper.controller.IMinesweeperController;
-import minesweeper.model.IGridFactory;
 import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 
@@ -23,7 +20,7 @@ public class Minesweeper {
 		// Set up logging through log4j
 		PropertyConfigurator.configure("log4j.properties");
 
-		Injector injector = getInjector(GridFactoryProviders.testSolve);
+		Injector injector = MinesweeperModule.getInjector(GridFactoryProviders.debugEasy);
 
 		IMinesweeperController controller = injector.getInstance(IMinesweeperController.class);
 		controller.openCell(0, 0);
@@ -56,9 +53,4 @@ public class Minesweeper {
 		gui.dispose();
 	}
 
-	public static Injector getInjector(Provider<IGridFactory> provider) {
-		GridFactoryModule gridFactoryModule = new GridFactoryModule();
-		gridFactoryModule.setProvider(provider);
-		return Guice.createInjector(new MinesweeperModule(), gridFactoryModule);
-	}
 }
