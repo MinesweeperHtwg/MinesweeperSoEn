@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutionException;
 
 public abstract class AbstractSolverWorker extends SwingWorker<Boolean, Void> {
 
-	private static final Logger logger = Logger.getLogger(AbstractSolverWorker.class);
+	private static final Logger LOG = Logger.getLogger(AbstractSolverWorker.class);
 
 	protected final SolverPlugin solver;
 
@@ -21,7 +21,7 @@ public abstract class AbstractSolverWorker extends SwingWorker<Boolean, Void> {
 		try {
 			get();
 		} catch (InterruptedException | ExecutionException e) {
-			logger.error("Solver has thrown:", e);
+			LOG.error("Solver has thrown:", e);
 		}
 	}
 }

@@ -1,16 +1,14 @@
 package minesweeper.model.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import minesweeper.model.ICell;
+import minesweeper.model.IGrid;
+import minesweeper.model.IGridFactory;
+import minesweeper.model.IGridFactory.Strategy;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import minesweeper.model.ICell;
-import minesweeper.model.IGrid;
-import minesweeper.model.IGridFactory.Strategy;
+import static org.junit.Assert.*;
 
 public class GridFactoryTest {
 
@@ -134,5 +132,10 @@ public class GridFactoryTest {
 
 		long mines = grid.getCells().stream().filter(ICell::isMine).count();
 		assertEquals(0, mines);
+	}
+
+	@Test
+	public void testInterfaceEnum() {
+		assertEquals(IGridFactory.Strategy.RANDOM, IGridFactory.Strategy.valueOf("RANDOM"));
 	}
 }
